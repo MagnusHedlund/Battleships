@@ -1,8 +1,20 @@
+//----------------------------------------------------------------
+// Namn: Fredrik Strömbergsson
+// Datum: 2013-05-17
+// 
+// Square.java:
+// Ärver från JButton och ritar ut som default en vit knapp med svart kant.
+// När man klickar på knappen ska den kunna ha 4 olika utseenden:
+// 1. Default (vit)
+// 2. Träff   (grön)
+// 3. Miss    (röd)
+// 4. Skepp   (mörkgrå)
+//----------------------------------------------------------------
+
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import javax.swing.JButton;
-
 
 @SuppressWarnings("serial")
 public class Square extends JButton
@@ -61,6 +73,14 @@ public class Square extends JButton
    {
 	   Alive = false;
 	   myColor = Color.DARK_GRAY;
+	   repaint();	   
+   }
+   
+   // Nollställer rutan till default
+   public void resetMe()
+   {
+	   Alive = true;
+	   myColor = Color.WHITE;
 	   repaint();	   
    }
    

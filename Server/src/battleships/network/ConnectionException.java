@@ -1,22 +1,23 @@
 /*
  * ConnectionException.java	
- * Version 1.0 (2013-05-13)
+ * Version 1.0 (2013-05-20)
  */
 
 package battleships.network;
 
 /**
  * Exception that is thrown whenever the establishment of communication
- * with sockets fail
+ * with sockets fail. This is also used when listening for new connections,
+ * describing that no server socket could be established.
  * 
  * @author Christopher Nilsson
  */
 public class ConnectionException extends Exception
 {
     /**
-     * Standard constructor
+     * Standard constructor.
      * 
-     * @param message	Error message
+     * @param message	Error message.
      */
     public ConnectionException(String message)
     {
@@ -24,10 +25,10 @@ public class ConnectionException extends Exception
     }
 
     /**
-     * Constructor allowing for more detailed information
+     * Constructor allowing for more detailed information.
      * 
-     * @param message	Error message
-     * @param throwable	Specific data related to the exception
+     * @param message	Error message.
+     * @param throwable	Specific data related to the exception.
      */
     public ConnectionException(String message, Throwable throwable)
     {

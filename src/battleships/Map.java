@@ -1,19 +1,19 @@
 package battleships;
 
-import java.util.Arrays;
+// import java.util.Arrays;
 
 public class Map {
 
-	protected static final Integer EMPTY=0, HIT=1, BOM=3, SUNK=4;  // SHIP??? Only for the client to see
-	private static final Integer SIZE = 10;
-	private Integer[][] ocean;
+	public final int EMPTY=0, HIT=1, BOM=2, SUNK=3;  // SHIP??? Only for the client to see
+	private static final int SIZE = 10;
+	private int[][] ocean;
 	
 	Map(){
-		ocean = new Integer[SIZE][SIZE];
-		Arrays.fill(ocean, EMPTY);		
+		ocean = new int[SIZE][SIZE];
+	//	Arrays.fill(ocean, 1);		
 	}
 	
-	public Integer[][] getOcean(){
+	public int[][] getOcean(){
 		return ocean;
 	}
 	

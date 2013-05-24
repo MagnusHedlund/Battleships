@@ -11,7 +11,7 @@ public class Navy {
 	private Map map;
 	private Integer sunkShips;
 	
-	Navy(int s, int d, int ac){
+	public Navy(int s, int d, int ac){
 		ships = new LinkedList<Ship>();
 		
 		SUBMARINES = s;
@@ -20,7 +20,7 @@ public class Navy {
 		
 		map = new Map();
 		sunkShips=0;
-	//	allGone = false;
+		
 	}
 	
 	public void addShip(Ship ship){
@@ -34,23 +34,26 @@ public class Navy {
 	public LinkedList<Ship> getShips(){
 		return ships;
 	}
-	
+	/**
+	 * Administrates a shot to the navy. Marks it on the map an returns a ship if hit.
+	 * To know if the ship is sunk the caller have to ask the returned ship.
+	 * 
+	 * @param c			The target-Coordinate.
+	 * @return			The Ship that was hit or null, if no hit.
+	 */
 	public Ship shot(Coordinate c){
 		// Look at map - exception if not EMPTY!!
 		map.getValue(c);
 		// Search for coordinate in ships - uses iterator, stop searching if found.
 		Iterator<Ship> it = ships.iterator();
 		Boolean found = false;
-		//Boolean sunk = false;
-		Integer result = 0;
 		
 		while(!found&&it.hasNext()){
 			Ship tmp=it.next();
 			if(tmp.hitByShot(c)){
 				found = true;
 				// Ask if target ship is sunk. If so put it in parameter ship, s.
-				if(tmp.isSunk()){
-					// sunk = true;
+				if(tmp.isSunk()){					
 					// Increase sunkShips.
 					++sunkShips;
 					this.markOnMap(c, map.SUNK); 
@@ -66,19 +69,35 @@ public class Navy {
 		return null;	
 		
 	}
-	
+	/**
+	 * 
+	 * @return sunkShips
+	 */
 	public Boolean allGone(){
 		return sunkShips == SUBMARINES+DESTROYERS+AIRCRAFT_CARRIERS;
 	}
 	
+	/**
+	 * 
+	 * @return amount of ships
+	 */
 	public int numberShips(){
 		return ships.size();
 	}
 	
+	/**
+	 * Returns if all ships in the navy are placed.
+	 * @return
+	 */
 	public boolean allSet(){
 		return ships.size() == SUBMARINES+DESTROYERS+AIRCRAFT_CARRIERS;
 	}
 	
+	/**
+	 * 
+	 * @param c
+	 * @param v
+	 */
 	private void markOnMap(Coordinate c, int v){
 		map.setValue(c, v);
 	}

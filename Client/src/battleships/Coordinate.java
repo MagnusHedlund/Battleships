@@ -6,7 +6,6 @@ package battleships;
  * 
  * @author Åsa Waldhe
  */
-
 public class Coordinate {
 	
 	/** x-coordinate */

@@ -3,22 +3,22 @@ package battleships;
 import java.util.TreeSet;
 
 public class Aircraft_carrier extends Ship {
-
-	private final Integer DIRECTION;
+	
+	public static final int LENGTH_A = 5;
 	private static Integer instances_ac=0;
 	
-	Aircraft_carrier(Coordinate c1, Coordinate c2, Coordinate c3, Coordinate c4, Coordinate c5){
+	public Aircraft_carrier(Coordinate c1, Coordinate c2, Coordinate c3, Coordinate c4, Coordinate c5){
 		
-		super("Aircraft carrier", 5);
+		super("Aircraft carrier", LENGTH_A);
 		
-		DIRECTION = shipsDirection(c1, c2);
+		super.shipsDirection(c1, c2);
 		
-		if(DIRECTION == HORIZONTAL){
+		if(direction == HORIZONTAL){
 			CompareHorizontal compH = new CompareHorizontal();
 			hits = new TreeSet<Coordinate>(compH);
 			coords = new TreeSet<Coordinate>(compH);
 			}
-			else if(DIRECTION == VERTICAL){
+			else if(direction == VERTICAL){
 				CompareVertical compV = new CompareVertical();
 				hits = new TreeSet<Coordinate>(compV);
 				coords = new TreeSet<Coordinate>(compV);
@@ -38,7 +38,4 @@ public class Aircraft_carrier extends Ship {
 		return instances_ac;
 	}
 	
-	public Integer getDirection(){
-		return DIRECTION;
-	}
 }

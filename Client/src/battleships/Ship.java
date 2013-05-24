@@ -15,6 +15,8 @@ public abstract class Ship {
 	protected TreeSet<Coordinate> hits;
 	protected Boolean sunk;
 	
+	protected Integer direction=null;
+	
 	
 	public Ship(String n, int l ){			// Kontrollera att koordinaterna ligger i rad?
 		sunk = false;
@@ -43,6 +45,9 @@ public abstract class Ship {
 		return coords.first();
 	}
 	
+	public Integer getDirection(){
+		return direction;
+	}
 	
 	
 	public Integer getLength(){
@@ -59,10 +64,15 @@ public abstract class Ship {
 	}
 	
 	protected Integer shipsDirection(Coordinate c1, Coordinate c2){
-		if( c1.getY() == c2.getY() )
-			return HORIZONTAL;
+		if( c1.getY() == c2.getY() ){
+			direction = HORIZONTAL;
+			return direction;
+		}
 		else
-			return VERTICAL;		
+		{
+			direction = VERTICAL;
+			return direction;
+		}		
 	}
 	
 	/**

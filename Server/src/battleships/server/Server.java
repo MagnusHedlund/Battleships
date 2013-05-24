@@ -14,7 +14,7 @@ import battleships.network.ConnectionListener;
  * @author Christopher Nilsson
  */
 public class Server
-{
+{	
 	/**
 	 * Manages players and sessions.
 	 */
@@ -34,9 +34,9 @@ public class Server
 	}
 	
 	/**
+	 * Activates the server.
 	 * 
-	 * @param port
-	 * @throws ConnectionException
+	 * @param port	At which port to listen for messages at.
 	 */
 	public void run(int port)
 	{

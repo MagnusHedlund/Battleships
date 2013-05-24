@@ -5,6 +5,11 @@
 
 package battleships.network;
 
+import java.io.IOException;
+
+import battleships.message.InvalidMessageException;
+import battleships.message.Message;
+
 /**
  * Handles the communication between two entities over a network.
  * 
@@ -26,6 +31,11 @@ public class Socket
 	 * Reads from the socket.
 	 */
     java.io.BufferedReader in;
+    
+    /**
+     * Translates and interprets network data
+     */
+    DataParser parser;
 	
 	/**
 	 * Creates a connection to another entity over the net.
@@ -55,6 +65,9 @@ public class Socket
 			throw new ConnectionException("A connection could not be established to " + 
 										  address + ":" + port + ".");
 		}
+		
+		// Network information translator
+		parser = new DataParser();
 	}
 	
 	/**
@@ -115,12 +128,20 @@ public class Socket
 	/**
 	 * Writes a message that will be sent through the socket.
 	 * 
-	 * @param message	Message to be delivered.
+	 * @param message					Message to be delivered.
+	 * @throws InvalidMessageException 	Badly formatted message.
 	 */
-	public void write(Message message)
+	public void write(Message message) throws InvalidMessageException
 	{
-		String data = ""; // Message to String
-		out.println(data);
+		if(message.isValid())
+		{
+			String data = parser.convertToString(message);
+			out.println(data);			
+		}
+		else
+		{
+			throw new InvalidMessageException("Message requires more data");
+		}
 	}
 	
 	/**
@@ -128,11 +149,22 @@ public class Socket
 	 * 
 	 * @return	Message coming through the socket. Is set to <i>null</i> if the sender
 	 * 			hasn't given any messages that have not been read previously.
+	 * @throws IOException 
 	 */
 	public Message read()
 	{
-		String data = in.readLine();
-		Message message = new Message(); // String to Message
-		return message;
+		// Reading
+		String data;
+		try
+		{
+			data = in.readLine();
+		} 
+		catch (IOException e)
+		{
+			return null;
+		}
+		
+		// Returning a message
+		return parser.convertToMessage(data);
 	}
 }

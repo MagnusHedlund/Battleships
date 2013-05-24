@@ -101,6 +101,11 @@ public class Navy {
 	private void markOnMap(Coordinate c, int v){
 		map.setValue(c, v);
 	}
+
+	public void clearNavy() {
+		
+		
+	}
 	
 	
 }

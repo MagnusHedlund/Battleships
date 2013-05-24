@@ -72,7 +72,8 @@ public class Square extends JButton
    public void setShipHere()
    {
 	   Alive = false;
-	   myColor = Color.DARK_GRAY;
+	   if(myColor == Color.DARK_GRAY || myColor == Color.WHITE)
+		   myColor = Color.DARK_GRAY;
 	   repaint();	   
    }
    

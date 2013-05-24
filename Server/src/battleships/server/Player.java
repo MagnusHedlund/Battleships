@@ -1,10 +1,12 @@
 /*
  * Player.java	
- * Version 0.1 (2013-05-20)
+ * Version 1.0 (2013-05-24)
  */
 
 package battleships.server;
 
+import battleships.message.InvalidMessageException;
+import battleships.message.Message;
 import battleships.network.Socket;
 
 /**
@@ -14,7 +16,7 @@ import battleships.network.Socket;
  * @author Christopher Nilsson
  */
 public class Player
-{
+{	
 	/**
 	 * Socket for communicating with the player over a network.
 	 */
@@ -26,15 +28,21 @@ public class Player
 	private String name;
 	
 	/**
+	 * Player ID.
+	 */
+	private Integer id;
+	
+	/**
 	 * Constructor where a connected socket and the player's 
 	 * name has to be given.
 	 * 
 	 * @param name	Name of the player.
 	 */
-	public Player(Socket socket, String name)
+	public Player(Socket socket, Integer id, String name)
 	{
 		this.socket = socket;
 		this.name = name;
+		this.id = id;
 	}
 	
 	/**
@@ -48,13 +56,27 @@ public class Player
 	}
 	
 	/**
+	 * Gets the unique ID of the player.
+	 * 
+	 * @return	Player ID.
+	 */
+	public Integer getID()
+	{
+		return id;
+	}
+	
+	/**
 	 * Sends a message to the player's client.
 	 * 
-	 * @param message	Message to deliver.
+	 * @param message					Message to deliver.
+	 * @throws InvalidMessageException 	Messages must be formatted properly.
 	 */
-	public void sendMessage(Message message)
+	public void sendMessage(Message message) throws InvalidMessageException
 	{
-		socket.write(message);
+		if(message.isValid())
+		{
+			socket.write(message);
+		}
 	}
 	
 	/**

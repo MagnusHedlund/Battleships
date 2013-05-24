@@ -12,6 +12,7 @@ package battleships.network;
  * 
  * @author Christopher Nilsson
  */
+@SuppressWarnings("serial")
 public class ConnectionException extends Exception
 {
     /**

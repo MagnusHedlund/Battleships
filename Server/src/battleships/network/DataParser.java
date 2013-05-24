@@ -11,6 +11,8 @@
 
 package battleships.network;
 
+import battleships.message.Message;
+
 /**
  * Converts raw network data to interpreted messages and the other
  * way around
@@ -19,5 +21,15 @@ package battleships.network;
  */
 public class DataParser
 {
+
+	public String convertToString(Message message) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public Message convertToMessage(String data) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 }

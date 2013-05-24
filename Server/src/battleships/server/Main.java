@@ -11,7 +11,7 @@ package battleships.server;
  * @author Christopher Nilsson
  */
 public class Main
-{
+{	
 	/**
 	 * Port used when listening for new client connections.
 	 */

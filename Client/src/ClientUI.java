@@ -1,12 +1,18 @@
 //----------------------------------------------------------------
 // Namn: Fredrik Strömbergsson
-// Datum: 2013-05-17
+// Datum: 2013-05-24
 // 
 // ClientUI.java
 //----------------------------------------------------------------
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+
+import battleships.Coordinate;
+import battleships.Navy;
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -40,6 +46,11 @@ public class ClientUI implements ActionListener
 	private JButton readyButton = new JButton("READY");						// READY (färdig med utplacering)
 	private JButton clearButton = new JButton("CLEAR");				// rensa fältet där man lägger ut skepp
 	private ShipPlacer placer = new ShipPlacer();					// Används när man sätter ut skepp
+	private Navy myNavy = new Navy(5, 3, 1);						// NAVY
+	private JList<String> lobbyList = new JList<String>();			// Listan i LOBBY
+	private JButton challengeButton = new JButton("Challenge!");	// "challenge" knapp - lobby
+	private Vector<String> playerList = new Vector<String>();		// objekten i listan - lobby
+	private String lobbySelected = "";								// vilket objekt som är valt i listan - lobby
 	
 	//-----------------------------------------
 	// Konstruktor
@@ -52,7 +63,7 @@ public class ClientUI implements ActionListener
 	//-----------------------------------------
 	// Skapar fönstret för anslutning mot server
 	//-----------------------------------------
-	public void createConnectWindow()
+	private void createConnectWindow()
 	{
 		// Sätt state till connect
 		state = states.connect.ordinal();
@@ -63,17 +74,13 @@ public class ClientUI implements ActionListener
 		window.setResizable(false);
 		window.setTitle("Project Battleship");
 		
-		// Meny										--- Behöver lägga till LISTENERS för dessa.
+		// Meny -- används ej.
 		JMenuBar theMenu = new JMenuBar();
 		JMenu menuTitle = new JMenu("Menu");
-		JMenuItem menuConnect = new JMenuItem("Connect");
-		JMenuItem menuDisconnect = new JMenuItem("Disconnect");
 		JMenuItem menuExit = new JMenuItem("Exit");
+		menuExit.setEnabled(false);
 		window.setJMenuBar(theMenu);
 		theMenu.add(menuTitle);
-		menuTitle.add(menuConnect);
-		menuTitle.add(menuDisconnect);
-		menuTitle.addSeparator();
 		menuTitle.add(menuExit);
 	
 		// Layout
@@ -120,6 +127,10 @@ public class ClientUI implements ActionListener
 		JLabel portboxlabel = new JLabel("Port:");
 		connectButton.addActionListener(this);
 
+		// Sätt default värden för textrutorna
+		ipbox.setText("127.0.0.1");
+		portbox.setText("5000");
+		
 		// text panelen, innehåller textfälten osv
 		JPanel textpanel = new JPanel();
 		textpanel.add(ipboxlabel);
@@ -147,13 +158,79 @@ public class ClientUI implements ActionListener
 	//-----------------------------------------
 	// Skapar lobbyfönstret
 	//-----------------------------------------
-	public void createLobbyWindow()
+	private void createLobbyWindow()
 	{
 		// Rensa fönstret på föregående komponenter
 		window.getContentPane().removeAll();	
 		
 		// Sätt state till lobby
 		state = states.lobby.ordinal();
+				
+		// GridBagLayout
+		GridBagLayout theLayout = new GridBagLayout();
+		GridBagConstraints con = new GridBagConstraints();
+		window.setLayout(theLayout);
+		
+		// Sätt storlek på lobbylistan
+		lobbyList.setMaximumSize(new Dimension(700,300));
+		lobbyList.setMinimumSize(new Dimension(700,300));
+		lobbyList.setPreferredSize(new Dimension(700,300));
+		lobbyList.setBorder(BorderFactory.createLineBorder(Color.black, 5));
+		lobbyList.setFont(new Font("SansSerif", Font.BOLD, 18));
+		
+		// överskift
+		JLabel lobbyText = new JLabel("Select and challenge your enemy!");
+		lobbyText.setFont(new Font("SansSerif", Font.BOLD, 24));
+		
+		// Lägg i panel
+		JPanel panel = new JPanel();
+		panel.setMaximumSize(new Dimension(700,50));
+		panel.setMinimumSize(new Dimension(700,50));
+		panel.setPreferredSize(new Dimension(700,50));
+		panel.add(lobbyText);
+		
+		// Sätt storlek på button...
+		challengeButton.setMaximumSize(new Dimension(150,30));
+		challengeButton.setMinimumSize(new Dimension(150,30));
+		challengeButton.setPreferredSize(new Dimension(150,30));
+		challengeButton.addActionListener(this);
+		
+		// Lägg button i en panel
+		JPanel panel2 = new JPanel();
+		panel2.setMaximumSize(new Dimension(700,50));
+		panel2.setMinimumSize(new Dimension(700,50));
+		panel2.setPreferredSize(new Dimension(700,50));
+		panel2.add(challengeButton);
+
+		// Här läggs komponenterna in i GridBagLayouten	
+		con.gridx = 1;
+		con.gridy = 0;
+		theLayout.setConstraints(panel, con);
+		window.add(panel);
+		
+		con.gridx = 1;
+		con.gridy = 1;
+		theLayout.setConstraints(lobbyList, con);
+		window.add(lobbyList);
+		
+		con.gridx = 1;
+		con.gridy = 2;
+		theLayout.setConstraints(panel2, con);
+		window.add(panel2);		
+		
+		// Lägg till servern i spelarlistan per default
+		playerList.add("Server");
+		playerList.add("Player");
+		lobbyList.setListData(playerList);
+		
+		// Lyssnare som hämtar värdet på den sak i listan man klickat på.
+		lobbyList.addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent evt) {
+            	lobbySelected = (String) lobbyList.getSelectedValue();
+            	challengeButton.setText("Challenge: " + lobbySelected);
+            }
+        });
 		
 		// Visa fönster
 		window.validate();
@@ -164,7 +241,7 @@ public class ClientUI implements ActionListener
 	//-----------------------------------------
 	// Skapar fönstret för utplacering av skepp
 	//-----------------------------------------
-	public void createNavyWindow()
+	private void createNavyWindow()
 	{
 		// Rensa fönstret på föregående komponenter
 		window.getContentPane().removeAll();
@@ -213,6 +290,7 @@ public class ClientUI implements ActionListener
 		addAircraftCarrierButton.addActionListener(this);
 		readyButton.addActionListener(this);
 		clearButton.addActionListener(this);
+		readyButton.setEnabled(false);
 		
 		// GridBagLayout
 		GridBagLayout theLayout = new GridBagLayout();
@@ -248,7 +326,7 @@ public class ClientUI implements ActionListener
 	//-----------------------------------------
 	// Skapar spelfönstret
 	//-----------------------------------------
-	public void createGameWindow()
+	private void createGameWindow()
 	{
 		// Rensa fönstret på föregående komponenter
 		window.getContentPane().removeAll();
@@ -364,7 +442,9 @@ public class ClientUI implements ActionListener
 		window.validate();
 		window.repaint();
 		window.setVisible(true);
-
+		
+		// Uppdatera navy
+		updateMyNavy();
 	}
 	
 	// Anslut till servern										---- Det här ska egentligen inte vara här ....
@@ -373,8 +453,8 @@ public class ClientUI implements ActionListener
 		return true;
 	}
 	
-	// Kontrollerar input
-	public boolean checkInput(String ip, String port)
+	// Kontrollerar input [kollar bara om det står något i rutorna överhuvudtaget]
+	private boolean checkInput(String ip, String port)
 	{
 		if(ip.length() == 0 || port.length() == 0)
 			return false;
@@ -385,7 +465,7 @@ public class ClientUI implements ActionListener
 	//-----------------------------------------
 	// Inaktiverar knappar som används vid utplacering av skepp
 	//-----------------------------------------
-	public void disablePlacementbuttons(){
+	private void disablePlacementbuttons(){
 		addAircraftCarrierButton.setEnabled(false);
 		addDestroyerButton.setEnabled(false);
 		addSubmarineButton.setEnabled(false);
@@ -394,7 +474,7 @@ public class ClientUI implements ActionListener
 	//-----------------------------------------
 	// Logik för utplacering av skepp
 	//-----------------------------------------	
-	public void placeShip(ActionEvent e)
+	private void placeShip(ActionEvent e)
 	{
 		// Om utplacering av skepp är färdigt, aktiveras knapparna igen och klick på rutorna inaktiveras.
 		// Nu ska vi också ha skapat skeppet i fråga, någonstans.
@@ -426,8 +506,9 @@ public class ClientUI implements ActionListener
 			// Loopa genom alla rutor vid klick.
 			for(int i = 0; i < placeSquares.size(); i++){
 				if(e.getSource() == placeSquares.elementAt(i)){
-					if(placeSquares.elementAt(i).isAlive()){
-						placeSquares.elementAt(i).setShipHere();	// Del av skepp/skepp får koordinaterna satt här typ?
+					if(placeSquares.elementAt(i).isAlive()){		// Sätt visuellt samt koordinaterna i ShipPlacer
+						placeSquares.elementAt(i).setShipHere();
+						placer.addCurrentCoordinates(placeSquares.elementAt(i).getXcoordinate(), placeSquares.elementAt(i).getYcoordinate());
 						placer.Count();
 					}
 					break;
@@ -461,6 +542,10 @@ public class ClientUI implements ActionListener
 				else
 					addSubmarineButton.setEnabled(true);
 				
+				// Kolla om vi ska låsa upp READY knappen
+				if(placer.getNumDestroyers() == 3 && placer.getNumAircraftcarriers() == 1 && placer.getNumSubmarines() == 5)
+					readyButton.setEnabled(true);
+				
 				// Uppdatera visuellt knapparna
 				addAircraftCarrierButton.setText("Aircraft Carrier (" + Integer.toString(placer.getNumAircraftcarriers()) + "/1)");
 				addDestroyerButton.setText("Destroyer (" + Integer.toString(placer.getNumDestroyers()) + "/3)");
@@ -472,7 +557,7 @@ public class ClientUI implements ActionListener
 	//-----------------------------------------
 	// Nollställer rutorna för utplacering av skepp
 	//-----------------------------------------
-	public void resetSquares() {
+	private void resetSquares() {
 		for(int i = 0; i < placeSquares.size(); i++){
 			placeSquares.elementAt(i).resetMe();
 		}
@@ -481,67 +566,123 @@ public class ClientUI implements ActionListener
 	//-----------------------------------------
 	// Nollställer knappar för utplacering av skepp
 	//-----------------------------------------
-	public void resetPlacementbuttons(){
+	private void resetPlacementbuttons() {
 		addAircraftCarrierButton.setText("Aircraft Carrier (0/1)");
 		addDestroyerButton.setText("Destroyer (0/3)");
 		addSubmarineButton.setText("Submarine (0/5)");	
 		addAircraftCarrierButton.setEnabled(true);
 		addDestroyerButton.setEnabled(true);
 		addSubmarineButton.setEnabled(true);
+		readyButton.setEnabled(false);
 	}
 	
+	//-----------------------------------------
+	// Uppdaterar spelarens NAVY på spelplanen
+	//-----------------------------------------	
+	public void updateMyNavy() {
+		// Vector med alla koordinater
+		Vector<Coordinate> cords = new Vector<Coordinate>();
+		
+		// Lägger över till vectorn
+		for(int i = 0; i < myNavy.getShips().size(); i++)
+			cords.addAll(myNavy.getShips().get(i).getCoords());
+		
+		// Sätt ut koordinaterna på playerSquares
+		for(int i = 0; i < playerSquares.size(); i++){
+			for(int j = 0; j < cords.size(); j++){
+				if(cords.elementAt(j).getX().equals(playerSquares.elementAt(i).getXcoordinate()) && cords.elementAt(j).getY().equals(playerSquares.elementAt(i).getYcoordinate())) {
+					playerSquares.elementAt(i).setShipHere();		
+				}
+			}
+		}
+		
+		// Det måste vara exakt 19 koordinater, annars är något fel.
+		if(cords.size() != 19)
+			System.err.println("ERROR: INVALID NUMBER OF COORDINATES PLACED (" + Integer.toString(cords.size()) + "). MUST BE 19.");
+		
+	}
+	
+	
+	//-----------------------------------------
+	// ActionEvents - CONNECT WINDOW
+	//-----------------------------------------	
+	private void connectEvents(ActionEvent e) 
+	{
+		if(e.getSource() == connectButton){
+			if(checkInput(ipbox.getText().toString(), portbox.getText().toString())){			// Kontrollerar input i textrutorna
+				if(connectToServer(ipbox.getText().toString(), portbox.getText().toString()))	// Ansluter till servern
+					createLobbyWindow();														// Om ansluten - Gå till lobby
+				else
+					connectionError.setText("Unable to connect to server.");					// Felmeddelande
+			}
+			else
+				connectionError.setText("Invalid input.");										// Felmeddelande	
+		}
+	}
+	
+	//-----------------------------------------
+	// ActionEvents - LOBBY WINDOW
+	//-----------------------------------------		
+	private void lobbyEvents(ActionEvent e) 
+	{
+		if(e.getSource() == challengeButton) {
+			// SKICKA CHALLENGE TILL SERVER MED NAMNET PÅ DEN MAN VALT, tex "SERVER" är ju en challenge mot den.
+			// Vänta på "accept" eller "deny"
+			createNavyWindow();
+		}		
+	}
+	
+	//-----------------------------------------
+	// ActionEvents - CREATE NAVY WINDOW
+	//-----------------------------------------		
+	private void createNavyEvents(ActionEvent e) 
+	{
+		// Utplacering av skepp
+		placeShip(e);	
+		
+		// READY eller CLEAR knapparna
+		if(e.getSource() == readyButton) {
+			myNavy = placer.getNavy();			// Hämta Navy från ShipPlacer
+			// ____ HÄR SKA NAVY SKICKAS TILL SERVER OCH VÄNTA SVAR PÅ OM KORREKT ELLER EJ ___
+			createGameWindow();
+		}
+		else if(e.getSource() == clearButton) {
+			placer.Reset();
+			resetSquares();
+			resetPlacementbuttons();
+		}		
+	}
+	
+	//-----------------------------------------
+	// ActionEvents - GAME WINDOW
+	//-----------------------------------------		
+	private void gameEvents(ActionEvent e) 
+	{
+		// Loopa genom alla rutor vid klick.				---- BOOL här som bestämmer om det är ens egen tur eller ej.
+		for(int i = 0; i < enemySquares.size(); i++){
+			if(e.getSource() == enemySquares.elementAt(i)){
+				if(enemySquares.elementAt(i).isAlive()){
+					enemySquares.elementAt(i).setMiss();		// Skicka meddelande till server här...
+					information.append("X: " + Integer.toString(enemySquares.elementAt(i).getXcoordinate()) + " Y: " + Integer.toString(enemySquares.elementAt(i).getYcoordinate()) + "\n");
+				}
+				break;
+			}
+		}		
+	}
 	
 	//-----------------------------------------
 	// Action Events
 	//-----------------------------------------
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		
-		if(state == states.connect.ordinal()){														// STATE: CONNECT (fönster 1)
-			if(e.getSource() == connectButton){
-				if(checkInput(ipbox.getText().toString(), portbox.getText().toString())){			// Kontrollerar input i textrutorna
-					if(connectToServer(ipbox.getText().toString(), portbox.getText().toString()))	// Ansluter till servern
-						createNavyWindow();														// Om ansluten - Gå till lobby
-					else
-						connectionError.setText("Unable to connect to server.");					// Felmeddelande
-				}
-				else
-					connectionError.setText("Invalid input.");										// Felmeddelande
-			}
-		}
-		else if(state == states.lobby.ordinal())													// STATE: LOBBY (fönster 2)
-		{
-			// events i lobby
-		}
-		else if(state == states.buildnavy.ordinal())												// STATE: BUILDNAVY (fönster 3)
-		{	
-			// Utplacering av skepp
-			placeShip(e);
-			
-			// READY eller CLEAR knapparna
-			if(e.getSource() == readyButton) {
-				createGameWindow();
-				// skicka READY (navy objekt) till Server.
-			}
-			else if(e.getSource() == clearButton) {
-				placer.Reset();
-				resetSquares();
-				resetPlacementbuttons();
-			}
-		}
-		else	// Game
-		{
-			// Loopa genom alla rutor vid klick.				---- BOOL här som bestämmer om det är ens egen tur eller ej.
-			for(int i = 0; i < enemySquares.size(); i++){
-				if(e.getSource() == enemySquares.elementAt(i)){
-					if(enemySquares.elementAt(i).isAlive()){
-						enemySquares.elementAt(i).setMiss();		// Skicka meddelande till server här...
-						information.append("X: " + Integer.toString(enemySquares.elementAt(i).getXcoordinate()) + " Y: " + Integer.toString(enemySquares.elementAt(i).getYcoordinate()) + "\n");
-					}
-					break;
-				}
-			}
-		}
+		if(state == states.connect.ordinal())
+			connectEvents(e);
+		else if(state == states.lobby.ordinal())
+			lobbyEvents(e);
+		else if(state == states.buildnavy.ordinal())
+			createNavyEvents(e);
+		else
+			gameEvents(e);
 	}	
 	
 }	// END OF CLIENT

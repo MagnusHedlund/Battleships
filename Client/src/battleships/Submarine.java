@@ -6,7 +6,7 @@ public class Submarine extends Ship {
 	
 	private static Integer instances_s =0;
 	
-	Submarine(Coordinate c){	
+	public Submarine(Coordinate c){	
 		
 		super("Submarine", 1);
 		

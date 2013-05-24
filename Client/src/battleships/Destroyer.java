@@ -7,7 +7,7 @@ public class Destroyer extends Ship {
 	private final Integer DIRECTION;
 	private static Integer instances_d=0;
 	
-	Destroyer(Coordinate c1, Coordinate c2, Coordinate c3){
+	public Destroyer(Coordinate c1, Coordinate c2, Coordinate c3){
 		
 		super("Destroyer", 3);
 		++instances_d;

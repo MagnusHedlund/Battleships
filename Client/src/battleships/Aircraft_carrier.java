@@ -7,7 +7,7 @@ public class Aircraft_carrier extends Ship {
 	private final Integer DIRECTION;
 	private static Integer instances_ac=0;
 	
-	Aircraft_carrier(Coordinate c1, Coordinate c2, Coordinate c3, Coordinate c4, Coordinate c5){
+	public Aircraft_carrier(Coordinate c1, Coordinate c2, Coordinate c3, Coordinate c4, Coordinate c5){
 		
 		super("Aircraft carrier", 5);
 		

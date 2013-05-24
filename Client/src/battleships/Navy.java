@@ -11,7 +11,7 @@ public class Navy {
 	private Map map;
 	private Integer sunkShips;
 	
-	Navy(int s, int d, int ac){
+	public Navy(int s, int d, int ac){
 		ships = new LinkedList<Ship>();
 		
 		SUBMARINES = s;
@@ -81,6 +81,11 @@ public class Navy {
 	
 	private void markOnMap(Coordinate c, int v){
 		map.setValue(c, v);
+	}
+
+	public void clearNavy() {
+		
+		
 	}
 	
 	

@@ -5,6 +5,8 @@
 
 package battleships.network;
 
+import battleships.message.Message;
+import battleships.message.MessageType;
 import battleships.server.Player;
 
 /**
@@ -13,7 +15,7 @@ import battleships.server.Player;
  * @author Christopher Nilsson
  */
 public class ConnectionListener
-{
+{	
 	/**
 	 * Raw listener.
 	 */
@@ -25,10 +27,15 @@ public class ConnectionListener
 	private java.util.ArrayList<Socket> sockets;
 	
 	/**
+	 * Highest ID reached
+	 */
+	private int idCounter;
+	
+	/**
+	 * Initializes the object for listening
 	 * 
-	 * 
-	 * @param port
-	 * @throws ConnectionException
+	 * @param port					Specific port to listen at.
+	 * @throws ConnectionException	Could not listen at the specified port.
 	 */
 	public void start(int port) throws ConnectionException
 	{
@@ -45,10 +52,13 @@ public class ConnectionListener
 		
 		// Storing sockets that haven't been fully initialized yet
 		sockets = new java.util.ArrayList<Socket>();
+		
+		// No ID:s have been given away yet
+		idCounter = 0;
 	}	
 	
 	/**
-	 * 
+	 * Closes the listening socket
 	 */
 	public void stop()
 	{
@@ -123,14 +133,15 @@ public class ConnectionListener
 			Socket socket = sockets.get(i);
 			Message message = socket.read();
 			
-			// Stop and create a player if its name is being set
-			if(message != null)
+			// Check if it is a message with a name
+			if(message != null && message.getType() == MessageType.CONNECT && message.isValid()) 
 			{
-				if(true) // Check if it is a 'Set Name' message
-				{
-					String name = ""; // Set name
-					return new Player(socket, name);
-				}
+				// Remove the socket from the listener
+				sockets.remove(i);
+				
+				// Setup a player
+				String name = message.getText();
+				return new Player(socket, ++idCounter, name);
 			}
 		}
 		

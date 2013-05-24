@@ -5,10 +5,11 @@ import java.util.TreeSet;
 public class Submarine extends Ship {
 	
 	private static Integer instances_s =0;
+	public static final int LENGTH_S = 1;
 	
 	public Submarine(Coordinate c){	
 		
-		super("Submarine", 1);
+		super("Submarine", LENGTH_S);
 		
 		CompareHorizontal compH = new CompareHorizontal();
 		coords = new TreeSet<Coordinate>(compH);
@@ -21,4 +22,5 @@ public class Submarine extends Ship {
 	public Integer getInstances(){
 		return instances_s;
 	}
+	
 }

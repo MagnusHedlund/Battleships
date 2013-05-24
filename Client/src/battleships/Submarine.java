@@ -4,19 +4,21 @@ import java.util.TreeSet;
 
 public class Submarine extends Ship {
 	
-	private static Integer instances;
+	private static Integer instances_s =0;
 	
 	Submarine(Coordinate c){	
 		
 		super("Submarine", 1);
 		
-		coords = new TreeSet<Coordinate>();
+		CompareHorizontal compH = new CompareHorizontal();
+		coords = new TreeSet<Coordinate>(compH);
+		hits = new TreeSet<Coordinate>(compH);
 		coords.add(c);
 		
-		++instances;
+		++instances_s;
 	}
 	
 	public Integer getInstances(){
-		return instances;
+		return instances_s;
 	}
 }

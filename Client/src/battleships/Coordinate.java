@@ -26,7 +26,10 @@ public class Coordinate {
 	 * @param x					x-coordinate
 	 * @param y					y-coordinate
 	 */
-	public Coordinate( int x, int y){		
+	public Coordinate( int x, int y){
+		if(x<0||x>9||y<0||y>9){
+			//throw									Skapa exception för detta!!
+		}
 		this.X=x;
 		this.Y=y;		
 	}

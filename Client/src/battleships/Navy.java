@@ -5,16 +5,22 @@ import java.util.LinkedList;
 
 public class Navy {
 	
+	private final int SUBMARINES, DESTROYERS, AIRCRAFT_CARRIERS;
+	
 	private LinkedList<Ship> ships;
 	private Map map;
 	private Integer sunkShips;
-	private Boolean allGone;
 	
-	Navy(){
+	Navy(int s, int d, int ac){
 		ships = new LinkedList<Ship>();
+		
+		SUBMARINES = s;
+		DESTROYERS = d;
+		AIRCRAFT_CARRIERS = ac;
+		
 		map = new Map();
 		sunkShips=0;
-		allGone = false;
+	//	allGone = false;
 	}
 	
 	public void addShip(Ship ship){
@@ -25,43 +31,57 @@ public class Navy {
 		return map;
 	}
 	
-	public Integer shot(Coordinate c, Ship s){
+	public LinkedList<Ship> getShips(){
+		return ships;
+	}
+	
+	public Ship shot(Coordinate c){
 		// Look at map - exception if not EMPTY!!
 		map.getValue(c);
 		// Search for coordinate in ships - uses iterator, stop searching if found.
 		Iterator<Ship> it = ships.iterator();
 		Boolean found = false;
-		Boolean sunk = false;
+		//Boolean sunk = false;
 		Integer result = 0;
 		
-		while(!found||!it.hasNext()){
+		while(!found&&it.hasNext()){
 			Ship tmp=it.next();
 			if(tmp.hitByShot(c)){
 				found = true;
 				// Ask if target ship is sunk. If so put it in parameter ship, s.
 				if(tmp.isSunk()){
-					sunk = true;
+					// sunk = true;
 					// Increase sunkShips.
 					++sunkShips;
-					s = tmp;
-					result = map.SUNK;
+					this.markOnMap(c, map.SUNK); 
 				}
-				result = map.HIT;
+				else
+					this.markOnMap(c, map.HIT);				
+				return tmp;
 			}			
 		}		
 		if(!found)
-			result = map.BOM;
-		
-		this.markOnMap(c, result);		
-		return result;	
+			this.markOnMap(c, map.HIT);
+				
+		return null;	
 		
 	}
 	
-	public Boolean isAllGone(){
-		return sunkShips == ships.size();
+	public Boolean allGone(){
+		return sunkShips == SUBMARINES+DESTROYERS+AIRCRAFT_CARRIERS;
 	}
 	
-	private void markOnMap(Coordinate c, Integer v){
+	public int numberShips(){
+		return ships.size();
+	}
+	
+	public boolean allSet(){
+		return ships.size() == SUBMARINES+DESTROYERS+AIRCRAFT_CARRIERS;
+	}
+	
+	private void markOnMap(Coordinate c, int v){
 		map.setValue(c, v);
 	}
+	
+	
 }

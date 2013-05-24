@@ -16,10 +16,10 @@ public abstract class Ship {
 	protected Boolean sunk;
 	
 	
-	public Ship(String n, int l ){
+	public Ship(String n, int l ){			// Kontrollera att koordinaterna ligger i rad?
 		sunk = false;
 		NAME = n;
-		LENGTH = l;			
+		LENGTH = l;
 	}
 	
 	
@@ -59,7 +59,7 @@ public abstract class Ship {
 	}
 	
 	protected Integer shipsDirection(Coordinate c1, Coordinate c2){
-		if( c1.getX() == c2.getX() )
+		if( c1.getY() == c2.getY() )
 			return HORIZONTAL;
 		else
 			return VERTICAL;		
@@ -99,6 +99,12 @@ public abstract class Ship {
 		return coords;
 		
 	}
+	
+	public void setCoords(TreeSet<Coordinate> c){
+		coords.clear();
+		coords.addAll(c);
+	}
+	
 	
 
 }

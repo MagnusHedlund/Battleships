@@ -7,7 +7,8 @@ public class Destroyer extends Ship {
 	public static final int LENGTH_D = 3;
 	private static Integer instances_d=0;
 	
-
+	
+	
 	public Destroyer(Coordinate c1, Coordinate c2, Coordinate c3){
 		
 		super("Destroyer", LENGTH_D);

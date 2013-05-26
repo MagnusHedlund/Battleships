@@ -4,8 +4,9 @@ package battleships.game;
  * Represents a coordinate in the game battleship.
  * The coordinates's value is meant not to be changed after initiation. But has methods for getting the values.
  * 
- * @author �sa Waldhe
+ * @author Åsa Waldhe
  */
+
 public class Coordinate {
 	
 	/** x-coordinate */
@@ -25,7 +26,10 @@ public class Coordinate {
 	 * @param x					x-coordinate
 	 * @param y					y-coordinate
 	 */
-	public Coordinate( int x, int y){		
+	public Coordinate( int x, int y){
+		if(x<0||x>9||y<0||y>9){
+			//throw									Skapa exception för detta!!
+		}
 		this.X=x;
 		this.Y=y;		
 	}

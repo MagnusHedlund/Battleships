@@ -1,6 +1,6 @@
 /*
  * Server.java	
- * Version 0.1 (2013-05-20)
+ * Version 0.2 (2013-05-26)
  */
 
 package battleships.server;

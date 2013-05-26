@@ -6,7 +6,6 @@
 package battleships.network;
 
 import battleships.message.Message;
-import battleships.message.MessageType;
 import battleships.server.Player;
 
 /**
@@ -134,13 +133,16 @@ public class ConnectionListener
 			Message message = socket.read();
 			
 			// Check if it is a message with a name
-			if(message != null && message.getType() == MessageType.CONNECT && message.isValid()) 
+			if(message != null && message.getType().equals("setname")) 
 			{
+				// Downcast
+				NameMessage castedMessage = (NameMessage) message;
+				
 				// Remove the socket from the listener
 				sockets.remove(i);
 				
 				// Setup a player
-				String name = message.getText();
+				String name = message.getName();
 				return new Player(socket, ++idCounter, name);
 			}
 		}

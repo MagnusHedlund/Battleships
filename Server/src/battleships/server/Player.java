@@ -5,7 +5,6 @@
 
 package battleships.server;
 
-import battleships.message.InvalidMessageException;
 import battleships.message.Message;
 import battleships.network.Socket;
 
@@ -69,14 +68,10 @@ public class Player
 	 * Sends a message to the player's client.
 	 * 
 	 * @param message					Message to deliver.
-	 * @throws InvalidMessageException 	Messages must be formatted properly.
 	 */
-	public void sendMessage(Message message) throws InvalidMessageException
+	public void sendMessage(Message message)
 	{
-		if(message.isValid())
-		{
-			socket.write(message);
-		}
+		socket.write(message);
 	}
 	
 	/**

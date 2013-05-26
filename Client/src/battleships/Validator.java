@@ -23,7 +23,7 @@ public class Validator {
 	private final Integer NUM_SUBMARINES, NUM_DESTROYERS, NUM_AIRCRAFT_CARRIERS;
 	
 
-	private Set<Coordinate> coords;
+	private Set<Coordinate> allCoords;
 	
 	/**
 	 * Initiates the constants for how many ships there should be of each kind.
@@ -68,6 +68,7 @@ public class Validator {
 			
 			String tmpName = tmp.getName();	
 			int length = tmp.getCoords().size(); // Gets the number of coordinates in the ship. Does not ask for the length of the ship.
+			
 			// Iterator for comparing coordinates in ships. 
 			Iterator<Coordinate> cordIt = tmp.getCoords().iterator();
 			
@@ -103,8 +104,8 @@ public class Validator {
 			
 			// Collects all coordinates, from all ships, in one set to make sure that the ships are not on the same place.
 			if(ok){
-				while(it.hasNext()||!ok){
-					ok = coords.add(cordIt.next());	// Ok when the coordinate is new in the set.			
+				while(cordIt.hasNext() && ok){
+					ok = allCoords.add(cordIt.next());	// Ok when the coordinate is new in the set.			
 				}
 			}			
 		} // End while
@@ -126,20 +127,20 @@ public class Validator {
 	private Boolean validateSpaceHorizontal(Integer length, Coordinate firstCoord){		
 		
 		Coordinate tmpC = new Coordinate((firstCoord.getX()-1), firstCoord.getY());
-		if(coords.contains(tmpC))
+		if(allCoords.contains(tmpC))
 			return false;
 		
 		Coordinate tmpC1 = new Coordinate((firstCoord.getX()+1), firstCoord.getY());
-		if(coords.contains(tmpC1))
+		if(allCoords.contains(tmpC1))
 			return false;
 		
 		for(int i=0;i<length+2;i++){
 			
 			Coordinate tmpC2 = new Coordinate((firstCoord.getX()-1+i), firstCoord.getY()-1);
-			if(coords.contains(tmpC1))
+			if(allCoords.contains(tmpC2))
 				return false;
 			Coordinate tmpC3 = new Coordinate((firstCoord.getX()-1+i), firstCoord.getY()+1);
-			if(coords.contains(tmpC3))
+			if(allCoords.contains(tmpC3))
 					return false;
 		}
 		
@@ -156,20 +157,20 @@ public class Validator {
 	private Boolean validateSpaceVertical(Integer length, Coordinate firstCoord){		
 		
 		Coordinate tmpC = new Coordinate(firstCoord.getX(), (firstCoord.getY()-1));
-		if(coords.contains(tmpC))
+		if(allCoords.contains(tmpC))
 			return false;
 		
 		Coordinate tmpC1 = new Coordinate(firstCoord.getX(), (firstCoord.getY()+1));
-		if(coords.contains(tmpC1))
+		if(allCoords.contains(tmpC1))
 			return false;
 		
 		for(int i=0;i<length+2;i++){
 			
 			Coordinate tmpC2 = new Coordinate((firstCoord.getX()-1), (firstCoord.getY()-1+i));
-			if(coords.contains(tmpC1))
+			if(allCoords.contains(tmpC2))
 				return false;
 			Coordinate tmpC3 = new Coordinate((firstCoord.getX()+1), (firstCoord.getY()+1+i));
-			if(coords.contains(tmpC2))
+			if(allCoords.contains(tmpC3))
 					return false;
 		}
 		

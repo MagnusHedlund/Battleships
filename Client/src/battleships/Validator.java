@@ -1,8 +1,8 @@
 package battleships;
 
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.Set;
 
 // NOT TESTED YET!!!
 
@@ -15,7 +15,7 @@ import java.util.Set;
  * 	- Have space between each other in all directions
  * 
  * The collection Set is used as a help in many places to make sure the same coordinate is not used two times either inside a single ship or in different ships.
- * @author asa
+ * @author Åsa Waldhe
  *
  */
 public class Validator {
@@ -23,7 +23,7 @@ public class Validator {
 	private final Integer NUM_SUBMARINES, NUM_DESTROYERS, NUM_AIRCRAFT_CARRIERS;
 	
 
-	private Set<Coordinate> allCoords;
+	private HashSet<Coordinate> allCoords;
 	
 	/**
 	 * Initiates the constants for how many ships there should be of each kind.
@@ -37,6 +37,8 @@ public class Validator {
 		this.NUM_SUBMARINES=ns;
 		this.NUM_DESTROYERS=nd;
 		this.NUM_AIRCRAFT_CARRIERS=na;
+		
+		allCoords = new HashSet<Coordinate>();
 	}
 	
 	/**

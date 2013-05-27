@@ -10,7 +10,16 @@ public class HitMessage {
 	private Ship ship=null;
 	
 	public HitMessage(){
-		
+		this.isHit=isHit;
+	}
+	public HitMessage(boolean isHit, Coordinate coordinate, boolean isSunk, Ship ship){
+		this.isHit=isHit;
+		this.coordinate=coordinate;
+		this.isSunk=isSunk;
+		this.ship=ship;
+	}
+	public HitMessage(){
+	
 	}
 	/* Getters */
 	public boolean getIsHit(){return isHit;}

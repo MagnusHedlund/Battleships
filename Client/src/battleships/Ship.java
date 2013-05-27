@@ -3,6 +3,11 @@ package battleships;
 
 import java.util.TreeSet;
 
+/**
+ * 
+ * @author Åsa Waldhe
+ *
+ */
 public abstract class Ship {
 	
 	protected static final Integer HORIZONTAL=0;
@@ -17,14 +22,20 @@ public abstract class Ship {
 	
 	protected Integer direction=null;
 	
-	
+	/**
+	 * 
+	 * @param n
+	 * @param l
+	 */
 	public Ship(String n, int l ){			// Kontrollera att koordinaterna ligger i rad?
 		sunk = false;
 		NAME = n;
 		LENGTH = l;
 	}
 	
-	
+	/**
+	 * 
+	 */
 	public String toString(){
 		return "Abstract class Ship";
 	}
@@ -44,12 +55,18 @@ public abstract class Ship {
 	public Coordinate getFirstCoord(){
 		return coords.first();
 	}
-	
+	/**
+	 * 
+	 * @return
+	 */
 	public Integer getDirection(){
 		return direction;
 	}
 	
-	
+	/**
+	 * 
+	 * @return
+	 */
 	public Integer getLength(){
 		return LENGTH;
 	}
@@ -63,6 +80,12 @@ public abstract class Ship {
 		 return coords.contains(coord);
 	}
 	
+	/**
+	 * 
+	 * @param c1
+	 * @param c2
+	 * @return
+	 */
 	protected Integer shipsDirection(Coordinate c1, Coordinate c2){
 		if( c1.getY() == c2.getY() ){
 			direction = HORIZONTAL;
@@ -110,6 +133,10 @@ public abstract class Ship {
 		
 	}
 	
+	/**
+	 * 
+	 * @param c
+	 */
 	public void setCoords(TreeSet<Coordinate> c){
 		coords.clear();
 		coords.addAll(c);

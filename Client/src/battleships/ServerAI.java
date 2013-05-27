@@ -1,9 +1,9 @@
 package battleships;
 
+import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Set;
+import java.util.LinkedHashSet;
 
-// Not TESTED!!!!!
 
 /**
  * This class acts as a player on the server. In present it is a predictable opponent since
@@ -16,8 +16,8 @@ import java.util.Set;
 public class ServerAI {
 	
 	private Navy navy;
-	private Set<Coordinate> hits;
-	private Set<Coordinate> oldTargets;
+	private LinkedHashSet<Coordinate> hits;
+	private HashSet<Coordinate> oldTargets;
 	
 	// Set of all coordinates not used, random an index from here to get target c????????????????????????????????
 	
@@ -26,12 +26,17 @@ public class ServerAI {
 	/**
 	 * This constructor creates a navy with ships according to the requirements.
 	 * 
+	 * Building a navy according to the parameters is not yet implemented. The set of ship and their placement is always the same:
+	 * 	- 5 submarines
+	 * 	- 3 destroyers
+	 * 	- 1 aircraft carrier
+	 * 
 	 * @param int submarines, destroyers, aircraft _carriers	Number of different ships to put in navy.
 	 * 
 	 */
 	public ServerAI(int submarines, int destroyers, int aircraft_carriers){
 		
-		// Navy for 5 submarines, 3 Destroyers and one Aircraft_carrier.
+		// Navy with given number of each kind of ship.
 		navy = new Navy(submarines, destroyers, aircraft_carriers);
 		
 		// Ships
@@ -88,6 +93,9 @@ public class ServerAI {
 		navy.addShip(d3);
 		
 		navy.addShip(ac);
+		
+		hits = new LinkedHashSet<Coordinate>();
+		oldTargets = new HashSet<Coordinate>();
 	}
 	
 	/**
@@ -104,44 +112,47 @@ public class ServerAI {
 			Iterator<Coordinate> it = hits.iterator();
 			Coordinate hit = it.next();
 			
-			// Try the coordinate right above, given that it lies in the interval for the coordinates.
-			if(hit.getY()> MIN_Y ){
-				c = new Coordinate(hit.getX(), hit.getY()-1);
-				// Is it used before?
-				if(!oldTargets.contains(c))
-					return c;
-			}
-			// Now try with the coordinate beneath the hit, given that it lies in the interval for the coordinates.
-			if(hit.getY() < MAX_Y ){
-				c = new Coordinate(hit.getX(), hit.getY()+1);
-				// Is it used before?
-				if(!oldTargets.contains(c))
-					return c;
-			}
-			// What about the coordinate to the left, 
-			if(hit.getX()> MIN_X ){
-				c = new Coordinate(hit.getX()-1, hit.getY());
-				// Is it used before?
-				if(!oldTargets.contains(c))
-					return c;
-			}
-			// Finally the coordinate on the right must be a success, if none of the ones above (and given that it lies in the interval for the coordinates).
-			if(hit.getX()< MAX_X ){
-				c = new Coordinate(hit.getX()+1, hit.getY());
-				// Is it used before?
-				if(!oldTargets.contains(c))
-					return c;
-			}
-		}
+			while(it.hasNext())
+			{
+				// Try the coordinate right above, given that it lies in the interval for the coordinates.
+				if(hit.getY()> MIN_Y ){
+					c = new Coordinate(hit.getX(), hit.getY()-1);
+					// Is it used before?
+					if(!oldTargets.contains(c))
+						return c;
+				}
+				// Now try with the coordinate beneath the hit, given that it lies in the interval for the coordinates.
+				if(hit.getY() < MAX_Y ){
+					c = new Coordinate(hit.getX(), hit.getY()+1);
+					// Is it used before?
+					if(!oldTargets.contains(c))
+						return c;
+				}
+				// What about the coordinate to the left, 
+				if(hit.getX()> MIN_X ){
+					c = new Coordinate(hit.getX()-1, hit.getY());
+					// Is it used before?
+					if(!oldTargets.contains(c))
+						return c;
+				}
+				// Finally the coordinate on the right must be a success, if none of the ones above (and given that it lies in the interval for the coordinates).
+				if(hit.getX()< MAX_X ){
+					c = new Coordinate(hit.getX()+1, hit.getY());
+					// Is it used before?
+					if(!oldTargets.contains(c))
+						return c;
+				}
+			} // End while
+		}// End if
 		else { // When the collection of hits is empty.
 			// Get random values for coordinates and test whether they are old targets or not. 
 			// Could be risky in the way that almost all possible coordinates are used.
 			do{
-				int x = (int)Math.random();
-				int y = (int)Math.random();
+				int x = (int)(10*Math.random());
+				int y = (int)(10*Math.random());
 				c = new Coordinate(x, y);
 			}while(oldTargets.contains(c));				
-		}		
+		}	
 		return c;
 	}
 	

@@ -2,11 +2,25 @@ package battleships;
 
 import java.util.TreeSet;
 
+/**
+ * This class extends the abstract class Ship for the game Battleships.
+ * 
+ * @author Åsa Waldhe
+ *
+ */
 public class Aircraft_carrier extends Ship {
 	
 	public static final int LENGTH_A = 5;
 	private static Integer instances_ac=0;
 	
+	/**
+	 * 
+	 * @param c1
+	 * @param c2
+	 * @param c3
+	 * @param c4
+	 * @param c5
+	 */
 	public Aircraft_carrier(Coordinate c1, Coordinate c2, Coordinate c3, Coordinate c4, Coordinate c5){
 		
 		super("Aircraft carrier", LENGTH_A);
@@ -33,7 +47,10 @@ public class Aircraft_carrier extends Ship {
 		
 		++instances_ac;
 	}
-	
+	/**
+	 * 
+	 * @return
+	 */
 	public Integer getInstances(){
 		return instances_ac;
 	}

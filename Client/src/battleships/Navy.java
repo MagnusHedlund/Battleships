@@ -3,6 +3,11 @@ package battleships;
 import java.util.Iterator;
 import java.util.LinkedList;
 
+/**
+ * 
+ * @author Åsa Waldhe
+ *
+ */
 public class Navy {
 	
 	private final int SUBMARINES, DESTROYERS, AIRCRAFT_CARRIERS;
@@ -11,6 +16,12 @@ public class Navy {
 	private Map map;
 	private Integer sunkShips;
 	
+	/**
+	 * 
+	 * @param s
+	 * @param d
+	 * @param ac
+	 */
 	public Navy(int s, int d, int ac){
 		ships = new LinkedList<Ship>();
 		
@@ -23,19 +34,32 @@ public class Navy {
 		
 	}
 	
+	/**
+	 * 
+	 * @param ship
+	 */
 	public void addShip(Ship ship){
 		ships.add(ship);
 	}
 	
+	/**
+	 * 
+	 * @return
+	 */
 	public Map getMap(){
 		return map;
 	}
 	
+	/**
+	 * 
+	 * @return
+	 */
 	public LinkedList<Ship> getShips(){
 		return ships;
 	}
+	
 	/**
-	 * Administrates a shot to the navy. Marks it on the map an returns a ship if hit.
+	 * Administers a shot to the navy. Marks it on the map an returns a ship if hit.
 	 * To know if the ship is sunk the caller have to ask the returned ship.
 	 * 
 	 * @param c			The target-Coordinate.
@@ -69,6 +93,7 @@ public class Navy {
 		return null;	
 		
 	}
+	
 	/**
 	 * 
 	 * @return sunkShips

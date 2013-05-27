@@ -2,14 +2,17 @@ package battleships.message;
 
 import battleships.game.Coordinate;
 
-public class Shot {
+public class Shot extends Message {
 	private Coordinate coordinate=null;
+	private static final String myType="Shot";
 	
 	public Shot(Coordinate target){
+		super(myType);
 		coordinate = target;
 	}
 	
 	public Shot(int x, int y){
+		super(myType);
 		coordinate = new Coordinate(x,y);
 	}
 	

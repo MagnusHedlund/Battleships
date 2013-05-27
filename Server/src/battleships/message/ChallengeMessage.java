@@ -1,12 +1,14 @@
 package battleships.message;
 
-public class ChallengeMessage {
+public class ChallengeMessage extends Message {
+	private static final String myType="ChallengeMessage";
 	private boolean isAcceptMsg;  //is this an acceptMessage?
 	private boolean accepted;  //was challenge accepted?
-	private String opponentName;  //could be changed to int?
+	private String opponentName;  
 	private String opponentIP;  //could maybe be omitted?
 	
 	public ChallengeMessage(){
+		super(myType);
 		isAcceptMsg=false;
 		accepted=false;
 		opponentName="";
@@ -14,6 +16,7 @@ public class ChallengeMessage {
 	}
 	
 	public ChallengeMessage(String opponentName, String opponentIP){
+		super(myType);
 		isAcceptMsg=false;
 		accepted=false;
 		this.opponentName=opponentName;
@@ -21,6 +24,7 @@ public class ChallengeMessage {
 	}
 	
 	public ChallengeMessage(String opponentName, String opponentIP, boolean isAcceptMsg, boolean accept){
+		super(myType);
 		this.isAcceptMsg=isAcceptMsg;
 		this.accepted=accept;
 		this.opponentName=opponentName;

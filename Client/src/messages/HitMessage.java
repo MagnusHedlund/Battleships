@@ -18,9 +18,7 @@ public class HitMessage {
 		this.isSunk=isSunk;
 		this.ship=ship;
 	}
-	public HitMessage(){
-	
-	}
+
 	/* Getters */
 	public boolean getIsHit(){return isHit;}
 	public Coordinate getCoordinate(){return coordinate;}

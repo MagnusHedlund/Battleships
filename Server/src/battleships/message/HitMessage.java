@@ -3,7 +3,7 @@ package battleships.message;
 import battleships.game.Coordinate;
 import battleships.game.Ship;
 
-public class HitMessage {
+public class HitMessage extends Message{
 	private static final String myType="HitMessage";
 	private boolean isHit=false;
 	private Coordinate coordinate=null;
@@ -14,6 +14,7 @@ public class HitMessage {
 		super(myType);
 	}
 	public HitMessage(boolean isHit, Coordinate coordinate, boolean isSunk, Ship ship){
+		super(myType);
 		this.isHit=isHit;
 		this.coordinate=coordinate;
 		this.isSunk=isSunk;

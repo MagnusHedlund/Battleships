@@ -1,9 +1,12 @@
 package battleships.game;
 
-import battleships.Navy;
+import battleships.message.FinishedMessage;
+import battleships.message.HitMessage;
 import battleships.message.Message;
 import battleships.message.NavyMessage;
+import battleships.message.Shot;
 import battleships.message.ValidationMessage;
+import battleships.server.Player;
 
 /**
  * A game session object.
@@ -14,7 +17,11 @@ public class Session implements Runnable{
 	private Player[] player = new Player[2];
 	private boolean[] navyValid = new boolean[2];
 	private Navy[] navy = new Navy[2];
-	int currentPlayer=PLAYER0, otherPlayer=PLAYER1;
+	private int currentPlayer=PLAYER0, otherPlayer=PLAYER1;
+	private boolean isHit=false;
+	private boolean isSunk=false;
+	private boolean grantTurn=false;
+	private boolean finished=false;
 	
 	/**
 	 * Runs the game.
@@ -44,12 +51,11 @@ public class Session implements Runnable{
 	 * Listening for NavyMessage and verifies the Navy object.
 	 * 
 	 * */
-	
 	private boolean readAndValidate(int playerNumber){
 		Message msg = player[playerNumber].readMessage();
 		if(msg.getType()=="NavyMessage"){
 			NavyMessage navMsg = (NavyMessage)msg;
-			if(navMsg.valid()){  //TODO Correct call 
+			if(navMsg.getNavy().valid()){  //TODO Correct call 
 				navy[playerNumber]=navMsg.getNavy();
 				return true;
 			}
@@ -66,43 +72,71 @@ public class Session implements Runnable{
 	private void enterGameLoop(){
 		boolean loop=true;
 		while(loop){
-			//TODO game logic
+			
+			//reset
+			isHit=false;
+			isSunk=false;
+			grantTurn=false;
+			finished=false;
+			
 			//Read message
 			Message msg = player[currentPlayer].readMessage();
+			Shot navMsg=null;
 			if(msg.getType()=="Shot"){
-				Shot navMsg = (Shot)msg;
+				navMsg = (Shot)msg;
 			}
 			
-			//is hit? Win? Sunk?
-			boolean isHit=false;
-			boolean isSunk=false;
-			boolean grantTurn=false;
-			Ship hitShip=navy[otherPlayer].shot(msg.getCoordinate());
-			if(hitShip!=null){
-				isHit=true;
-				if(!hitShip.isSunk()){
-					hitShip=null;  //don´t send Ship unless sunk
+			// do we have a valid message?
+			if(navMsg!=null){
+				
+				Ship hitShip=navy[otherPlayer].shot(navMsg.getCoordinate());
+				
+				//a hit
+				if(hitShip!=null){
+					isHit=true;
+					if(!hitShip.isSunk()){
+						hitShip=null;  //don´t send Ship unless sunk
+					}
+					else{
+						isSunk=true;
+						// check if won
+						if(navy[otherPlayer].allGone()){
+							finished=true;
+						}
+					}
+				}
+				// no hit
+				else{
+					//if miss  let the other one fire
+					grantTurn=true;
+				}
+				
+				if(finished){
+					
+					player[currentPlayer].sendMessage(new FinishedMessage(true, navy[currentPlayer]));
+					
+					//send hitMessage to otherPlayer
+					player[otherPlayer].sendMessage(new FinishedMessage(false, navy[otherPlayer]));
+					
+					loop=false;
 				}
 				else{
-					isSunk=true;
+					//send hitMessage to currentPlayer
+					player[currentPlayer].sendMessage(new HitMessage(isHit, navMsg.getCoordinate(), isSunk, hitShip));
+				
+					//send hitMessage to otherPlayer
+					player[otherPlayer].sendMessage(new NavyMessage(navy[otherPlayer], grantTurn));
+				}
+
+				//if otherPlayer was granted next turn, Switch player
+				if(grantTurn){
+					switchPlayer();
 				}
 			}
-			else{
-				//if miss  let the other one fire
-				grantTurn=true;
+			else{ //the message received was of wrong type
+				player[currentPlayer].sendMessage(new ValidationMessage(false));
 			}
-				
-			//send hitMessage to currentPlayer
-			player[currentPlayer].sendMessage(new HitMessage(isHit, msg.getCoordinate(), isSunk, hitShip));
-			
-			//send hitMessage to otherPlayer
-			player[otherPlayer].sendMessage(new NavyMessage(navy[otherPlayer], grantTurn));
-			
-			//if otherPlayer was granted next turn, Switch player
-			if(grantTurn){
-				switchPlayer();
-			}
-		}
+		}//while end
 	}
 	
 	/**

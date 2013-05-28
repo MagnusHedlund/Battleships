@@ -62,6 +62,7 @@ public class Coordinate {
 	 * @param coord				The coordinate to compare to.
 	 * @return 					Equals or not. 
 	 */
+	@Override
 	public boolean equals(Object obj){
 		if(obj == null || obj.getClass() != getClass())
 			return false;

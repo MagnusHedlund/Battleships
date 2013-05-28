@@ -4,7 +4,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-// NOT TESTED YET!!!
+
 
 /**
  * Class Validator validates that the ships in a navy fulfills the requirements in the game. That is that they
@@ -20,8 +20,7 @@ import java.util.LinkedList;
  */
 public class Validator {
 
-	private final Integer NUM_SUBMARINES, NUM_DESTROYERS, NUM_AIRCRAFT_CARRIERS;
-	
+	private final Integer NUM_SUBMARINES, NUM_DESTROYERS, NUM_AIRCRAFT_CARRIERS;	
 
 	private HashSet<Coordinate> allCoords;
 	
@@ -51,6 +50,7 @@ public class Validator {
 		
 		// Ships in navy 
 		LinkedList<Ship> l = n.getShips();
+		
 		// Boolean variable to return at the end of the function. 
 		Boolean ok=true;
 		
@@ -59,19 +59,21 @@ public class Validator {
 		
 		// Iterator to walk through the ships. 
 		Iterator<Ship> it = l.iterator();
+		
 		// The present ship to control. 
 		Ship tmp;
-		// If the ships by some reason does not fulfill the requirements the while-loop is stopped. 
-		while(it.hasNext() || !ok){
+		
+		// Do the following examinations to all ships.
+		// If one ship by some reason does not fulfill the requirements the while-loop is stopped. 
+		while(it.hasNext() && ok){
 			
 			tmp = it.next();		
 			
-			// Right number coordinates?
-			
+			// Separate functions needed for different ship-types. Identify type by name.			
 			String tmpName = tmp.getName();	
-			int length = tmp.getCoords().size(); // Gets the number of coordinates in the ship. Does not ask for the length of the ship.
+			int length = tmp.getCoords().size(); // Gets the number of coordinates in the ship. Does not ask for the length-constant of the ship.
 			
-			// Iterator for comparing coordinates in ships. 
+			// Iterator for comparing coordinates in the ship. 
 			Iterator<Coordinate> cordIt = tmp.getCoords().iterator();
 			
 			// Increments counters for types.
@@ -82,7 +84,7 @@ public class Validator {
 			{
 				case "Submarine": 
 						subs++;
-						ok = length == Submarine.LENGTH_S;
+						ok = (length == Submarine.LENGTH_S);
 					break;
 				case "Destroyer": 
 						dests++;
@@ -93,7 +95,7 @@ public class Validator {
 						else if(ok)
 							ok = this.validateSpaceVertical(length, tmp.getFirstCoord());
 					break;
-				case "Aircraft_carrier": 
+				case "Aircraft carrier": 
 						aircs++; 
 						if(length == Aircraft_carrier.LENGTH_A)
 							ok = this.validatePlacement(cordIt);
@@ -107,14 +109,18 @@ public class Validator {
 			// Collects all coordinates, from all ships, in one set to make sure that the ships are not on the same place.
 			if(ok){
 				while(cordIt.hasNext() && ok){
-					ok = allCoords.add(cordIt.next());	// Ok when the coordinate is new in the set.			
+					Coordinate tmpc = cordIt.next();
+					ok = allCoords.add(tmpc);	// Ok when the coordinate is new in the set.
+					//System.out.println(tmpc);
+					//System.out.println(ok);
 				}
+				//System.out.println(allCoords);
 			}			
 		} // End while
 		
 		// Checks the sum of the ships.
 		if(ok)
-			ok = (subs == NUM_SUBMARINES && NUM_DESTROYERS == dests && aircs == NUM_AIRCRAFT_CARRIERS);
+			ok = ((subs == NUM_SUBMARINES) && (NUM_DESTROYERS == dests && aircs == NUM_AIRCRAFT_CARRIERS));
 		
 		return ok;		
 	}
@@ -185,22 +191,30 @@ public class Validator {
 	 * @param it
 	 * @return
 	 */
-	private Boolean validatePlacement(Iterator<Coordinate> it){
+	private Boolean validatePlacement(Iterator<Coordinate> it)
+	{
 		Boolean ok = true;
-		Integer x = it.next().getX();
-		Integer y = it.next().getY();
+		Coordinate c = it.next();
+		Coordinate c1 = it.next();
 		
-		Integer i = 0;
 		
-		if(x == it.next().getX()){
-			while(it.hasNext()||!ok){
+		Integer x = c.getX();
+		Integer y = c.getY();
+		
+		Integer i = 1;		
+		
+		if(x == c1.getX()){
+			while(it.hasNext() && ok){
 				++i;
-				ok = (it.next().getX()== x) && (it.next().getY()== y+i);				
+				Coordinate tmpC = it.next();
+				ok = (tmpC.getX()== x) && (tmpC.getY()== y+i);				
 			}
 		}
-		else if(y == it.next().getY()){
-			while(it.hasNext()||!ok){
-				ok = (it.next().getY()== y) && (it.next().getX()== x+i);				
+		else if(y == c1.getY()){
+			while(it.hasNext() && ok){
+				++i;
+				Coordinate tmpC = it.next();
+				ok = (tmpC.getY()== y) && (tmpC.getX()== x+i);				
 			}
 		}
 		else

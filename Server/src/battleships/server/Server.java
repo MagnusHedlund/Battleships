@@ -47,6 +47,7 @@ public class Server
 		try
 		{
 			listener.start(port);
+			System.out.println("Server started with port " + port + "!");
 		}
 		catch(Exception e)
 		{

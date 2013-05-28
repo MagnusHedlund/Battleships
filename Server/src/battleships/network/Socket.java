@@ -1,6 +1,6 @@
 /*
  * Socket.java
- * Version 0.2 (2013-05-20)
+ * Version 0.3 (2013-05-28)
  */
 
 package battleships.network;

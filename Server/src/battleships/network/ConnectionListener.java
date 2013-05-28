@@ -1,11 +1,12 @@
 /*
  * ConnectionListener.java
- * Version 0.1 (2013-05-20)
+ * Version 0.2 (2013-05-28)
  */
 
 package battleships.network;
 
 import battleships.message.Message;
+import battleships.message.NameMessage;
 import battleships.server.Player;
 
 /**
@@ -26,12 +27,12 @@ public class ConnectionListener
 	private java.util.ArrayList<Socket> sockets;
 	
 	/**
-	 * Highest ID reached
+	 * Highest ID reached.
 	 */
 	private int idCounter;
 	
 	/**
-	 * Initializes the object for listening
+	 * Initializes the object for listening.
 	 * 
 	 * @param port					Specific port to listen at.
 	 * @throws ConnectionException	Could not listen at the specified port.
@@ -57,7 +58,7 @@ public class ConnectionListener
 	}	
 	
 	/**
-	 * Closes the listening socket
+	 * Closes the listening socket.
 	 */
 	public void stop()
 	{
@@ -142,7 +143,7 @@ public class ConnectionListener
 				sockets.remove(i);
 				
 				// Setup a player
-				String name = message.getName();
+				String name = castedMessage.getName();
 				return new Player(socket, ++idCounter, name);
 			}
 		}

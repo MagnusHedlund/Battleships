@@ -1,6 +1,6 @@
 /*
  * Player.java	
- * Version 1.0 (2013-05-24)
+ * Version 1.0 (2013-05-29)
  */
 
 package battleships.server;
@@ -32,6 +32,11 @@ public class Player
 	private Integer id;
 	
 	/**
+	 * Status.
+	 */
+	private boolean idle;
+	
+	/**
 	 * Constructor where a connected socket and the player's 
 	 * name has to be given.
 	 * 
@@ -39,9 +44,13 @@ public class Player
 	 */
 	public Player(Socket socket, Integer id, String name)
 	{
+		// Attributes
 		this.socket = socket;
 		this.name = name;
 		this.id = id;
+		
+		// Status
+		idle = true;
 	}
 	
 	/**
@@ -62,6 +71,37 @@ public class Player
 	public Integer getID()
 	{
 		return id;
+	}
+	
+	/**
+	 * Indicates whether the player isn't in a game.
+	 * 
+	 * @return	Idle status.
+	 */
+	public boolean getIdle()
+	{
+		return idle;
+	}
+	
+	/**
+	 * Defines the status of the player (false means that he or she
+	 * is currently in a game).
+	 * 
+	 * @param idle	Status.
+	 */
+	public void setIdle(boolean idle)
+	{
+		this.idle = idle;
+	}
+	
+	/**
+	 * A player is not valid if there's no connection to him or her
+	 * 
+	 * @return	Connection state
+	 */
+	public boolean isValid()
+	{
+		return socket.isConnected();
 	}
 	
 	/**

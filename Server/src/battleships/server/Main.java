@@ -15,7 +15,7 @@ public class Main
 	/**
 	 * Port used when listening for new client connections.
 	 */
-	private static final int SERVER_PORT = 5168;
+	private static final int SERVER_PORT = 5000;
 	
 	/**
 	 * Starting point of the program.

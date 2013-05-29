@@ -1,6 +1,6 @@
 /*
  * ConnectionListener.java
- * Version 0.2 (2013-05-28)
+ * Version 1.0 (2013-05-29)
  */
 
 package battleships.network;
@@ -129,22 +129,32 @@ public class ConnectionListener
 		// Try to retrieve names from all connected clients
 		for(int i = 0; i < sockets.size(); ++i)
 		{
-			// Retrieve the message
+			// Remove invalid sockets
 			Socket socket = sockets.get(i);
-			Message message = socket.read();
-			
-			// Check if it is a message with a name
-			if(message != null && message.getType().equals("setname")) 
+			if(!socket.isConnected())
 			{
-				// Downcast
-				NameMessage castedMessage = (NameMessage) message;
+				sockets.remove(i--);
+			}
+			
+			// Retrieve the message
+			else
+			{
+				// Message object
+				Message message = socket.read();
 				
-				// Remove the socket from the listener
-				sockets.remove(i);
-				
-				// Setup a player
-				String name = castedMessage.getName();
-				return new Player(socket, ++idCounter, name);
+				// Check if it is a message with a name
+				if(message != null && message.getType().equals("setname")) 
+				{
+					// Downcast
+					NameMessage castedMessage = (NameMessage) message;
+					
+					// Remove the socket from the listener
+					sockets.remove(i);
+					
+					// Setup a player
+					String name = castedMessage.getName();
+					return new Player(socket, ++idCounter, name);
+				}				
 			}
 		}
 		

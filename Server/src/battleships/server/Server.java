@@ -5,7 +5,6 @@
 
 package battleships.server;
 
-
 /**
  * Manages the creation of connections and players. Redirects the rest
  * to an instance of Lobby that handles other communication messages.

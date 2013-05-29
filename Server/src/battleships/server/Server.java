@@ -5,8 +5,6 @@
 
 package battleships.server;
 
-import battleships.network.ConnectionListener;
-
 /**
  * Manages the creation of connections and players. Redirects the rest
  * to an instance of Lobby that handles other communication messages.
@@ -23,14 +21,14 @@ public class Server
 	/**
 	 * Listens for new connections, generating new players for the lobby.
 	 */
-	private ConnectionListener listener;
+	private Listener listener;
 	
 	/**
 	 * Constructor.
 	 */
 	public Server()
 	{
-		listener = new ConnectionListener();
+		listener = new Listener();
 	}
 	
 	/**

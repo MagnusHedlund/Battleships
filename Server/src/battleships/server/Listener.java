@@ -3,18 +3,19 @@
  * Version 1.0 (2013-05-29)
  */
 
-package battleships.network;
+package battleships.server;
 
 import battleships.message.Message;
 import battleships.message.NameMessage;
-import battleships.server.Player;
+import battleships.network.ConnectionException;
+import battleships.network.Socket;
 
 /**
  * Listens for new connections.
  * 
  * @author Christopher Nilsson
  */
-public class ConnectionListener
+public class Listener
 {	
 	/**
 	 * Raw listener.

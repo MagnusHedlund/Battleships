@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import battleships.game.Session;
 import battleships.message.ActivePlayersMessage;
 import battleships.message.ChallengeMessage;
 import battleships.message.Message;
@@ -67,8 +66,15 @@ public class Lobby
 					// Interpret the message and act accordingly
 					switch(type)
 					{
-						case "ActivePlayersMessage": sendPlayerList(player); break;	
-						case "ChallengeMessage": handleChallenge(player, (ChallengeMessage)message); break;
+						// Player list request
+						case "ActivePlayersMessage": 
+							sendPlayerList(player);
+							break;
+							
+						// Messages related to challenging other players
+						case "ChallengeMessage": 
+							handleChallenge(player, (ChallengeMessage)message);
+							break;
 					}
 				}
 			}
@@ -87,19 +93,20 @@ public class Lobby
 	}
 	
 	/**
+	 * Sends a list of idle players to a client.
 	 * 
-	 * 
-	 * @param player
+	 * @param player	Player that requested the list.
 	 */
 	private void sendPlayerList(Player player)
 	{
 		// Create a message to deliver
 		ActivePlayersMessage message = new ActivePlayersMessage();
 		
-		// List with idle player information
+		// List with player information
 		HashMap<String, Integer> list = new HashMap<String, Integer>();
 		for(Player value : players.values())
 		{
+			// Only idle players
 			if(value.getIdle())
 			{
 				list.put(value.getName(), value.getID());
@@ -112,32 +119,64 @@ public class Lobby
 	}
 	
 	/**
+	 * Interpret and respond to a challenge request or answer.
 	 * 
-	 * 
-	 * @param player
-	 * @param message
+	 * @param player	Player client that sent the message.
+	 * @param message	The message itself.
 	 */
 	private void handleChallenge(Player player, ChallengeMessage message)
 	{
-		// REMARKS:
-		// How do I know whether the message is a Request or a Response? Det finns flagga för detta i meddelandet .//M
-		// The IP (String) attribute should be changed to ID (Integer)? Fixar det.//M
-		Player other = null;
-
+		// Find the other player
+		Player other = players.get(message.getOpponentIP());
 		
-		createGame(player, other);
+		// Must be a valid one
+		if(other == null)
+		{
+			// Potential new message: ErrorMessage (With String to describe the issue)
+		}
+		
+		// The player can't already be in a game
+		else if(!other.getIdle())
+		{
+			// Potential new message: ErrorMessage (With String to describe the issue)
+		}
+		
+		// Sending the challenge request
+		else if(!message.isAcceptMessage())
+		{
+			other.sendMessage(new ChallengeMessage(player.getName(), player.getID()));
+		}
+		
+		// Response from the challenged player
+		else
+		{
+			// Get stance
+			boolean response = message.getAccept();
+			
+			// Send the result to the challenger
+			other.sendMessage(new ChallengeMessage(player.getName(), player.getID(), true, response));
+			
+			// Create a new game if the challenge was accepted
+			if(response)
+			{
+				createGame(player, other);
+			}
+		}
 	}
 	
 	/**
+	 * Creates a new game session for two specific players.
 	 * 
-	 * 
-	 * @param first
-	 * @param second
+	 * @param first		Player #1.
+	 * @param second	Player #2.
 	 */
 	private void createGame(Player first, Player second)
 	{
-		// REMARKS:
-		// You probably need the Player instances. Define a constructor? Jag fixar.//M
-		(new Thread(new Session())).start();
+		// The players aren't idle anymore
+		first.setIdle(false);
+		second.setIdle(false);
+		
+		// Sessions are handled in separate threads
+		(new Thread(new Session(first, second))).start();
 	}
 }

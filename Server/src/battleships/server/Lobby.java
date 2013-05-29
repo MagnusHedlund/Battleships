@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import battleships.game.Session;
 import battleships.message.ActivePlayersMessage;
 import battleships.message.ChallengeMessage;
 import battleships.message.Message;

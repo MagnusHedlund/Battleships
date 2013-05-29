@@ -1,12 +1,14 @@
-package battleships.game;
+package battleships.server;
 
+import battleships.game.Navy;
+import battleships.game.Ship;
+import battleships.game.Validator;
 import battleships.message.FinishedMessage;
 import battleships.message.HitMessage;
 import battleships.message.Message;
 import battleships.message.NavyMessage;
 import battleships.message.Shot;
 import battleships.message.ValidationMessage;
-import battleships.server.Player;
 
 /**
  * A game session object.

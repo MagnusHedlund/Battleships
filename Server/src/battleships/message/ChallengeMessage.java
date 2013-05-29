@@ -5,7 +5,7 @@ public class ChallengeMessage extends Message {
 	private boolean isAcceptMsg;  //is this an acceptMessage?
 	private boolean accepted;  //was challenge accepted?
 	private String opponentName;  
-	private String opponentIP;  //could maybe be omitted?
+	private int opponentID; 
 	
 	public ChallengeMessage(){
 		super(myType);

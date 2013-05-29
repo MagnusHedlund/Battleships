@@ -20,6 +20,15 @@ public abstract class Message {
 	}
 	
 	/**
+	 * Converts an XML String to a Message.
+	 */
+	public static Message toMessage(String data)
+	{
+		XStream xstream = new XStream();
+		return (Message)xstream.fromXML(data);
+	}
+	
+	/**
 	 * Returns the type of concrete message.
 	 * */
 	public String getType(){return type;}

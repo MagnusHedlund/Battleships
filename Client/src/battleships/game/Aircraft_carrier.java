@@ -1,24 +1,38 @@
-package battleships.game;
+package game;
 
 import java.util.TreeSet;
 
+/**
+ * This class extends the abstract class Ship for the game Battleships.
+ * 
+ * @author Åsa Waldhe
+ *
+ */
 public class Aircraft_carrier extends Ship {
-
-	private final Integer DIRECTION;
+	
+	public static final int LENGTH_A = 5;
 	private static Integer instances_ac=0;
 	
-	Aircraft_carrier(Coordinate c1, Coordinate c2, Coordinate c3, Coordinate c4, Coordinate c5){
+	/**
+	 * 
+	 * @param c1
+	 * @param c2
+	 * @param c3
+	 * @param c4
+	 * @param c5
+	 */
+	public Aircraft_carrier(Coordinate c1, Coordinate c2, Coordinate c3, Coordinate c4, Coordinate c5){
 		
-		super("Aircraft carrier", 5);
+		super("Aircraft carrier", LENGTH_A);
 		
-		DIRECTION = shipsDirection(c1, c2);
+		super.shipsDirection(c1, c2);
 		
-		if(DIRECTION == HORIZONTAL){
+		if(direction == HORIZONTAL){
 			CompareHorizontal compH = new CompareHorizontal();
 			hits = new TreeSet<Coordinate>(compH);
 			coords = new TreeSet<Coordinate>(compH);
 			}
-			else if(DIRECTION == VERTICAL){
+			else if(direction == VERTICAL){
 				CompareVertical compV = new CompareVertical();
 				hits = new TreeSet<Coordinate>(compV);
 				coords = new TreeSet<Coordinate>(compV);
@@ -33,12 +47,12 @@ public class Aircraft_carrier extends Ship {
 		
 		++instances_ac;
 	}
-	
+	/**
+	 * 
+	 * @return
+	 */
 	public Integer getInstances(){
 		return instances_ac;
 	}
 	
-	public Integer getDirection(){
-		return DIRECTION;
-	}
 }

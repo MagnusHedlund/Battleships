@@ -1,4 +1,4 @@
-package battleships.game;
+package game;
 
 /**
  * Represents a coordinate in the game battleship.
@@ -6,7 +6,6 @@ package battleships.game;
  * 
  * @author Åsa Waldhe
  */
-
 public class Coordinate {
 	
 	/** x-coordinate */
@@ -63,6 +62,7 @@ public class Coordinate {
 	 * @param coord				The coordinate to compare to.
 	 * @return 					Equals or not. 
 	 */
+	@Override
 	public boolean equals(Object obj){
 		if(obj == null || obj.getClass() != getClass())
 			return false;

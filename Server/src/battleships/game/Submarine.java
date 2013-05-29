@@ -1,4 +1,4 @@
-package battleships;
+package game;
 
 import java.util.TreeSet;
 
@@ -36,8 +36,4 @@ public class Submarine extends Ship {
 		return instances_s;
 	}
 	
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> upstream/master

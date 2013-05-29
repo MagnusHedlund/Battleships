@@ -15,7 +15,7 @@ import battleships.network.Socket;
  * 
  * @author Christopher Nilsson
  */
-public class ConnectionListener
+public class Listener
 {	
 	/**
 	 * Raw listener.

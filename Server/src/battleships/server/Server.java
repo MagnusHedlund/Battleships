@@ -22,14 +22,14 @@ public class Server
 	/**
 	 * Listens for new connections, generating new players for the lobby.
 	 */
-	private ConnectionListener listener;
+	private Listener listener;
 	
 	/**
 	 * Constructor.
 	 */
 	public Server()
 	{
-		listener = new ConnectionListener();
+		listener = new Listener();
 	}
 	
 	/**

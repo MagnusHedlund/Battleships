@@ -5,7 +5,6 @@
 
 package battleships.server;
 
-import battleships.network.ConnectionListener;
 
 /**
  * Manages the creation of connections and players. Redirects the rest

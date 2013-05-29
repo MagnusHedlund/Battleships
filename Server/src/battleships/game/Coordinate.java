@@ -73,5 +73,13 @@ public class Coordinate {
 			
 	}
 	
+	/**
+	 * 
+	 */
+	@Override
+	public int hashCode(){
+		return 100*this.X+Y;
+	}
+	
 
 }

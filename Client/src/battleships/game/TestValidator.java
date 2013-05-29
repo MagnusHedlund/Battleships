@@ -47,7 +47,7 @@ public class TestValidator {
 	// Navy with only two submarines for a first, simple, test
 	navy = new Navy(2, 0, 0);
 	navy.addShip(su);
-	navy.addShip(su1);
+	navy.addShip(su);
 	
 	// Coordinates and ships for further testing, building bigger navys
 	c1 = new Coordinate(0,0);
@@ -126,6 +126,7 @@ public class TestValidator {
 		 assertEquals(true , validator.validateNavy(navy));
 		 assertEquals(true , navy.allSet());
 		 assertEquals(2 , navy.numberShips());
+		 assertEquals(true , c.equals(co));
 		 
 		 // Second test - navy with one destroyer only
 		 /*assertEquals(true , validator1.validateNavy(navy1));
@@ -151,7 +152,7 @@ public class TestValidator {
 		/*assertEquals(true , navyAI.allSet());
 		assertEquals(true , validatorAI.validateNavy(ai.getNavy()));
 		
-		assertEquals(true , c.equals(co));*/
+		*/
 		 
 	}
 

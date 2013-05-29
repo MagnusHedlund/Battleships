@@ -28,6 +28,7 @@ public class Server
 	 */
 	public Server()
 	{
+		lobby = new Lobby();
 		listener = new Listener();
 	}
 	
@@ -42,13 +43,15 @@ public class Server
 		boolean serverActive = true;
 		
 		// Begin listening for connections
+		System.out.println("Attempting to start the server process...");
 		try
 		{
 			listener.start(port);
+			System.out.println("Server started sucessfully (listening at port #" + port + ")!");
 		}
 		catch(Exception e)
 		{
-			System.out.println("Couldn't start server with port " + port + "! Aborting...");
+			System.out.println("Server could not be initialized properly!");
 			serverActive = false;
 		}
 		

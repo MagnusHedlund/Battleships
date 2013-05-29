@@ -155,7 +155,7 @@ public class Listener
 					// Setup a player
 					String name = castedMessage.getName();
 					return new Player(socket, ++idCounter, name);
-				}				
+				}
 			}
 		}
 		

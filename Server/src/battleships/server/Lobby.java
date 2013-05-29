@@ -49,6 +49,7 @@ public class Lobby
 			if(!player.isValid())
 			{
 				players.remove(entry.getKey());
+				System.out.println(player.getName() + " [" + player.getID() + "] left.");
 			}
 			
 			// Prepare message retrieval if the player isn't in a game
@@ -90,6 +91,7 @@ public class Lobby
 	public void addPlayer(Player newPlayer)
 	{
 		players.put(newPlayer.getID(), newPlayer);
+		System.out.println(newPlayer.getName() + " [" + newPlayer.getID() + "] joined.");
 	}
 	
 	/**
@@ -114,6 +116,7 @@ public class Lobby
 		}
 		
 		// Apply the list to the message and send it
+		System.out.println(player.getName() + " [" + player.getID() + "] received an updated player list.");
 		message.setContenders(list);
 		player.sendMessage(message);
 	}
@@ -132,19 +135,21 @@ public class Lobby
 		// Must be a valid one
 		if(other == null)
 		{
-			// Potential new message: ErrorMessage (With String to describe the issue)
+			System.out.println(player.getName() + " [" + player.getID() + "] tried to challenge someone who doesn't exist!");
 		}
 		
 		// The player can't already be in a game
 		else if(!other.getIdle())
 		{
-			// Potential new message: ErrorMessage (With String to describe the issue)
+			System.out.println(player.getName() + " [" + player.getID() + "] tried to challenge a busy player!");
 		}
 		
 		// Sending the challenge request
 		else if(!message.isAcceptMessage())
 		{
 			other.sendMessage(new ChallengeMessage(player.getName(), player.getID()));
+			System.out.println(player.getName() + " [" + player.getID() + "] sent a challenge request to " + other.getName() +
+					   		   " [" + other.getID() + "]!");
 		}
 		
 		// Response from the challenged player
@@ -159,7 +164,14 @@ public class Lobby
 			// Create a new game if the challenge was accepted
 			if(response)
 			{
+				System.out.println(player.getName() + " [" + player.getID() + "] accepted " + other.getName() +
+		   		   		   		   "'s [" + other.getID() + "] request!");
 				createGame(player, other);
+			}
+			else
+			{
+				System.out.println(player.getName() + " [" + player.getID() + "] denied " + other.getName() +
+				   		   		   "'s [" + other.getID() + "] request!");
 			}
 		}
 	}

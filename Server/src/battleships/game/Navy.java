@@ -1,4 +1,4 @@
-package game;
+package battleships.game;
 
 import java.util.Iterator;
 import java.util.LinkedList;

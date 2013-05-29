@@ -23,6 +23,11 @@ public class Session implements Runnable{
 	private boolean grantTurn=false;
 	private boolean finished=false;
 	
+	public Session(Player first, Player second){
+		player[PLAYER0]=first;
+		player[PLAYER1]=second;
+	}
+	
 	/**
 	 * Runs the game.
 	 * */

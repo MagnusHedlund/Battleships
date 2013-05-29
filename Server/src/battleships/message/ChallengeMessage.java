@@ -32,19 +32,21 @@ public class ChallengeMessage extends Message {
 	}
 	
 	/* Getters */
-	public boolean GetAccept(){return accepted;}
-	public String GetOpponentName(){return opponentName;}
-	public int GetOpponentIP(){return opponentID;}
+	public boolean getAccept(){return accepted;}
+	public boolean isAcceptMessage(){return isAcceptMsg;}
+	public String getOpponentName(){return opponentName;}
+	public int getOpponentIP(){return opponentID;}
 	
 	/* Setters */
-	public void SetAccept(boolean accept){this.accepted=accept;}
-	public void SetOpponentName(String opponentName){this.opponentName=opponentName;}
-	public void SetOpponentIP(int opponentIP){this.opponentID=opponentID;}
+	public void setAccept(boolean accept){this.accepted=accept;}
+	public void setIsAcceptMessage(boolean isAcceptMsg){this.isAcceptMsg=isAcceptMsg;}
+	public void setOpponentName(String opponentName){this.opponentName=opponentName;}
+	public void setOpponentIP(int opponentIP){this.opponentID=opponentID;}
 	
 	/**
 	 * Sets the message to become a accept challenge message
 	 * */
-	public void Accept(){
+	public void accept(){
 		isAcceptMsg=true;
 		accepted=true;
 	}
@@ -52,7 +54,7 @@ public class ChallengeMessage extends Message {
 	/**
 	 * Sets the message to become a decline challenge message
 	 * */
-	public void Decline(){
+	public void decline(){
 		isAcceptMsg=true;
 		accepted=false;
 	}

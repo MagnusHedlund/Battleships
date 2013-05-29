@@ -13,7 +13,7 @@ import battleships.server.Player;
  * @author Magnus Hedlund
  * */
 public class Session implements Runnable{
-	private final static int PLAYER0 =0, PLAYER1=1;
+	private final static int PLAYER0 =0, PLAYER1=1, SUBMARINES=5, DESTROYERS=3, AIRCRAFT_CARRIERS=1;
 	private Player[] player = new Player[2];
 	private boolean[] navyValid = new boolean[2];
 	private Navy[] navy = new Navy[2];
@@ -52,10 +52,11 @@ public class Session implements Runnable{
 	 * 
 	 * */
 	private boolean readAndValidate(int playerNumber){
+		Validator validator = new Validator(SUBMARINES,DESTROYERS,AIRCRAFT_CARRIERS);
 		Message msg = player[playerNumber].readMessage();
 		if(msg.getType()=="NavyMessage"){
 			NavyMessage navMsg = (NavyMessage)msg;
-			if(navMsg.getNavy().valid()){  //TODO Correct call 
+			if(validator.validateNavy(navMsg.getNavy())){  //TODO Correct call 
 				navy[playerNumber]=navMsg.getNavy();
 				return true;
 			}

@@ -4,24 +4,22 @@ import java.util.TreeSet;
 
 public class Destroyer extends Ship {
 
-	public static final int LENGTH_D = 3;
+	private final Integer DIRECTION;
 	private static Integer instances_d=0;
 	
-	
-	
-	public Destroyer(Coordinate c1, Coordinate c2, Coordinate c3){
+	Destroyer(Coordinate c1, Coordinate c2, Coordinate c3){
 		
-		super("Destroyer", LENGTH_D);
+		super("Destroyer", 3);
 		++instances_d;
 		
-		super.shipsDirection(c1, c2);
+		DIRECTION = shipsDirection(c1, c2);
 		
-		if(direction == HORIZONTAL){
+		if(DIRECTION == HORIZONTAL){
 			CompareHorizontal compH = new CompareHorizontal();
 			hits = new TreeSet<Coordinate>(compH);
 			coords = new TreeSet<Coordinate>(compH);
 			}
-			else if(direction == VERTICAL){
+			else if(DIRECTION == VERTICAL){
 				CompareVertical compV = new CompareVertical();
 				hits = new TreeSet<Coordinate>(compV);
 				coords = new TreeSet<Coordinate>(compV);
@@ -36,4 +34,7 @@ public class Destroyer extends Ship {
 		return instances_d;
 	}
 	
+	public Integer getDirection(){
+		return DIRECTION;
+	}
 }

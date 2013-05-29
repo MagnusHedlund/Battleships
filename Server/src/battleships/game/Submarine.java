@@ -36,4 +36,8 @@ public class Submarine extends Ship {
 		return instances_s;
 	}
 	
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> upstream/master

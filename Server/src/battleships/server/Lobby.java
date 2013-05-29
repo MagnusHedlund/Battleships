@@ -138,6 +138,6 @@ public class Lobby
 	{
 		// REMARKS:
 		// You probably need the Player instances. Define a constructor? Jag fixar.//M
-		(new Thread(new Session())).start();
+		(new Thread(new Session(first, second))).start();
 	}
 }

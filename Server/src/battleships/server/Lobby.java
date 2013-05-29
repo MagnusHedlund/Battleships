@@ -120,8 +120,8 @@ public class Lobby
 	private void handleChallenge(Player player, ChallengeMessage message)
 	{
 		// REMARKS:
-		// How do I know whether the message is a Request or a Response?
-		// The IP (String) attribute should be changed to ID (Integer)?
+		// How do I know whether the message is a Request or a Response? Det finns flagga för detta i meddelandet .//M
+		// The IP (String) attribute should be changed to ID (Integer)? Fixar det.//M
 		Player other = null;
 
 		
@@ -137,7 +137,7 @@ public class Lobby
 	private void createGame(Player first, Player second)
 	{
 		// REMARKS:
-		// You probably need the Player instances. Define a constructor?
+		// You probably need the Player instances. Define a constructor? Jag fixar.//M
 		(new Thread(new Session())).start();
 	}
 }

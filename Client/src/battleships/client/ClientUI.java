@@ -80,6 +80,7 @@ public class ClientUI implements ActionListener
 	private boolean ConnectedToServer = false;	// Ansluten?
 	private boolean myTurn = false;				// Min tur att anfalla?	
 	private JLabel direction = new JLabel("?");	// Visar vems tur det är, visuellt.
+	private int myAttack = 0; 	// Den square man attackerade
 	
 	/**
 	 * Constructor
@@ -318,37 +319,10 @@ public class ClientUI implements ActionListener
 		Message lobbyUpdate = cNetwork.getMessage();
 		
 		if(lobbyUpdate != null)
-			if(lobbyUpdate.getType().equals("ActivePlayersMessage")) 
-			{
-				ActivePlayersMessage playerL = (ActivePlayersMessage) lobbyUpdate;
-				lobbyContenders = playerL.getContenders();
-				System.err.println("Received: ActivePlayersMessage");
-				
-				// Uppdatera lobbylistan
-				playerList.clear();
-				playerList.add("Server");
-				for(int i = 0; i < lobbyContenders.size(); i++)
-					playerList.add("Player " + Integer.toString(i+1));
-				lobbyList.setListData(playerList);
-				
-			}
-			else if(lobbyUpdate.getType().equals("ChallengeMessage")) 
-			{
-				ChallengeMessage challenge = (ChallengeMessage) lobbyUpdate;
-				System.err.println("Received: ChallengeMessage");
-								
-				// Avgör om man väntar på ett svar på skickad challenge, eller väntar på en challenge.
-				if(waitingForChallenge) {
-					triggerChallenge(Integer.toString(challenge.getOpponentID()));
-				}
-				else {
-					// Accept meddelande?
-					if(challenge.getAccept())
-						createNavyWindow();
-					else
-						waitingForChallenge = true;		// Deny message
-				}
-			}
+			if(lobbyUpdate.getType().equals("ActivePlayersMessage")) 	// Få en lista av spelare
+				handleActivePlayerMessage(lobbyUpdate);
+			else if(lobbyUpdate.getType().equals("ChallengeMessage")) 	// Challenge
+				handleChallengeMessage(lobbyUpdate);
 	}
 	
 	/**
@@ -359,25 +333,8 @@ public class ClientUI implements ActionListener
 		Message navyUpdate = cNetwork.getMessage();
 			
 		if(navyUpdate != null)
-			if(navyUpdate.getType().equals("ValidationMessage")) 
-			{
-				ValidationMessage valid = (ValidationMessage) navyUpdate;
-				System.err.println("Received: ValidationMessage");
-				
-				// Korrekt utplacerad Navy?
-				if(valid.getMessage())
-					createGameWindow();		// Ja - Spela
-				else {						// Nej - Gör om
-					placer.Reset();
-					resetSquares();
-					resetPlacementbuttons();
-					JOptionPane.showMessageDialog(window,
-						    "The placement of your navy was invalid. \n" +
-						    "Replace and try again.",
-						    "Invalid Navy",
-						    JOptionPane.ERROR_MESSAGE);
-				}
-			}
+			if(navyUpdate.getType().equals("ValidationMessage"))	// Korrekt navy eller inte?
+				handleValidationMessage(navyUpdate);
 	}
 	
 	/**
@@ -388,37 +345,138 @@ public class ClientUI implements ActionListener
 		Message gameUpdate = cNetwork.getMessage();
 			
 		if(gameUpdate != null) {
-			if(gameUpdate.getType().equals("NavyMessage"))					// Uppdatering av Navy och grantTurn
-			{
-				// Uppdatera Navy
-				NavyMessage navy = (NavyMessage) gameUpdate;
-				System.err.println("Received: NavyMessage");
-				myNavy = navy.getNavy();
-				updateMyNavy();
-				
-				// Vems tur?
-				myTurn = navy.getGrantTurn();
-				changeDirection();
-			}
-			else if(gameUpdate.getType().equals("HitMessage"))				// Träff eller Miss?
-			{
-				HitMessage Hit = (HitMessage) gameUpdate;
-				System.err.println("Received: HitMessage");
-				// ??
-			}
-			else if(gameUpdate.getType().equals("FinishedMessage"))			// Game Over
-			{
-				FinishedMessage finished = (FinishedMessage) gameUpdate;
-				System.err.println("Received: FinishedMessage");
-				if(finished.getWinner())
-					information.append("******* YOU WIN! *******" + "\n");
-				else
-					information.append("******* YOU LOSE! *******" + "\n");
-				myTurn = false;
-				t.stop();	// Sluta läsa efter meddelanden
-			}
+			if(gameUpdate.getType().equals("NavyMessage"))			// Uppdatering av Navy och grantTurn
+				handleNavyMessage(gameUpdate);
+			else if(gameUpdate.getType().equals("HitMessage"))		// Träff eller Miss?
+				handleHitMessage(gameUpdate);
+			else if(gameUpdate.getType().equals("FinishedMessage"))	// Game Over
+				handleFinishedMessage(gameUpdate);
 		}
+	}
+	
+	/**
+	 * Handle this type of message
+	 * @param	msg		The Message
+	 */	
+	private void handleActivePlayerMessage(Message msg) 
+	{
+		ActivePlayersMessage playerL = (ActivePlayersMessage) msg;
+		lobbyContenders = playerL.getContenders();
+		System.err.println("Received: ActivePlayersMessage");
 		
+		// Uppdatera lobbylistan
+		playerList.clear();
+		playerList.add("Server");
+		for(int i = 0; i < lobbyContenders.size(); i++)
+			playerList.add("Player " + Integer.toString(i+1));
+		lobbyList.setListData(playerList);		
+	}
+	
+	/**
+	 * Handle this type of message
+	 * @param	msg		The Message
+	 */	
+	private void handleChallengeMessage(Message msg) 
+	{
+		ChallengeMessage challenge = (ChallengeMessage) msg;
+		System.err.println("Received: ChallengeMessage");
+						
+		// Avgör om man väntar på ett svar på skickad challenge, eller väntar på en challenge.
+		if(waitingForChallenge) {
+			triggerChallenge(Integer.toString(challenge.getOpponentID()));
+		}
+		else {
+			// Accept meddelande?
+			if(challenge.getAccept())
+				createNavyWindow();
+			else
+				waitingForChallenge = true;		// Deny message
+		}		
+	}
+	
+	/**
+	 * Handle this type of message
+	 * @param	msg		The Message
+	 */	
+	private void handleValidationMessage(Message msg) 
+	{
+		ValidationMessage valid = (ValidationMessage) msg;
+		System.err.println("Received: ValidationMessage");
+		
+		// Korrekt utplacerad Navy?
+		if(valid.getMessage())
+			createGameWindow();		// Ja - Spela
+		else {						// Nej - Gör om
+			placer.Reset();
+			resetSquares();
+			resetPlacementbuttons();
+			JOptionPane.showMessageDialog(window,
+				    "The placement of your navy was invalid. \n" +
+				    "Replace and try again.",
+				    "Invalid Navy",
+				    JOptionPane.ERROR_MESSAGE);
+		}		
+	}
+	
+	/**
+	 * Handle this type of message
+	 * @param	msg		The Message
+	 */	
+	private void handleNavyMessage(Message msg) 
+	{
+		// Uppdatera Navy
+		NavyMessage navy = (NavyMessage) msg;
+		System.err.println("Received: NavyMessage");
+		myNavy = navy.getNavy();
+		updateMyNavy();
+		
+		// Vems tur?
+		myTurn = navy.getGrantTurn();
+		changeDirection();
+	}
+	
+	/**
+	 * Handle this type of message
+	 * @param	msg		The Message
+	 */	
+	private void handleHitMessage(Message msg) 
+	{
+		HitMessage Hit = (HitMessage) msg;
+		System.err.println("Received: HitMessage");
+		
+		// Träff eller bom?
+		if(Hit.getIsHit()) {
+			enemySquares.elementAt(myAttack).setHit();
+			myTurn = true;
+			
+			// Sänkte vi ett skepp?
+			if(Hit.getIsSunk())
+				information.append("You sunk a " + Hit.getShip().getName() + "\n");
+			else
+				information.append("You managed to hit a ship! \n");
+				
+		}
+		else {
+			enemySquares.elementAt(myAttack).setMiss();
+			information.append("You missed. \n");
+			changeDirection();
+		}
+	}
+	
+	/**
+	 * Handle this type of message
+	 * @param	msg		The Message
+	 */	
+	private void handleFinishedMessage(Message msg) 
+	{
+		FinishedMessage finished = (FinishedMessage) msg;
+		System.err.println("Received: FinishedMessage");
+		if(finished.getWinner())
+			information.append("******* YOU WIN! *******" + "\n");
+		else
+			information.append("******* YOU LOSE! *******" + "\n");
+		myTurn = false;
+		t.stop();	// Sluta läsa efter meddelanden	
 	}
 	
 	/**
@@ -829,6 +887,7 @@ public class ClientUI implements ActionListener
 		addDestroyerButton.setEnabled(true);
 		addSubmarineButton.setEnabled(true);
 		readyButton.setEnabled(false);
+		clearButton.setEnabled(true);
 	}
 	
 	/**
@@ -842,7 +901,7 @@ public class ClientUI implements ActionListener
 		// Lägger över till vectorn
 		for(int i = 0; i < myNavy.getShips().size(); i++)
 			cords.addAll(myNavy.getShips().get(i).getCoords());
-		
+				
 		// Sätt ut koordinaterna på playerSquares
 		for(int i = 0; i < playerSquares.size(); i++){
 			for(int j = 0; j < cords.size(); j++){
@@ -919,6 +978,8 @@ public class ClientUI implements ActionListener
 			myNavy = placer.getNavy();							// Hämta Navy från ShipPlacer
 			NavyMessage sendNavy = new NavyMessage(myNavy);		// Skicka till server
 			cNetwork.sendMessage(sendNavy);
+			System.err.println("Sent NavyMessage to Server.");
+			clearButton.setEnabled(false);
 		}
 		else if(e.getSource() == clearButton) {					// Nollställ Navy
 			placer.Reset();
@@ -940,8 +1001,8 @@ public class ClientUI implements ActionListener
 					if(enemySquares.elementAt(i).isAlive()){
 						Shot shoot = new Shot(enemySquares.elementAt(i).getXcoordinate(), enemySquares.elementAt(i).getYcoordinate()); 
 						cNetwork.sendMessage(shoot);
+						myAttack = i;
 						myTurn = false;
-						changeDirection();
 					}
 					break;
 				}

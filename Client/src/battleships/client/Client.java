@@ -1,12 +1,10 @@
 package battleships.client;
 
-//----------------------------------------------------------------
-// Namn: Fredrik Strömbergsson
-// Datum: 2013-05-17
-// 
-// Client.java
-//----------------------------------------------------------------
-
+/**
+ * Client, Main
+ * 
+ * @author Fredrik Strömbergsson
+ */
 public class Client {
 	
 	// ------- MAIN -------

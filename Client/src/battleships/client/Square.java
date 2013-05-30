@@ -1,15 +1,7 @@
-//----------------------------------------------------------------
-// Namn: Fredrik Strömbergsson
-// Datum: 2013-05-17
-// 
-// Square.java:
-// Ärver från JButton och ritar ut som default en vit knapp med svart kant.
-// När man klickar på knappen ska den kunna ha 4 olika utseenden:
-// 1. Default (vit)
-// 2. Träff   (grön)
-// 3. Miss    (röd)
-// 4. Skepp   (mörkgrå)
-//----------------------------------------------------------------
+/*
+ * Square.java
+ * Version 1.0 (2013-05-30)
+ */
 
 package battleships.client;
 import java.awt.Color;
@@ -17,6 +9,11 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import javax.swing.JButton;
 
+/**
+ * Square: a modified JButton. Represents a square in the game.
+ * 
+ * @author Fredrik Strömbergsson
+ */
 @SuppressWarnings("serial")
 public class Square extends JButton
 {
@@ -35,7 +32,9 @@ public class Square extends JButton
 		setBorderPainted(true);
 	}
 	
-	// Ritar ut knappen (vit - default)
+	/**
+	 * Paints the button
+	 */
     @Override
     protected void paintComponent(Graphics g) 
     {
@@ -45,7 +44,9 @@ public class Square extends JButton
        g2.dispose();
    }
 	
-   // Ritar ut kanten på knappen (svart - default)
+	/**
+	 * Paints the button border
+	 */
    @Override
    public void paintBorder(Graphics g) 
    {
@@ -53,7 +54,9 @@ public class Square extends JButton
        g.drawRect(0, 0, getWidth(), getHeight());
    }
    
-   // Indikerar miss
+	/**
+	 * Sets the button to be a "miss" button with color: RED.
+	 */
    public void setMiss()
    {
 	   Alive = false;
@@ -61,7 +64,9 @@ public class Square extends JButton
 	   repaint();
    }
    
-   // Indikerar träff
+	/**
+	 * Sets the button to be a "hit" button with color: GREEN.
+	 */
    public void setHit()
    {
 	   Alive = false;
@@ -69,7 +74,9 @@ public class Square extends JButton
 	   repaint();	   
    }
    
-   // Sätter att detta är ett skepp
+	/**
+	 * Sets the button to be a "ship" button.
+	 */
    public void setShipHere()
    {
 	   Alive = false;
@@ -78,7 +85,9 @@ public class Square extends JButton
 	   repaint();	   
    }
    
-   // Nollställer rutan till default
+	/**
+	 * Resets this button to default.
+	 */
    public void resetMe()
    {
 	   Alive = true;
@@ -86,9 +95,19 @@ public class Square extends JButton
 	   repaint();	   
    }
    
-   // GET metoder
+	/**
+	 * GET - Is this button alive? (clickable)
+	 */
    public boolean isAlive() {return Alive;};
+   
+	/**
+	 * GET - The X coordinate.
+	 */
    public int getXcoordinate() {return x;};
+   
+	/**
+	 * GET - The Y coordinate
+	 */
    public int getYcoordinate() {return y;};
 
 }

@@ -1,9 +1,7 @@
-//----------------------------------------------------------------
-// Namn: Fredrik Strömbergsson
-// Datum: 2013-05-24
-// 
-// ClientUI.java
-//----------------------------------------------------------------
+/*
+ * ClientUI.java
+ * Version 1.0 (2013-05-30)
+ */
 
 package battleships.client;
 import java.awt.BorderLayout;
@@ -34,6 +32,7 @@ import javax.swing.JList;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -43,6 +42,11 @@ import javax.swing.event.ListSelectionListener;
 import battleships.message.*;
 import battleships.game.*;
 
+/**
+ * Contains the graphical UI and all game related logic.
+ * 
+ * @author Fredrik Strömbergsson
+ */
 public class ClientUI implements ActionListener
 {
 	// Deklarationer
@@ -72,12 +76,14 @@ public class ClientUI implements ActionListener
 	private ClientNetwork cNetwork = new ClientNetwork();			// Wrapper för Socket
 	private boolean waitingForChallenge = true;						// BOOL - för lobbymeddelanden
 	private javax.swing.Timer t = null;								// Timer som uppdaterar nätverket varje sekund
-	private Map<String, Integer> lobbyContenders = new HashMap<String,Integer>();
-	private boolean ConnectedToServer = false;	
+	private Map<String, Integer> lobbyContenders = new HashMap<String,Integer>();	// Lobbylistan - Från server (i lobby)
+	private boolean ConnectedToServer = false;	// Ansluten?
+	private boolean myTurn = false;				// Min tur att anfalla?	
+	private JLabel direction = new JLabel("?");	// Visar vems tur det är, visuellt.
 	
-	//-----------------------------------------
-	// Konstruktor
-	//-----------------------------------------
+	/**
+	 * Constructor
+	 */
 	ClientUI()
 	{	
 		// Action listener för timer som varje sekund lyssnar efter nätverksmeddelanden
@@ -98,9 +104,9 @@ public class ClientUI implements ActionListener
 		createConnectWindow();
 	}
 		
-	// ----------------------------------
-	// 	När man stränger ner fönstret...
-	// ----------------------------------
+	/**
+	 * WindowAdapter. Disconnects the client if connected.
+	 */
 	WindowAdapter exitListener = new WindowAdapter()
 	{
 		@Override
@@ -110,9 +116,9 @@ public class ClientUI implements ActionListener
 		}
 	};
 	
-	//-----------------------------------------
-	// Skapar fönstret för anslutning mot server
-	//-----------------------------------------
+	/**
+	 * Creates the "Connect window"
+	 */
 	private void createConnectWindow()
 	{
 		// Sätt state till connect
@@ -206,9 +212,9 @@ public class ClientUI implements ActionListener
 		window.setVisible(true);
 	}
 	
-	//-----------------------------------------
-	// Skapar lobbyfönstret
-	//-----------------------------------------
+	/**
+	 * Creates the "Lobby window"
+	 */
 	private void createLobbyWindow()
 	{
 		// Rensa fönstret på föregående komponenter
@@ -304,9 +310,9 @@ public class ClientUI implements ActionListener
 		refreshLobby();
 	}
 	
-	//-----------------------------------------
-	// Uppdaterar lobbyn (NETWORK - Reciever)
-	//-----------------------------------------	
+	/**
+	 * Listens for messages while in Lobby
+	 */
 	private void lobbyNetwork()
 	{
 		Message lobbyUpdate = cNetwork.getMessage();
@@ -345,34 +351,84 @@ public class ClientUI implements ActionListener
 			}
 	}
 	
-	//-----------------------------------------
-	// Uppdaterar create navy (NETWORK - Reciever)
-	//-----------------------------------------	
+	/**
+	 * Listens for messages while in createNavy
+	 */
 	private void navyNetwork()
 	{
 		Message navyUpdate = cNetwork.getMessage();
 			
 		if(navyUpdate != null)
-			;
+			if(navyUpdate.getType().equals("ValidationMessage")) 
+			{
+				ValidationMessage valid = (ValidationMessage) navyUpdate;
+				System.err.println("Received: ValidationMessage");
+				
+				// Korrekt utplacerad Navy?
+				if(valid.getMessage())
+					createGameWindow();		// Ja - Spela
+				else {						// Nej - Gör om
+					placer.Reset();
+					resetSquares();
+					resetPlacementbuttons();
+					JOptionPane.showMessageDialog(window,
+						    "The placement of your navy was invalid. \n" +
+						    "Replace and try again.",
+						    "Invalid Navy",
+						    JOptionPane.ERROR_MESSAGE);
+				}
+			}
 	}
 	
-	//-----------------------------------------
-	// Uppdaterar game (NETWORK - Reciever)
-	//-----------------------------------------	
+	/**
+	 * Listens for messages while in Game
+	 */
 	private void gameNetwork()
 	{
-
 		Message gameUpdate = cNetwork.getMessage();
 			
-		if(gameUpdate != null)
-			;			
-
+		if(gameUpdate != null) {
+			if(gameUpdate.getType().equals("NavyMessage"))					// Uppdatering av Navy och grantTurn
+			{
+				// Uppdatera Navy
+				NavyMessage navy = (NavyMessage) gameUpdate;
+				System.err.println("Received: NavyMessage");
+				myNavy = navy.getNavy();
+				updateMyNavy();
+				
+				// Vems tur?
+				myTurn = navy.getGrantTurn();
+				changeDirection();
+			}
+			else if(gameUpdate.getType().equals("HitMessage"))				// Träff eller Miss?
+			{
+				HitMessage Hit = (HitMessage) gameUpdate;
+				System.err.println("Received: HitMessage");
+				// ??
+			}
+			else if(gameUpdate.getType().equals("FinishedMessage"))			// Game Over
+			{
+				FinishedMessage finished = (FinishedMessage) gameUpdate;
+				System.err.println("Received: FinishedMessage");
+				if(finished.getWinner())
+					information.append("******* YOU WIN! *******" + "\n");
+				else
+					information.append("******* YOU LOSE! *******" + "\n");
+				myTurn = false;
+				t.stop();	// Sluta läsa efter meddelanden
+			}
+		}
+		
 	}
 	
-	//-----------------------------------------
-	// Challenge Meddelandet, accept eller deny (NETWORK - Sender)
-	//-----------------------------------------		
-	private void triggerChallenge(String opponent) {
+	/**
+	 * Triggers a challenge dialog box.
+	 * You are asked to Accept or Deny.
+	 * 
+	 * @param opponent	String representation of the opponent ID.
+	 */	
+	private void triggerChallenge(String opponent) 
+	{
 		waitingForChallenge = false;
 		
 		// Skapar en JDialog för "challenge" meddelandet
@@ -383,6 +439,7 @@ public class ClientUI implements ActionListener
 		challengeDialog.add(title, BorderLayout.NORTH);
 		challengeDialog.add(accept, BorderLayout.WEST);
 		challengeDialog.add(deny, BorderLayout.EAST);
+		challengeDialog.setLocation(200, 200);
 		
 		// action listener för denna.
 		ActionListener dialogListener = new ActionListener() {
@@ -409,9 +466,9 @@ public class ClientUI implements ActionListener
 		challengeDialog.setVisible(true);
 	}
 	
-	//-----------------------------------------
-	// Skickar ett refresh meddelande (NETWORK - Sender)
-	//-----------------------------------------		
+	/**
+	 * Sends a RefreshMessage to the Server
+	 */	
 	private void refreshLobby() 
 	{
 		RefreshMessage refresh = new RefreshMessage();
@@ -419,9 +476,9 @@ public class ClientUI implements ActionListener
 		System.err.println("Refreshed Lobby");
 	}
 	
-	//-----------------------------------------
-	// Skapar fönstret för utplacering av skepp
-	//-----------------------------------------
+	/**
+	 * Creates the "create Navy Window"
+	 */	
 	private void createNavyWindow()
 	{
 		// Rensa fönstret på föregående komponenter
@@ -504,9 +561,9 @@ public class ClientUI implements ActionListener
 		window.setVisible(true);
 	}	
 	
-	//-----------------------------------------
-	// Skapar spelfönstret
-	//-----------------------------------------
+	/**
+	 * Creates the "Game window"
+	 */	
 	private void createGameWindow()
 	{
 		// Rensa fönstret på föregående komponenter
@@ -572,6 +629,8 @@ public class ClientUI implements ActionListener
 		middle.setMaximumSize(new Dimension(90,90));
 		middle.setMinimumSize(new Dimension(90,90));
 		middle.setPreferredSize(new Dimension(90,90));
+		direction.setFont(new Font("SansSerif", Font.BOLD, 50));
+		middle.add(direction);
 		
 		// Bottenpanelen innehåller textfältet med information om händelser
 		JPanel bottom = new JPanel();
@@ -628,7 +687,12 @@ public class ClientUI implements ActionListener
 		updateMyNavy();
 	}
 		
-	// Kontrollerar input [kollar bara om det står något i rutorna överhuvudtaget]
+	/**
+	 * Checks wether you typed anything at all in the boxes.
+	 * 
+	 * @param ip	IP Address
+	 * @param port	Port Number
+	 */	
 	private boolean checkInput(String ip, String port)
 	{
 		if(ip.length() == 0 || port.length() == 0)
@@ -637,18 +701,20 @@ public class ClientUI implements ActionListener
 			return true;
 	}
 	
-	//-----------------------------------------
-	// Inaktiverar knappar som används vid utplacering av skepp
-	//-----------------------------------------
+	/**
+	 * Disables the buttons for which you place ships/coordinates.
+	 */	
 	private void disablePlacementbuttons(){
 		addAircraftCarrierButton.setEnabled(false);
 		addDestroyerButton.setEnabled(false);
 		addSubmarineButton.setEnabled(false);
 	}
 	
-	//-----------------------------------------
-	// Logik för utplacering av skepp
-	//-----------------------------------------	
+	/**
+	 * Logic for placing the coordinates and ships.
+	 * 
+	 * @param e		Action Event
+	 */	
 	private void placeShip(ActionEvent e)
 	{
 		// Om utplacering av skepp är färdigt, aktiveras knapparna igen och klick på rutorna inaktiveras.
@@ -729,18 +795,32 @@ public class ClientUI implements ActionListener
 		}
 	}
 	
-	//-----------------------------------------
-	// Nollställer rutorna för utplacering av skepp
-	//-----------------------------------------
+	/**
+	 * Changes the visual "arrow" that indicates who is attacking.
+	 */	
+	private void changeDirection() {
+		if(myTurn){
+			direction.setForeground(Color.green);
+			direction.setText(">");
+		}
+		else {
+			direction.setForeground(Color.red);
+			direction.setText("<");
+		}
+	}
+	
+	/**
+	 * Resets all Squares while creating navy
+	 */	
 	private void resetSquares() {
 		for(int i = 0; i < placeSquares.size(); i++){
 			placeSquares.elementAt(i).resetMe();
 		}
 	}
 	
-	//-----------------------------------------
-	// Nollställer knappar för utplacering av skepp
-	//-----------------------------------------
+	/**
+	 * Resets all buttons to default in navy creation
+	 */	
 	private void resetPlacementbuttons() {
 		addAircraftCarrierButton.setText("Aircraft Carrier (0/1)");
 		addDestroyerButton.setText("Destroyer (0/3)");
@@ -751,10 +831,11 @@ public class ClientUI implements ActionListener
 		readyButton.setEnabled(false);
 	}
 	
-	//-----------------------------------------
-	// Uppdaterar spelarens NAVY på spelplanen
-	//-----------------------------------------	
-	public void updateMyNavy() {
+	/**
+	 * Updates the myNavy object
+	 */	
+	private void updateMyNavy() 
+	{
 		// Vector med alla koordinater
 		Vector<Coordinate> cords = new Vector<Coordinate>();
 		
@@ -773,9 +854,11 @@ public class ClientUI implements ActionListener
 	}
 	
 	
-	//-----------------------------------------
-	// ActionEvents - CONNECT WINDOW
-	//-----------------------------------------	
+	/**
+	 * Action Events in CONNECT WINDOW.
+	 * 
+	 * @param e		ActionEvent
+	 */	
 	private void connectEvents(ActionEvent e) 
 	{
 		if(e.getSource() == connectButton){
@@ -792,9 +875,11 @@ public class ClientUI implements ActionListener
 		}
 	}
 	
-	//-----------------------------------------
-	// ActionEvents - LOBBY WINDOW
-	//-----------------------------------------		
+	/**
+	 * Action Events in LOBBY WINDOW.
+	 * 
+	 * @param e		ActionEvent
+	 */		
 	private void lobbyEvents(ActionEvent e) 
 	{
 		if(e.getSource() == challengeButton) {
@@ -819,9 +904,11 @@ public class ClientUI implements ActionListener
 		}
 	}
 	
-	//-----------------------------------------
-	// ActionEvents - CREATE NAVY WINDOW
-	//-----------------------------------------		
+	/**
+	 * Action Events in CREATE NAVY WINDOW.
+	 * 
+	 * @param e		ActionEvent
+	 */		
 	private void createNavyEvents(ActionEvent e) 
 	{
 		// Utplacering av skepp
@@ -829,37 +916,43 @@ public class ClientUI implements ActionListener
 		
 		// READY eller CLEAR knapparna
 		if(e.getSource() == readyButton) {
-			myNavy = placer.getNavy();			// Hämta Navy från ShipPlacer
-			// SKICKA NAVY TILL SERVER FÖR VALIDERING, VÄNTA PÅ SVAR...
-			createGameWindow();
+			myNavy = placer.getNavy();							// Hämta Navy från ShipPlacer
+			NavyMessage sendNavy = new NavyMessage(myNavy);		// Skicka till server
+			cNetwork.sendMessage(sendNavy);
 		}
-		else if(e.getSource() == clearButton) {
+		else if(e.getSource() == clearButton) {					// Nollställ Navy
 			placer.Reset();
 			resetSquares();
 			resetPlacementbuttons();
 		}		
 	}
 	
-	//-----------------------------------------
-	// ActionEvents - GAME WINDOW
-	//-----------------------------------------		
+	/**
+	 * Action Events in GAME WINDOW.
+	 * 
+	 * @param e		ActionEvent
+	 */		
 	private void gameEvents(ActionEvent e) 
 	{
-		// Loopa genom alla rutor vid klick.				---- BOOL här som bestämmer om det är ens egen tur eller ej.
-		for(int i = 0; i < enemySquares.size(); i++){
-			if(e.getSource() == enemySquares.elementAt(i)){
-				if(enemySquares.elementAt(i).isAlive()){
-					enemySquares.elementAt(i).setMiss();		// Skicka meddelande till server här...
-					information.append("X: " + Integer.toString(enemySquares.elementAt(i).getXcoordinate()) + " Y: " + Integer.toString(enemySquares.elementAt(i).getYcoordinate()) + "\n");
+		if(myTurn)	// Gå igenom alla rutor.
+			for(int i = 0; i < enemySquares.size(); i++){
+				if(e.getSource() == enemySquares.elementAt(i)){
+					if(enemySquares.elementAt(i).isAlive()){
+						Shot shoot = new Shot(enemySquares.elementAt(i).getXcoordinate(), enemySquares.elementAt(i).getYcoordinate()); 
+						cNetwork.sendMessage(shoot);
+						myTurn = false;
+						changeDirection();
+					}
+					break;
 				}
-				break;
-			}
-		}		
+			}		
 	}
 	
-	//-----------------------------------------
-	// Action Events
-	//-----------------------------------------
+	/**
+	 * Action Events
+	 * 
+	 * @param e		ActionEvent
+	 */	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(state == states.connect.ordinal())

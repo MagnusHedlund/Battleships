@@ -130,7 +130,7 @@ public class Lobby
 	private void handleChallenge(Player player, ChallengeMessage message)
 	{
 		// The player may challenge the Server AI
-		if(message.getOpponentIP() == 0)
+		if(message.getOpponentID() == 0)
 		{
 			// Accept the request right away
 			player.sendMessage(new ChallengeMessage("Server AI", 0, true, true));
@@ -139,7 +139,7 @@ public class Lobby
 		}
 		
 		// Find the other player, since it turned out not to be the Server AI
-		Player other = players.get(message.getOpponentIP());
+		Player other = players.get(message.getOpponentID());
 		
 		// Must be a valid one
 		if(other == null)

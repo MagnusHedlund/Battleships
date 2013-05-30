@@ -146,6 +146,10 @@ public class Socket
 		}
 		
 		// Returning a message
-		return Message.toMessage(data);
+		if(data != null && data.length() > 0)
+		{
+			return Message.toMessage(data);
+		}
+		return null;
 	}
 }

@@ -273,7 +273,7 @@ public class ClientUI implements ActionListener
 		Message lobbyUpdate = cNetwork.getMessage();
 		
 		if(lobbyUpdate != null)
-			if(lobbyUpdate.getType() == "ActivePlayersMessage") 
+			if(lobbyUpdate.getType().equals("ActivePlayersMessage")) 
 			{
 				ActivePlayersMessage playerL = (ActivePlayersMessage) lobbyUpdate;
 
@@ -281,7 +281,7 @@ public class ClientUI implements ActionListener
 				playerList.add("ActivePlayerMessage recieved, this is a test.");
 				
 			}
-			else if(lobbyUpdate.getType() == "ChallengeMessage") 
+			else if(lobbyUpdate.getType().equals("ChallengeMessage")) 
 			{
 				ChallengeMessage challenge = (ChallengeMessage) lobbyUpdate;
 				

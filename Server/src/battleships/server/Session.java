@@ -1,6 +1,8 @@
 package battleships.server;
 
+import battleships.game.Coordinate;
 import battleships.game.Navy;
+import battleships.game.ServerAI;
 import battleships.game.Ship;
 import battleships.game.Validator;
 import battleships.message.FinishedMessage;
@@ -24,10 +26,18 @@ public class Session implements Runnable{
 	private boolean isSunk=false;
 	private boolean grantTurn=false;
 	private boolean finished=false;
+	private ServerAI serverAI=null;
 	
 	public Session(Player first, Player second){
 		player[PLAYER0]=first;
 		player[PLAYER1]=second;
+	}
+	
+	public Session(Player first){
+		player[PLAYER0]=first;
+		serverAI = new ServerAI(5,3,1); 
+		navyValid[PLAYER1]=true; //skip validation of server Navy
+		navy[PLAYER1]=serverAI.getNavy();
 	}
 	
 	/**
@@ -77,8 +87,13 @@ public class Session implements Runnable{
 		}	
 	}
 	
+	
+	/**
+	 * The game loop. Read messages/getshots and evaluate. Messages are sent to clients(not to the ServerAI)
+	 * */
 	private void enterGameLoop(){
 		boolean loop=true;
+		Coordinate shotCoordinate=null;
 		while(loop){
 			
 			//reset
@@ -86,18 +101,27 @@ public class Session implements Runnable{
 			isSunk=false;
 			grantTurn=false;
 			finished=false;
+			shotCoordinate=null;
 			
 			//Read message
-			Message msg = player[currentPlayer].readMessage();
-			Shot navMsg=null;
-			if(msg.getType()=="Shot"){
-				navMsg = (Shot)msg;
+			if(player[currentPlayer]!=null){  //an actual player
+				Message msg = player[currentPlayer].readMessage();
+				Shot navMsg=null;
+				if(msg.getType()=="Shot"){
+					navMsg = (Shot)msg;
+					shotCoordinate = navMsg.getCoordinate();
+				}
+			}
+			else {  //get shot coordinate from ServerAI
+				if(serverAI!=null){
+					shotCoordinate = serverAI.shoot();
+				}	
 			}
 			
-			// do we have a valid message?
-			if(navMsg!=null){
+			// do we have a Coordinate?
+			if(shotCoordinate!=null){
 				
-				Ship hitShip=navy[otherPlayer].shot(navMsg.getCoordinate());
+				Ship hitShip=navy[otherPlayer].shot(shotCoordinate);
 				
 				//a hit
 				if(hitShip!=null){
@@ -120,20 +144,27 @@ public class Session implements Runnable{
 				}
 				
 				if(finished){
-					
-					player[currentPlayer].sendMessage(new FinishedMessage(true, navy[currentPlayer]));
+					if(player[currentPlayer]!=null){
+						player[currentPlayer].sendMessage(new FinishedMessage(true, navy[currentPlayer]));
+					}
 					
 					//send hitMessage to otherPlayer
-					player[otherPlayer].sendMessage(new FinishedMessage(false, navy[otherPlayer]));
+					if(player[otherPlayer]!=null){
+						player[otherPlayer].sendMessage(new FinishedMessage(false, navy[otherPlayer]));
+					}
 					
 					loop=false;
 				}
 				else{
 					//send hitMessage to currentPlayer
-					player[currentPlayer].sendMessage(new HitMessage(isHit, navMsg.getCoordinate(), isSunk, hitShip));
-				
+					if(player[currentPlayer]!=null){
+						player[currentPlayer].sendMessage(new HitMessage(isHit, shotCoordinate, isSunk, hitShip));
+					}
+					
 					//send hitMessage to otherPlayer
-					player[otherPlayer].sendMessage(new NavyMessage(navy[otherPlayer], grantTurn));
+					if(player[currentPlayer]!=null){
+						player[otherPlayer].sendMessage(new NavyMessage(navy[otherPlayer], grantTurn));
+					}
 				}
 
 				//if otherPlayer was granted next turn, Switch player
@@ -142,7 +173,10 @@ public class Session implements Runnable{
 				}
 			}
 			else{ //the message received was of wrong type
-				player[currentPlayer].sendMessage(new ValidationMessage(false));
+				if(player[currentPlayer]!=null){
+					player[currentPlayer].sendMessage(new ValidationMessage(false));
+				}
+				
 			}
 		}//while end
 	}

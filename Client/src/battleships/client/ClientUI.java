@@ -404,8 +404,10 @@ public class ClientUI implements ActionListener
 		System.err.println("Received: ValidationMessage");
 		
 		// Korrekt utplacerad Navy?
-		if(valid.getMessage())
+		if(valid.getMessage()) {
+			setPlayerNavy();		// Ja - Sätt Navy
 			createGameWindow();		// Ja - Spela
+		}
 		else {						// Nej - Gör om
 			placer.Reset();
 			resetSquares();
@@ -891,24 +893,45 @@ public class ClientUI implements ActionListener
 	}
 	
 	/**
-	 * Updates the myNavy object
-	 */	
-	private void updateMyNavy() 
+	 * Converts Navy coordinates to Squares, visually in the game.
+	 */		
+	private void setPlayerNavy()
 	{
 		// Vector med alla koordinater
 		Vector<Coordinate> cords = new Vector<Coordinate>();
 		
 		// Lägger över till vectorn
 		for(int i = 0; i < myNavy.getShips().size(); i++)
-			cords.addAll(myNavy.getShips().get(i).getCoords());
-				
+			cords.addAll(myNavy.getShips().get(i).getCoords());	
+		
 		// Sätt ut koordinaterna på playerSquares
 		for(int i = 0; i < playerSquares.size(); i++){
 			for(int j = 0; j < cords.size(); j++){
 				if(cords.elementAt(j).getX().equals(playerSquares.elementAt(i).getXcoordinate()) && cords.elementAt(j).getY().equals(playerSquares.elementAt(i).getYcoordinate())) {
-					playerSquares.elementAt(i).setShipHere();		
+					playerSquares.elementAt(i).setShipHere();	
 				}
 			}
+		}
+	}
+	
+	/**
+	 * Updates the clients Navy
+	 */	
+	private void updateMyNavy() 
+	{
+		// Lägg över 2D array till Int Vector
+		Vector<Integer> Ocean = new Vector<Integer>(100);
+		for (int x[] : myNavy.getMap().getOcean()) {
+			for (int y : x) 
+				Ocean.add(y);
+		}
+
+		// Loopa genom båda vectorer, om värdet i Ocean == 3 eller 1, så är detta en träff av fienden.
+		for(int i = 0; i < playerSquares.size(); i++) {
+			if((Ocean.elementAt(i) == 3 || Ocean.elementAt(i) == 1) && playerSquares.elementAt(i).isAship())
+				playerSquares.elementAt(i).setMiss();	// Egentligen en träff, men för fienden. (blir rätt färg)
+			else if(Ocean.elementAt(i) == 2)
+				playerSquares.elementAt(i).setBom();	// "BOM" är alltså en miss (för fienden)
 		}
 	}
 	

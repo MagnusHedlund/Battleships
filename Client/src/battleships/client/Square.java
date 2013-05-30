@@ -22,6 +22,7 @@ public class Square extends JButton
 	private int x = 0;								// X Koordinat
 	private int y = 0;								// Y Koordinat
 	private Color myColor = Color.WHITE;			// Färg
+	private boolean iShip = false;					// Skepp?
 	
 	// Konstruktor
 	Square(int px, int py, boolean palive)
@@ -65,6 +66,17 @@ public class Square extends JButton
    }
    
 	/**
+	 * Sets the button to be a "bom" button with color: ORANGE.
+	 * "bom" only happens from the Clients own perspective.
+	 */
+  public void setBom()
+  {
+	   Alive = false;
+	   myColor = Color.orange;
+	   repaint();
+  }
+   
+	/**
 	 * Sets the button to be a "hit" button with color: GREEN.
 	 */
    public void setHit()
@@ -80,6 +92,7 @@ public class Square extends JButton
    public void setShipHere()
    {
 	   Alive = false;
+	   iShip = true;
 	   if(myColor == Color.DARK_GRAY || myColor == Color.WHITE)
 		   myColor = Color.DARK_GRAY;
 	   repaint();	   
@@ -109,5 +122,10 @@ public class Square extends JButton
 	 * GET - The Y coordinate
 	 */
    public int getYcoordinate() {return y;};
+   
+	/**
+	 * GET - Is there a Ship on this square?
+	 */  
+   public boolean isAship() {return iShip;}
 
 }

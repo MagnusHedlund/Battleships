@@ -68,7 +68,7 @@ public class Lobby
 					switch(type)
 					{
 						// Player list request
-						case "ActivePlayersMessage": 
+						case "RefreshMessage": 
 							sendPlayerList(player);
 							break;
 							

@@ -179,16 +179,16 @@ public class Lobby
 			// Create a new game if the challenge was accepted
 			if(response)
 			{
-				System.out.println(player.getName() + " [" + player.getID() + "] accepted " + other.getName() +
-		   		   		   		   "'s [" + other.getID() + "] request!");
+				System.out.println(player.getName() + " [" + player.getID() + "] accepted the challenge given by " + other.getName() +
+		   		   		   		   " [" + other.getID() + "]!");
 				createGame(player, other);
 			}
 			
 			// The challenge was declined
 			else
 			{
-				System.out.println(player.getName() + " [" + player.getID() + "] denied " + other.getName() +
-				   		   		   "'s [" + other.getID() + "] request!");
+				System.out.println(player.getName() + " [" + player.getID() + "] denied the challenge given by " + other.getName() +
+				   		   		   " [" + other.getID() + "]!");
 			}
 		}
 	}
@@ -204,6 +204,7 @@ public class Lobby
 		player.setIdle(false);
 		
 		// Sessions are handled in separate threads
+		System.out.println(player.getName() + " [" + player.getID() + "] is battling against the Server AI!");
 		(new Thread(new Session(player))).start();
 	}
 	
@@ -220,6 +221,8 @@ public class Lobby
 		second.setIdle(false);
 		
 		// Sessions are handled in separate threads
+		System.out.println(first.getName() + " [" + first.getID() + "] is battling against " + second.getName() +
+		   		   		   " [" + second.getID() + "]!");
 		(new Thread(new Session(first, second))).start();
 	}
 }

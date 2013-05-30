@@ -7,13 +7,8 @@
 //----------------------------------------------------------------
 
 package battleships.client;
-
 import java.util.Vector;
-import battleships.game.Aircraft_carrier;
-import battleships.game.Coordinate;
-import battleships.game.Destroyer;
-import battleships.game.Navy;
-import battleships.game.Submarine;
+import battleships.game.*;
 
 public class ShipPlacer {
 	

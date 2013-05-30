@@ -5,46 +5,48 @@ public class ChallengeMessage extends Message {
 	private boolean isAcceptMsg;  //is this an acceptMessage?
 	private boolean accepted;  //was challenge accepted?
 	private String opponentName;  
-	private String opponentIP;  //could maybe be omitted?
+	private int opponentID; 
 	
 	public ChallengeMessage(){
 		super(myType);
 		isAcceptMsg=false;
 		accepted=false;
 		opponentName="";
-		opponentIP="";
+		opponentID=-1;
 	}
 	
-	public ChallengeMessage(String opponentName, String opponentIP){
+	public ChallengeMessage(String opponentName, int opponentID){
 		super(myType);
 		isAcceptMsg=false;
 		accepted=false;
 		this.opponentName=opponentName;
-		this.opponentIP=opponentIP;
+		this.opponentID=opponentID;
 	}
 	
-	public ChallengeMessage(String opponentName, String opponentIP, boolean isAcceptMsg, boolean accept){
+	public ChallengeMessage(String opponentName, int opponentID, boolean isAcceptMsg, boolean accept){
 		super(myType);
 		this.isAcceptMsg=isAcceptMsg;
 		this.accepted=accept;
 		this.opponentName=opponentName;
-		this.opponentIP=opponentIP;
+		this.opponentID=opponentID;
 	}
 	
 	/* Getters */
-	public boolean GetAccept(){return accepted;}
-	public String GetOpponentName(){return opponentName;}
-	public String GetOpponentIP(){return opponentIP;}
+	public boolean getAccept(){return accepted;}
+	public boolean isAcceptMessage(){return isAcceptMsg;}
+	public String getOpponentName(){return opponentName;}
+	public int getOpponentIP(){return opponentID;}
 	
 	/* Setters */
-	public void SetAccept(boolean accept){this.accepted=accept;}
-	public void SetOpponentName(String opponentName){this.opponentName=opponentName;}
-	public void SetOpponentIP(String opponentIP){this.opponentIP=opponentIP;}
+	public void setAccept(boolean accept){this.accepted=accept;}
+	public void setIsAcceptMessage(boolean isAcceptMsg){this.isAcceptMsg=isAcceptMsg;}
+	public void setOpponentName(String opponentName){this.opponentName=opponentName;}
+	public void setOpponentIP(int opponentIP){this.opponentID=opponentID;}
 	
 	/**
 	 * Sets the message to become a accept challenge message
 	 * */
-	public void Accept(){
+	public void accept(){
 		isAcceptMsg=true;
 		accepted=true;
 	}
@@ -52,7 +54,7 @@ public class ChallengeMessage extends Message {
 	/**
 	 * Sets the message to become a decline challenge message
 	 * */
-	public void Decline(){
+	public void decline(){
 		isAcceptMsg=true;
 		accepted=false;
 	}

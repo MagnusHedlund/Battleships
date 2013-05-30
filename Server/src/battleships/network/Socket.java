@@ -75,6 +75,17 @@ public class Socket
 		{
 			throw new ConnectionException("Invalid raw socket");			
 		}
+		
+		// Streams for reading and writing through this socket
+		try
+		{
+			out = new java.io.PrintWriter(internalSocket.getOutputStream(), true);
+			in = new java.io.BufferedReader(new java.io.InputStreamReader(internalSocket.getInputStream()));
+		}
+		catch (Exception e)
+		{
+			throw new ConnectionException("Stream failure!");		
+		}
 	}
 	
 	/**
@@ -138,6 +149,7 @@ public class Socket
 		String data;
 		try
 		{
+			// Retrieve information
 			data = in.readLine();
 		} 
 		catch (IOException e)

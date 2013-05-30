@@ -1,4 +1,4 @@
-package message;
+package battleships.message;
 
 public class ValidationMessage extends Message {
 	private static final String myType="ValidationMessage";
@@ -14,7 +14,7 @@ public class ValidationMessage extends Message {
 		valid=val;
 	}
 	
-	private boolean getMessage(){return valid;}
+	public boolean getMessage(){return valid;}
 	
-	private void setMessage(boolean val){valid=val;}
+	public void setMessage(boolean val){valid=val;}
 }

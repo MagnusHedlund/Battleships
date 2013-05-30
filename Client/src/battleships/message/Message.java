@@ -1,4 +1,4 @@
-package message;
+package battleships.message;
 
 import com.thoughtworks.xstream.XStream;
 
@@ -12,10 +12,13 @@ public abstract class Message {
 	/**
 	 * Converts the object to an XML-string.
 	 * */
-	public String toXML(){
+	public String toXML()
+	{
 		String xml;
 		XStream xstream = new XStream();
 		xml = xstream.toXML(this);
+		xml = xml.replace("\n", "").replace("\r", "");
+		xml += "\n";
 		return xml;
 	}
 	
@@ -25,7 +28,16 @@ public abstract class Message {
 	public static Message toMessage(String data)
 	{
 		XStream xstream = new XStream();
-		return (Message)xstream.fromXML(data);
+		Message message;
+		try
+		{
+			message = (Message)xstream.fromXML(data);
+		}
+		catch(Exception e)
+		{
+			return null;
+		}
+		return message;
 	}
 	
 	/**

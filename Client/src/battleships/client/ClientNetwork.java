@@ -1,17 +1,24 @@
-package client;
-import message.Message;
-import network.ConnectionException;
-import network.Socket;
+package battleships.client;
+import battleships.message.Message;
+import battleships.network.ConnectionException;
+import battleships.network.Socket;
 
+/**
+ * Socket Wrapper for Client.
+ * 
+ * @author Fredrik Strömbergsson
+ */
 public class ClientNetwork {
-	private Socket s;
+	private Socket s = new Socket();
 	
-	//-----------------------------------------
-	// Ansluter till servern
-	//-----------------------------------------
+	/**
+	 * Connect to the server
+	 * 
+	 * @param address	IP Address
+	 * @param port		Port Number
+	 */
 	public boolean connect(String address, String port) {
 		
-		s = new Socket();
 		try 
 		{	// Anslut till servern
 			s.connect(address, Integer.parseInt(port));
@@ -26,19 +33,22 @@ public class ClientNetwork {
 		return true;
 	}
 	
-	//-----------------------------------------
-	// Disconnect
-	//-----------------------------------------	
+	/**
+	 * Disconnect from server
+	 */
 	public void disconnect() {s.disconnect();}
 	
-	//-----------------------------------------
-	// Skicka meddelande
-	//-----------------------------------------		
+	/**
+	 * Send a message to the server
+	 * @param msg	The Message
+	 */	
 	public void sendMessage(Message msg) {s.write(msg);}
 	
-	//-----------------------------------------
-	// Ta emot meddelande
-	//-----------------------------------------		
+	/**
+	 * Get a message
+	 * 
+	 * @return	A message
+	 */	
 	public Message getMessage() {return s.read();}
 	
 }

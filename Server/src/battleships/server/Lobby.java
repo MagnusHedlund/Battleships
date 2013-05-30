@@ -1,6 +1,6 @@
 /*
  * Lobby.java	
- * Version 1.0 (2013-05-29)
+ * Version 1.1 (2013-05-30)
  */
 
 package battleships.server;
@@ -68,11 +68,11 @@ public class Lobby
 					switch(type)
 					{
 						// Player list request
-						case "ActivePlayersMessage": 
+						case "RefreshMessage": 
 							sendPlayerList(player);
 							break;
 							
-						// Messages related to challenging other players
+						// Messages related to challenging others
 						case "ChallengeMessage": 
 							handleChallenge(player, (ChallengeMessage)message);
 							break;
@@ -108,8 +108,8 @@ public class Lobby
 		HashMap<String, Integer> list = new HashMap<String, Integer>();
 		for(Player value : players.values())
 		{
-			// Only idle players
-			if(value.getIdle())
+			// Only idle players (and ignore the requesting player)
+			if(value.getIdle() && player.getID() != value.getID())
 			{
 				list.put(value.getName(), value.getID());
 			}
@@ -129,8 +129,17 @@ public class Lobby
 	 */
 	private void handleChallenge(Player player, ChallengeMessage message)
 	{
-		// Find the other player
-		Player other = players.get(message.getOpponentIP());
+		// The player may challenge the Server AI
+		if(message.getOpponentID() == 0)
+		{
+			// Accept the request right away
+			player.sendMessage(new ChallengeMessage("Server AI", 0, true, true));
+			createGame(player);
+			return;
+		}
+		
+		// Find the other player, since it turned out not to be the Server AI
+		Player other = players.get(message.getOpponentID());
 		
 		// Must be a valid one
 		if(other == null)
@@ -142,6 +151,12 @@ public class Lobby
 		else if(!other.getIdle())
 		{
 			System.out.println(player.getName() + " [" + player.getID() + "] tried to challenge a busy player!");
+		}
+		
+		// Challenging oneself makes no sense
+		else if(other.getID() == player.getID())
+		{
+			System.out.println(player.getName() + " [" + player.getID() + "] tried to challenge oneself!");
 		}
 		
 		// Sending the challenge request
@@ -164,16 +179,33 @@ public class Lobby
 			// Create a new game if the challenge was accepted
 			if(response)
 			{
-				System.out.println(player.getName() + " [" + player.getID() + "] accepted " + other.getName() +
-		   		   		   		   "'s [" + other.getID() + "] request!");
+				System.out.println(player.getName() + " [" + player.getID() + "] accepted the challenge given by " + other.getName() +
+		   		   		   		   " [" + other.getID() + "]!");
 				createGame(player, other);
 			}
+			
+			// The challenge was declined
 			else
 			{
-				System.out.println(player.getName() + " [" + player.getID() + "] denied " + other.getName() +
-				   		   		   "'s [" + other.getID() + "] request!");
+				System.out.println(player.getName() + " [" + player.getID() + "] denied the challenge given by " + other.getName() +
+				   		   		   " [" + other.getID() + "]!");
 			}
 		}
+	}
+	
+	/**
+	 * Creates a new game session for a single player and the Server AI.
+	 * 
+	 * @param player	The challenger.
+	 */
+	private void createGame(Player player)
+	{
+		// The player isn't idle anymore
+		player.setIdle(false);
+		
+		// Sessions are handled in separate threads
+		System.out.println(player.getName() + " [" + player.getID() + "] is battling against the Server AI!");
+		(new Thread(new Session(player))).start();
 	}
 	
 	/**
@@ -189,6 +221,8 @@ public class Lobby
 		second.setIdle(false);
 		
 		// Sessions are handled in separate threads
+		System.out.println(first.getName() + " [" + first.getID() + "] is battling against " + second.getName() +
+		   		   		   " [" + second.getID() + "]!");
 		(new Thread(new Session(first, second))).start();
 	}
 }

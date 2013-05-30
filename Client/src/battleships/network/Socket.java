@@ -3,11 +3,11 @@
  * Version 1.0 (2013-05-29)
  */
 
-package network;
+package battleships.network;
 
 import java.io.IOException;
 
-import message.Message;
+import battleships.message.Message;
 
 /**
  * Handles the communication between two entities over a network.
@@ -75,6 +75,17 @@ public class Socket
 		{
 			throw new ConnectionException("Invalid raw socket");			
 		}
+		
+		// Streams for reading and writing through this socket
+		try
+		{
+			out = new java.io.PrintWriter(internalSocket.getOutputStream(), true);
+			in = new java.io.BufferedReader(new java.io.InputStreamReader(internalSocket.getInputStream()));
+		}
+		catch (Exception e)
+		{
+			throw new ConnectionException("Stream failure!");		
+		}
 	}
 	
 	/**
@@ -138,6 +149,7 @@ public class Socket
 		String data;
 		try
 		{
+			// Retrieve information
 			data = in.readLine();
 		} 
 		catch (IOException e)
@@ -146,6 +158,10 @@ public class Socket
 		}
 		
 		// Returning a message
-		return Message.toMessage(data);
+		if(data != null && data.length() > 0)
+		{
+			return Message.toMessage(data);
+		}
+		return null;
 	}
 }

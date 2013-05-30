@@ -1,6 +1,6 @@
-package message;
+package battleships.message;
 
-import game.Navy;
+import battleships.game.Navy;
 
 /**
  * Message for telling the game is over, and whether the receiver is the winner.

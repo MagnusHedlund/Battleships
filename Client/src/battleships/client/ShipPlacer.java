@@ -1,15 +1,17 @@
-//----------------------------------------------------------------
-// Namn: Fredrik Strömbergsson
-// Datum: 2013-05-24
-// 
-// ShipPlacer.java:
-// Används vid utplacering av skepp för att hålla reda på vilka skepp/delar av skepp som blivit utplacerade.
-//----------------------------------------------------------------
+/*
+ * ShipPlacer.java
+ * Version 1.0 (2013-05-30)
+ */
 
-package client;
+package battleships.client;
 import java.util.Vector;
-import game.*;
+import battleships.game.*;
 
+/**
+ * Used by Client to place ships and coordinates while creating a navy.
+ * 
+ * @author Fredrik Strömbergsson
+ */
 public class ShipPlacer {
 	
 	// Deklarationer
@@ -33,34 +35,47 @@ public class ShipPlacer {
 	public void setCounter(int C) {Counter = C;}
 	public void addCurrentCoordinates(int x, int y) {currentCoords.add(new Coordinate(x, y));}
 	
-	// Lägg till en ubåt
+	/**
+	 * Add a submarine to the Navy
+	 */
 	public void addNumSubmarines() {
 		Submarines++; 
 		myNavy.addShip(new Submarine(currentCoords.elementAt(0)));
 		currentCoords.clear();
 	}
 	
-	// Lägg till en jägare
+	/**
+	 * Add a destroyer to the Navy
+	 */
 	public void addNumDestroyers() {
 		Destroyers++;
 		myNavy.addShip(new Destroyer(currentCoords.elementAt(0), currentCoords.elementAt(1), currentCoords.elementAt(2)));
 		currentCoords.clear();
 	}
 	
-	// Lägg till hangarfartyg
+	/**
+	 * Add a aircraft carrier to the Navy
+	 */
 	public void addNumAircraftcarriers() {
 		Aircraftc++;
 		myNavy.addShip(new Aircraft_carrier(currentCoords.elementAt(0), currentCoords.elementAt(1), currentCoords.elementAt(2), currentCoords.elementAt(3), currentCoords.elementAt(4)));
 		currentCoords.clear();
 	}
 	
-	// Vad som läggs ut just nu
+	/**
+	 * Sets what is currently being placed
+	 * @param	what	What is being placed? For example: "Submarine"
+	 */
 	public void addingShip(String what) {currentlyPlacing = what;}
 	
-	// Räkna ned antalet klick/utplaceringar (koordinater)
+	/**
+	 * Decrements the counter that keeps track of how many coordinates we are going to place.
+	 */
 	public void Count() {Counter--;}
 
-	// Nollställ
+	/**
+	 * Resets ShipPlacer to default
+	 */
 	public void Reset() {
 		Submarines = 0;
 		Destroyers = 0;

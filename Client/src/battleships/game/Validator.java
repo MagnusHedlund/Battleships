@@ -1,4 +1,4 @@
-package game;
+package battleships.game;
 
 import java.util.HashSet;
 import java.util.Iterator;

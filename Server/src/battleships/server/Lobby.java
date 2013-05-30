@@ -108,8 +108,8 @@ public class Lobby
 		HashMap<String, Integer> list = new HashMap<String, Integer>();
 		for(Player value : players.values())
 		{
-			// Only idle players
-			if(value.getIdle())
+			// Only idle players (and ignore the requesting player)
+			if(value.getIdle() && player.getID() != value.getID())
 			{
 				list.put(value.getName(), value.getID());
 			}

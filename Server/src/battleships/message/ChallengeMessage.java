@@ -35,13 +35,13 @@ public class ChallengeMessage extends Message {
 	public boolean getAccept(){return accepted;}
 	public boolean isAcceptMessage(){return isAcceptMsg;}
 	public String getOpponentName(){return opponentName;}
-	public int getOpponentIP(){return opponentID;}
+	public int getOpponentID(){return opponentID;}
 	
 	/* Setters */
 	public void setAccept(boolean accept){this.accepted=accept;}
 	public void setIsAcceptMessage(boolean isAcceptMsg){this.isAcceptMsg=isAcceptMsg;}
 	public void setOpponentName(String opponentName){this.opponentName=opponentName;}
-	public void setOpponentIP(int opponentIP){this.opponentID=opponentID;}
+	public void setOpponentIP(int opponentID){this.opponentID=opponentID;}
 	
 	/**
 	 * Sets the message to become a accept challenge message

@@ -330,12 +330,10 @@ public class ClientUI implements ActionListener
 			{
 				ChallengeMessage challenge = (ChallengeMessage) lobbyUpdate;
 				System.err.println("Recieved - ChallengeMessage");
-				
-				playerList.add("ChallengeMessage recieved, this is a test.");
-				
+								
 				// Avgör om man väntar på ett svar på skickad challenge, eller väntar på en challenge.
 				if(waitingForChallenge) {
-					triggerChallenge(challenge.getOpponentName());
+					triggerChallenge(Integer.toString(challenge.getOpponentID()));
 				}
 				else {
 					// Accept meddelande?
@@ -381,7 +379,7 @@ public class ClientUI implements ActionListener
 		final JDialog challengeDialog = new JDialog();
 		final JButton accept = new JButton("Accept");
 		final JButton deny = new JButton("Deny");
-		JLabel title = new JLabel(opponent + " has challenged you.");
+		JLabel title = new JLabel("Player " + opponent + " has challenged you.");
 		challengeDialog.add(title, BorderLayout.NORTH);
 		challengeDialog.add(accept, BorderLayout.WEST);
 		challengeDialog.add(deny, BorderLayout.EAST);
@@ -804,11 +802,16 @@ public class ClientUI implements ActionListener
 			// Skicka ett challenge till den man valt
 			if(lobbySelected.length() > 0) {
 				waitingForChallenge = false;
-				ChallengeMessage challenge = new ChallengeMessage();
-				challenge.accept();
-				challenge.setOpponentName(lobbySelected);
+				
+				// Sätter ID och Namn
+				int playerID = 0;
+				if(!lobbySelected.equals("Server"))
+					playerID = Character.getNumericValue(lobbySelected.charAt(lobbySelected.length()-1));
+
+				// Skicka
+				ChallengeMessage challenge = new ChallengeMessage(lobbySelected, playerID);
 				cNetwork.sendMessage(challenge);
-				System.err.println("Sent challenge message");
+				System.err.println("Sent challenge message against: " + lobbySelected + " with ID: " + Integer.toString(playerID));
 			}
 		}
 		else if(e.getSource() == refreshButton) {

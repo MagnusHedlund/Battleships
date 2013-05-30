@@ -316,7 +316,7 @@ public class ClientUI implements ActionListener
 			{
 				ActivePlayersMessage playerL = (ActivePlayersMessage) lobbyUpdate;
 				lobbyContenders = playerL.getContenders();
-				System.err.println("Recieved - ActivePlayersMessage");
+				System.err.println("Received: ActivePlayersMessage");
 				
 				// Uppdatera lobbylistan
 				playerList.clear();
@@ -329,7 +329,7 @@ public class ClientUI implements ActionListener
 			else if(lobbyUpdate.getType().equals("ChallengeMessage")) 
 			{
 				ChallengeMessage challenge = (ChallengeMessage) lobbyUpdate;
-				System.err.println("Recieved - ChallengeMessage");
+				System.err.println("Received: ChallengeMessage");
 								
 				// Avgör om man väntar på ett svar på skickad challenge, eller väntar på en challenge.
 				if(waitingForChallenge) {

@@ -130,7 +130,7 @@ public class Lobby
 	private void handleChallenge(Player player, ChallengeMessage message)
 	{
 		// The player may challenge the Server AI
-		if(message.getOpponentIP() == 0)
+		if(message.getOpponentID() == 0)
 		{
 			// Accept the request right away
 			player.sendMessage(new ChallengeMessage("Server AI", 0, true, true));
@@ -139,7 +139,7 @@ public class Lobby
 		}
 		
 		// Find the other player, since it turned out not to be the Server AI
-		Player other = players.get(message.getOpponentIP());
+		Player other = players.get(message.getOpponentID());
 		
 		// Must be a valid one
 		if(other == null)
@@ -151,6 +151,12 @@ public class Lobby
 		else if(!other.getIdle())
 		{
 			System.out.println(player.getName() + " [" + player.getID() + "] tried to challenge a busy player!");
+		}
+		
+		// Challenging oneself makes no sense
+		else if(other.getID() == player.getID())
+		{
+			System.out.println(player.getName() + " [" + player.getID() + "] tried to challenge oneself!");
 		}
 		
 		// Sending the challenge request

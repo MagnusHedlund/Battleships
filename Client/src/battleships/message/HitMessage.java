@@ -1,7 +1,7 @@
-package battleships.message;
+package message;
 
-import battleships.game.Coordinate;
-import battleships.game.Ship;
+import game.Coordinate;
+import game.Ship;
 
 public class HitMessage extends Message{
 	private static final String myType="HitMessage";

@@ -1,4 +1,4 @@
-package battleships.message;
+package message;
 
 import java.util.HashMap;
 import java.util.Map;

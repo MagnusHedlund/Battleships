@@ -1,6 +1,6 @@
-package battleships.message;
+package message;
 
-import battleships.game.Navy;
+import game.Navy;
 
 /**
  * Message containing a full Navy object, used to update Client and grant turn

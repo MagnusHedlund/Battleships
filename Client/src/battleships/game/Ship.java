@@ -1,4 +1,4 @@
-package battleships.game;
+package game;
 
 
 import java.util.TreeSet;

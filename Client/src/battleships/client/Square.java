@@ -11,8 +11,7 @@
 // 4. Skepp   (mörkgrå)
 //----------------------------------------------------------------
 
-package battleships.client;
-
+package client;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;

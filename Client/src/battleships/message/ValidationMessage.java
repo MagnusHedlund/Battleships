@@ -1,4 +1,4 @@
-package battleships.message;
+package message;
 
 public class ValidationMessage extends Message {
 	private static final String myType="ValidationMessage";

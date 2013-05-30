@@ -6,14 +6,9 @@
 // Används vid utplacering av skepp för att hålla reda på vilka skepp/delar av skepp som blivit utplacerade.
 //----------------------------------------------------------------
 
-package battleships.client;
-
+package client;
 import java.util.Vector;
-import battleships.game.Aircraft_carrier;
-import battleships.game.Coordinate;
-import battleships.game.Destroyer;
-import battleships.game.Navy;
-import battleships.game.Submarine;
+import game.*;
 
 public class ShipPlacer {
 	

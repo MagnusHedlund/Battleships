@@ -1,6 +1,6 @@
-package battleships.message;
+package message;
 
-import battleships.game.Coordinate;
+import game.Coordinate;
 
 public class Shot extends Message {
 	private Coordinate coordinate=null;

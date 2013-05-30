@@ -1,4 +1,4 @@
-package battleships.game;
+package game;
 
 /**
  * Represents a coordinate in the game battleship.

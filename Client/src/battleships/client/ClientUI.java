@@ -5,16 +5,8 @@
 // ClientUI.java
 //----------------------------------------------------------------
 
-package battleships.client;
-
-import javax.imageio.ImageIO;
-import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-
-import battleships.game.Coordinate;
-import battleships.game.Navy;
-
+package client;
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -23,10 +15,31 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.Vector;
+import javax.imageio.ImageIO;
+import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import message.*;
+import game.*;
 
 public class ClientUI implements ActionListener
 {
@@ -51,8 +64,11 @@ public class ClientUI implements ActionListener
 	private Navy myNavy = new Navy(5, 3, 1);						// NAVY
 	private JList<String> lobbyList = new JList<String>();			// Listan i LOBBY
 	private JButton challengeButton = new JButton("Challenge!");	// "challenge" knapp - lobby
+	private JButton refreshButton = new JButton("Refresh");			// "refresh" knapp - lobby
 	private Vector<String> playerList = new Vector<String>();		// objekten i listan - lobby
 	private String lobbySelected = "";								// vilket objekt som är valt i listan - lobby
+	private ClientNetwork cNetwork = new ClientNetwork();			// Wrapper för Socket
+	private boolean waitingForChallenge = true;						// BOOL - för lobbymeddelanden
 	
 	//-----------------------------------------
 	// Konstruktor
@@ -61,6 +77,16 @@ public class ClientUI implements ActionListener
 	{
 		createConnectWindow();
 	}
+	
+	//-----------------------------------------
+	// Vid avslut, disconnect socket
+	//-----------------------------------------
+	WindowAdapter exitListener = new WindowAdapter() {
+		@Override
+		public void windowClosing(WindowEvent e) {
+			cNetwork.disconnect();
+		}
+	};
 	
 	//-----------------------------------------
 	// Skapar fönstret för anslutning mot server
@@ -75,6 +101,7 @@ public class ClientUI implements ActionListener
 		window.setSize(720, 520);
 		window.setResizable(false);
 		window.setTitle("Project Battleship");
+		window.addWindowListener(exitListener);
 		
 		// Meny -- används ej.
 		JMenuBar theMenu = new JMenuBar();
@@ -109,7 +136,7 @@ public class ClientUI implements ActionListener
 			picLabel.setFont(new Font("SansSerif", Font.BOLD, 50));
 			head.add(picLabel);			
 		}
-		else
+		else	// Använder bilden
 		{
 			JLabel picLabel = new JLabel(new ImageIcon(myPicture));
 			head.add(picLabel);			
@@ -130,8 +157,8 @@ public class ClientUI implements ActionListener
 		connectButton.addActionListener(this);
 
 		// Sätt default värden för textrutorna
-		ipbox.setText("127.0.0.1");
-		portbox.setText("5000");
+		ipbox.setText("81.170.203.163");
+		portbox.setText("5168");
 		
 		// text panelen, innehåller textfälten osv
 		JPanel textpanel = new JPanel();
@@ -151,7 +178,7 @@ public class ClientUI implements ActionListener
 		window.add(head);
 		window.add(textpanel);
 		window.add(bottom);
-		
+				
 		// Visa fönster
 		window.validate();
 		window.setVisible(true);
@@ -191,11 +218,16 @@ public class ClientUI implements ActionListener
 		panel.setPreferredSize(new Dimension(700,50));
 		panel.add(lobbyText);
 		
-		// Sätt storlek på button...
+		// Sätt storlek på knappar...
 		challengeButton.setMaximumSize(new Dimension(150,30));
 		challengeButton.setMinimumSize(new Dimension(150,30));
 		challengeButton.setPreferredSize(new Dimension(150,30));
 		challengeButton.addActionListener(this);
+		
+		refreshButton.setMaximumSize(new Dimension(150,30));
+		refreshButton.setMinimumSize(new Dimension(150,30));
+		refreshButton.setPreferredSize(new Dimension(150,30));
+		refreshButton.addActionListener(this);
 		
 		// Lägg button i en panel
 		JPanel panel2 = new JPanel();
@@ -203,6 +235,7 @@ public class ClientUI implements ActionListener
 		panel2.setMinimumSize(new Dimension(700,50));
 		panel2.setPreferredSize(new Dimension(700,50));
 		panel2.add(challengeButton);
+		panel2.add(refreshButton);
 
 		// Här läggs komponenterna in i GridBagLayouten	
 		con.gridx = 1;
@@ -219,10 +252,8 @@ public class ClientUI implements ActionListener
 		con.gridy = 2;
 		theLayout.setConstraints(panel2, con);
 		window.add(panel2);		
-		
+
 		// Lägg till servern i spelarlistan per default
-		playerList.add("Server");
-		playerList.add("Player");
 		lobbyList.setListData(playerList);
 		
 		// Lyssnare som hämtar värdet på den sak i listan man klickat på.
@@ -238,6 +269,124 @@ public class ClientUI implements ActionListener
 		window.validate();
 		window.repaint();
 		window.setVisible(true);
+		
+		System.err.println("Created Lobby Window");
+		
+		// Uppdatera lobbyn
+		refreshLobby();
+	}
+	
+	//-----------------------------------------
+	// Uppdaterar lobbyn (NETWORK - Reciever)
+	//-----------------------------------------	
+	private void lobbyNetwork()
+	{
+		Message lobbyUpdate = cNetwork.getMessage();
+		
+		if(lobbyUpdate != null)
+			if(lobbyUpdate.getType() == "ActivePlayersMessage") 
+			{
+				ActivePlayersMessage playerL = (ActivePlayersMessage) lobbyUpdate;
+
+				// UPPDATERA LOBBYLISTAN HÄR ...
+				playerList.add("ActivePlayerMessage recieved, this is a test.");
+				
+			}
+			else if(lobbyUpdate.getType() == "ChallengeMessage") 
+			{
+				ChallengeMessage challenge = (ChallengeMessage) lobbyUpdate;
+				
+				playerList.add("ChallengeMessage recieved, this is a test.");
+				
+				// Avgör om man väntar på ett svar på skickad challenge, eller väntar på en challenge.
+				if(waitingForChallenge) {
+					triggerChallenge(challenge.getOpponentName());
+				}
+				else {
+					// Accept meddelande?
+					if(challenge.getAccept())
+						createNavyWindow();
+					else
+						waitingForChallenge = true;		// Deny message
+				}
+			}
+	}
+	
+	//-----------------------------------------
+	// Uppdaterar create navy (NETWORK - Reciever)
+	//-----------------------------------------	
+	private void navyNetwork()
+	{
+		Message navyUpdate = cNetwork.getMessage();
+			
+		if(navyUpdate != null)
+			;
+	}
+	
+	//-----------------------------------------
+	// Uppdaterar game (NETWORK - Reciever)
+	//-----------------------------------------	
+	private void gameNetwork()
+	{
+
+		Message gameUpdate = cNetwork.getMessage();
+			
+		if(gameUpdate != null)
+			;			
+
+	}
+	
+	//-----------------------------------------
+	// Challenge Meddelandet, accept eller deny (NETWORK - Sender)
+	//-----------------------------------------		
+	private void triggerChallenge(String opponent) {
+		waitingForChallenge = false;
+		
+		// Skapar en JDialog för "challenge" meddelandet
+		final JDialog challengeDialog = new JDialog();
+		final JButton accept = new JButton("Accept");
+		final JButton deny = new JButton("Deny");
+		JLabel title = new JLabel(opponent + " has challenged you.");
+		challengeDialog.add(title, BorderLayout.NORTH);
+		challengeDialog.add(accept, BorderLayout.WEST);
+		challengeDialog.add(deny, BorderLayout.EAST);
+		
+		// action listener för denna.
+		ActionListener dialogListener = new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				if(arg0.getSource() == accept) {
+					ChallengeMessage msg = new ChallengeMessage();
+					msg.accept();
+					cNetwork.sendMessage(msg);
+					challengeDialog.setVisible(false);
+					lobbyNetwork();
+				}
+				else if(arg0.getSource() == deny) {
+					ChallengeMessage msg = new ChallengeMessage();
+					msg.decline();
+					cNetwork.sendMessage(msg);
+					challengeDialog.setVisible(false);
+					lobbyNetwork();
+				}
+			}
+		};
+		accept.addActionListener(dialogListener);
+		deny.addActionListener(dialogListener);
+		challengeDialog.pack();
+		challengeDialog.setResizable(false);
+		challengeDialog.setVisible(true);
+	}
+	
+	//-----------------------------------------
+	// Skickar ett refresh meddelande (NETWORK - Sender)
+	//-----------------------------------------		
+	private void refreshLobby() 
+	{
+		RefreshMessage refresh = new RefreshMessage();
+		cNetwork.sendMessage(refresh);	
+		lobbyNetwork();
+		System.err.println("Refreshed Lobby");
 	}
 	
 	//-----------------------------------------
@@ -448,13 +597,7 @@ public class ClientUI implements ActionListener
 		// Uppdatera navy
 		updateMyNavy();
 	}
-	
-	// Anslut till servern										---- Det här ska egentligen inte vara här ....
-	public boolean connectToServer(String ip, String port)
-	{
-		return true;
-	}
-	
+		
 	// Kontrollerar input [kollar bara om det står något i rutorna överhuvudtaget]
 	private boolean checkInput(String ip, String port)
 	{
@@ -521,11 +664,11 @@ public class ClientUI implements ActionListener
 			if(placer.placementIsDone()){
 				
 				// Lägg till skepp
-				if(placer.whatShipWasPlaced() == "submarine")
+				if(placer.whatShipWasPlaced().equals("submarine"))
 					placer.addNumSubmarines();
-				else if(placer.whatShipWasPlaced() == "destroyer")
+				else if(placer.whatShipWasPlaced().equals("destroyer"))
 					placer.addNumDestroyers();
-				else if(placer.whatShipWasPlaced() == "aircraft carrier")
+				else if(placer.whatShipWasPlaced().equals("aircraft carrier"))
 					placer.addNumAircraftcarriers();
 				
 				// Kolla om vi ska inaktivera knappen eller ej
@@ -597,11 +740,6 @@ public class ClientUI implements ActionListener
 				}
 			}
 		}
-		
-		// Det måste vara exakt 19 koordinater, annars är något fel.
-		if(cords.size() != 19)
-			System.err.println("ERROR: INVALID NUMBER OF COORDINATES PLACED (" + Integer.toString(cords.size()) + "). MUST BE 19.");
-		
 	}
 	
 	
@@ -612,7 +750,7 @@ public class ClientUI implements ActionListener
 	{
 		if(e.getSource() == connectButton){
 			if(checkInput(ipbox.getText().toString(), portbox.getText().toString())){			// Kontrollerar input i textrutorna
-				if(connectToServer(ipbox.getText().toString(), portbox.getText().toString()))	// Ansluter till servern
+				if(cNetwork.connect(ipbox.getText().toString(), portbox.getText().toString()))	// Ansluter till servern
 					createLobbyWindow();														// Om ansluten - Gå till lobby
 				else
 					connectionError.setText("Unable to connect to server.");					// Felmeddelande
@@ -628,10 +766,20 @@ public class ClientUI implements ActionListener
 	private void lobbyEvents(ActionEvent e) 
 	{
 		if(e.getSource() == challengeButton) {
-			// SKICKA CHALLENGE TILL SERVER MED NAMNET PÅ DEN MAN VALT, tex "SERVER" är ju en challenge mot den.
-			// Vänta på "accept" eller "deny"
-			createNavyWindow();
-		}		
+			
+			// Skicka ett challenge till den man valt
+			if(lobbySelected.length() > 0) {
+				waitingForChallenge = false;
+				ChallengeMessage challenge = new ChallengeMessage();
+				challenge.accept();
+				challenge.setOpponentName(lobbySelected);
+				cNetwork.sendMessage(challenge);
+				lobbyNetwork();
+			}
+		}
+		else if(e.getSource() == refreshButton) {
+			refreshLobby();
+		}
 	}
 	
 	//-----------------------------------------
@@ -645,7 +793,7 @@ public class ClientUI implements ActionListener
 		// READY eller CLEAR knapparna
 		if(e.getSource() == readyButton) {
 			myNavy = placer.getNavy();			// Hämta Navy från ShipPlacer
-			// ____ HÄR SKA NAVY SKICKAS TILL SERVER OCH VÄNTA SVAR PÅ OM KORREKT ELLER EJ ___
+			// SKICKA NAVY TILL SERVER FÖR VALIDERING, VÄNTA PÅ SVAR...
 			createGameWindow();
 		}
 		else if(e.getSource() == clearButton) {
@@ -685,11 +833,11 @@ public class ClientUI implements ActionListener
 			createNavyEvents(e);
 		else
 			gameEvents(e);
-	}	
-	
+	}
+
 }	// END OF CLIENT
 
 
-
-
+// Vilka meddelanden används vid skapandet av Navy?
+// Hur agerar servern vid disconnect? Går bara ansluta 1 gång, väldigt trögt att testa något då.
 

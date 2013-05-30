@@ -67,12 +67,28 @@ public class ClientUI implements ActionListener
 	private String lobbySelected = "";								// vilket objekt som är valt i listan - lobby
 	private ClientNetwork cNetwork = new ClientNetwork();			// Wrapper för Socket
 	private boolean waitingForChallenge = true;						// BOOL - för lobbymeddelanden
+	javax.swing.Timer t = null;
 	
 	//-----------------------------------------
 	// Konstruktor
 	//-----------------------------------------
 	ClientUI()
-	{
+	{	
+		// Action listener som varje sekund lyssnar efter nätverksmeddelanden
+		ActionListener networkListener = new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(state == states.lobby.ordinal())
+					lobbyNetwork();
+				else if(state == states.buildnavy.ordinal())
+					navyNetwork();
+				else if(state == states.game.ordinal())
+					gameNetwork();
+			}
+		};
+		
+		t = new javax.swing.Timer(1000, networkListener);
+		t.start();
 		createConnectWindow();
 	}
 		
@@ -144,7 +160,7 @@ public class ClientUI implements ActionListener
 		connectButton.addActionListener(this);
 
 		// Sätt default värden för textrutorna
-		ipbox.setText("81.170.203.163");
+		ipbox.setText("127.0.0.1");
 		portbox.setText("5168");
 		
 		// text panelen, innehåller textfälten osv
@@ -266,7 +282,6 @@ public class ClientUI implements ActionListener
 		
 		// Uppdatera lobbyn
 		refreshLobby();
-		lobbyNetwork();
 	}
 	
 	//-----------------------------------------
@@ -274,7 +289,6 @@ public class ClientUI implements ActionListener
 	//-----------------------------------------	
 	private void lobbyNetwork()
 	{
-		while(state == states.lobby.ordinal()) {
 		Message lobbyUpdate = cNetwork.getMessage();
 		
 		if(lobbyUpdate != null)
@@ -304,7 +318,6 @@ public class ClientUI implements ActionListener
 						waitingForChallenge = true;		// Deny message
 				}
 			}
-		}
 	}
 	
 	//-----------------------------------------
@@ -355,14 +368,12 @@ public class ClientUI implements ActionListener
 					msg.accept();
 					cNetwork.sendMessage(msg);
 					challengeDialog.setVisible(false);
-					lobbyNetwork();
 				}
 				else if(arg0.getSource() == deny) {
 					ChallengeMessage msg = new ChallengeMessage();
 					msg.decline();
 					cNetwork.sendMessage(msg);
 					challengeDialog.setVisible(false);
-					lobbyNetwork();
 				}
 			}
 		};
@@ -768,7 +779,7 @@ public class ClientUI implements ActionListener
 				challenge.accept();
 				challenge.setOpponentName(lobbySelected);
 				cNetwork.sendMessage(challenge);
-				lobbyNetwork();
+				System.err.println("Sent challenge message");
 			}
 		}
 		else if(e.getSource() == refreshButton) {
@@ -830,8 +841,4 @@ public class ClientUI implements ActionListener
 	}
 
 }	// END OF CLIENT
-
-
-// Vilka meddelanden används vid skapandet av Navy?
-// Hur agerar servern vid disconnect? Går bara ansluta 1 gång, väldigt trögt att testa något då.
 

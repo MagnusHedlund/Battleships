@@ -110,6 +110,7 @@ public class Listener
 		    Socket connection = new Socket();
 		    connection.connect(raw);
 		    sockets.add(connection);
+		    System.out.println("New socket found! Waiting for name...");
 		}
 		
 		// No socket could be found at this time
@@ -146,6 +147,8 @@ public class Listener
 				// Check if it is a message with a name
 				if(message != null && message.getType() != null && message.getType().equals("NameMessage")) 
 				{
+					System.out.println("Name received!");
+					
 					// Downcast
 					NameMessage castedMessage = (NameMessage) message;
 					

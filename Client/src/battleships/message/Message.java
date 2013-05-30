@@ -12,10 +12,13 @@ public abstract class Message {
 	/**
 	 * Converts the object to an XML-string.
 	 * */
-	public String toXML(){
+	public String toXML()
+	{
 		String xml;
 		XStream xstream = new XStream();
 		xml = xstream.toXML(this);
+		xml = xml.replace("\n", "").replace("\r", "");
+		xml += "\n";
 		return xml;
 	}
 	

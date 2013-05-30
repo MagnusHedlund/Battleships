@@ -144,7 +144,7 @@ public class Listener
 				Message message = socket.read();
 				
 				// Check if it is a message with a name
-				if(message != null && message.getType().equals("setname")) 
+				if(message != null && message.getType() != null && message.getType().equals("NameMessage")) 
 				{
 					// Downcast
 					NameMessage castedMessage = (NameMessage) message;
@@ -154,7 +154,7 @@ public class Listener
 					
 					// Setup a player
 					String name = castedMessage.getName();
-					return new Player(socket, ++idCounter, name);
+					return new Player(socket, ++idCounter, name);						
 				}
 			}
 		}

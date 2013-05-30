@@ -259,6 +259,11 @@ public class ClientUI implements ActionListener
 		
 		System.err.println("Created Lobby Window");
 		
+		// Skicka namn
+		NameMessage msg = new NameMessage();
+		msg.setName("IAmAPlayerName");
+		cNetwork.sendMessage(msg);
+		
 		// Uppdatera lobbyn
 		refreshLobby();
 		lobbyNetwork();

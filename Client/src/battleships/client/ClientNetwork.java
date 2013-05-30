@@ -4,14 +4,13 @@ import battleships.network.ConnectionException;
 import battleships.network.Socket;
 
 public class ClientNetwork {
-	private Socket s;
+	private Socket s = new Socket();
 	
 	//-----------------------------------------
 	// Ansluter till servern
 	//-----------------------------------------
 	public boolean connect(String address, String port) {
 		
-		s = new Socket();
 		try 
 		{	// Anslut till servern
 			s.connect(address, Integer.parseInt(port));

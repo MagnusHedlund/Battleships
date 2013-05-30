@@ -1,6 +1,6 @@
 /*
  * Server.java	
- * Version 0.2 (2013-05-26)
+ * Version 1.0 (2013-05-30)
  */
 
 package battleships.server;
@@ -47,7 +47,7 @@ public class Server
 		try
 		{
 			listener.start(port);
-			System.out.println("Server started sucessfully (listening at port #" + port + ")!");
+			System.out.println("Server started sucessfully, listening at port #" + port + "!");
 		}
 		catch(Exception e)
 		{

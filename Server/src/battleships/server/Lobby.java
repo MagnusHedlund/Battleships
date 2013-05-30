@@ -1,6 +1,6 @@
 /*
  * Lobby.java	
- * Version 1.0 (2013-05-29)
+ * Version 1.1 (2013-05-30)
  */
 
 package battleships.server;
@@ -72,7 +72,7 @@ public class Lobby
 							sendPlayerList(player);
 							break;
 							
-						// Messages related to challenging other players
+						// Messages related to challenging others
 						case "ChallengeMessage": 
 							handleChallenge(player, (ChallengeMessage)message);
 							break;
@@ -129,7 +129,16 @@ public class Lobby
 	 */
 	private void handleChallenge(Player player, ChallengeMessage message)
 	{
-		// Find the other player
+		// The player may challenge the Server AI
+		if(message.getOpponentIP() == 0)
+		{
+			// Accept the request right away
+			player.sendMessage(new ChallengeMessage("Server AI", 0, true, true));
+			createGame(player);
+			return;
+		}
+		
+		// Find the other player, since it turned out not to be the Server AI
 		Player other = players.get(message.getOpponentIP());
 		
 		// Must be a valid one
@@ -168,12 +177,28 @@ public class Lobby
 		   		   		   		   "'s [" + other.getID() + "] request!");
 				createGame(player, other);
 			}
+			
+			// The challenge was declined
 			else
 			{
 				System.out.println(player.getName() + " [" + player.getID() + "] denied " + other.getName() +
 				   		   		   "'s [" + other.getID() + "] request!");
 			}
 		}
+	}
+	
+	/**
+	 * Creates a new game session for a single player and the Server AI.
+	 * 
+	 * @param player	The challenger.
+	 */
+	private void createGame(Player player)
+	{
+		// The player isn't idle anymore
+		player.setIdle(false);
+		
+		// Sessions are handled in separate threads
+		(new Thread(new Session(player))).start();
 	}
 	
 	/**

@@ -15,9 +15,13 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Vector;
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
@@ -67,14 +71,16 @@ public class ClientUI implements ActionListener
 	private String lobbySelected = "";								// vilket objekt som är valt i listan - lobby
 	private ClientNetwork cNetwork = new ClientNetwork();			// Wrapper för Socket
 	private boolean waitingForChallenge = true;						// BOOL - för lobbymeddelanden
-	javax.swing.Timer t = null;
+	private javax.swing.Timer t = null;								// Timer som uppdaterar nätverket varje sekund
+	private Map<String, Integer> lobbyContenders = new HashMap<String,Integer>();
+	private boolean ConnectedToServer = false;	
 	
 	//-----------------------------------------
 	// Konstruktor
 	//-----------------------------------------
 	ClientUI()
 	{	
-		// Action listener som varje sekund lyssnar efter nätverksmeddelanden
+		// Action listener för timer som varje sekund lyssnar efter nätverksmeddelanden
 		ActionListener networkListener = new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -92,6 +98,18 @@ public class ClientUI implements ActionListener
 		createConnectWindow();
 	}
 		
+	// ----------------------------------
+	// 	När man stränger ner fönstret...
+	// ----------------------------------
+	WindowAdapter exitListener = new WindowAdapter()
+	{
+		@Override
+		public void windowClosing(WindowEvent e) {
+			if(ConnectedToServer)
+				cNetwork.disconnect();
+		}
+	};
+	
 	//-----------------------------------------
 	// Skapar fönstret för anslutning mot server
 	//-----------------------------------------
@@ -105,6 +123,7 @@ public class ClientUI implements ActionListener
 		window.setSize(720, 520);
 		window.setResizable(false);
 		window.setTitle("Project Battleship");
+		window.addWindowListener(exitListener);
 		
 		// Meny -- används ej.
 		JMenuBar theMenu = new JMenuBar();
@@ -193,7 +212,7 @@ public class ClientUI implements ActionListener
 	private void createLobbyWindow()
 	{
 		// Rensa fönstret på föregående komponenter
-		window.getContentPane().removeAll();	
+		window.getContentPane().removeAll();
 		
 		// Sätt state till lobby
 		state = states.lobby.ordinal();
@@ -257,6 +276,7 @@ public class ClientUI implements ActionListener
 		window.add(panel2);		
 
 		// Lägg till servern i spelarlistan per default
+		playerList.add("Server");
 		lobbyList.setListData(playerList);
 		
 		// Lyssnare som hämtar värdet på den sak i listan man klickat på.
@@ -295,20 +315,25 @@ public class ClientUI implements ActionListener
 			if(lobbyUpdate.getType().equals("ActivePlayersMessage")) 
 			{
 				ActivePlayersMessage playerL = (ActivePlayersMessage) lobbyUpdate;
-
-				// UPPDATERA LOBBYLISTAN HÄR ...
-				playerList.add("ActivePlayerMessage recieved, this is a test.");
+				lobbyContenders = playerL.getContenders();
+				System.err.println("Recieved - ActivePlayersMessage");
+				
+				// Uppdatera lobbylistan
+				playerList.clear();
+				playerList.add("Server");
+				for(int i = 0; i < lobbyContenders.size(); i++)
+					playerList.add("Player " + Integer.toString(i+1));
+				lobbyList.setListData(playerList);
 				
 			}
 			else if(lobbyUpdate.getType().equals("ChallengeMessage")) 
 			{
 				ChallengeMessage challenge = (ChallengeMessage) lobbyUpdate;
-				
-				playerList.add("ChallengeMessage recieved, this is a test.");
-				
+				System.err.println("Recieved - ChallengeMessage");
+								
 				// Avgör om man väntar på ett svar på skickad challenge, eller väntar på en challenge.
 				if(waitingForChallenge) {
-					triggerChallenge(challenge.getOpponentName());
+					triggerChallenge(Integer.toString(challenge.getOpponentID()));
 				}
 				else {
 					// Accept meddelande?
@@ -354,7 +379,7 @@ public class ClientUI implements ActionListener
 		final JDialog challengeDialog = new JDialog();
 		final JButton accept = new JButton("Accept");
 		final JButton deny = new JButton("Deny");
-		JLabel title = new JLabel(opponent + " has challenged you.");
+		JLabel title = new JLabel("Player " + opponent + " has challenged you.");
 		challengeDialog.add(title, BorderLayout.NORTH);
 		challengeDialog.add(accept, BorderLayout.WEST);
 		challengeDialog.add(deny, BorderLayout.EAST);
@@ -755,8 +780,10 @@ public class ClientUI implements ActionListener
 	{
 		if(e.getSource() == connectButton){
 			if(checkInput(ipbox.getText().toString(), portbox.getText().toString())){			// Kontrollerar input i textrutorna
-				if(cNetwork.connect(ipbox.getText().toString(), portbox.getText().toString()))	// Ansluter till servern
+				if(cNetwork.connect(ipbox.getText().toString(), portbox.getText().toString())){	// Ansluter till servern
 					createLobbyWindow();														// Om ansluten - Gå till lobby
+					ConnectedToServer = true;
+				}
 				else
 					connectionError.setText("Unable to connect to server.");					// Felmeddelande
 			}
@@ -775,11 +802,16 @@ public class ClientUI implements ActionListener
 			// Skicka ett challenge till den man valt
 			if(lobbySelected.length() > 0) {
 				waitingForChallenge = false;
-				ChallengeMessage challenge = new ChallengeMessage();
-				challenge.accept();
-				challenge.setOpponentName(lobbySelected);
+				
+				// Sätter ID och Namn
+				int playerID = 0;
+				if(!lobbySelected.equals("Server"))
+					playerID = Character.getNumericValue(lobbySelected.charAt(lobbySelected.length()-1));
+
+				// Skicka
+				ChallengeMessage challenge = new ChallengeMessage(lobbySelected, playerID);
 				cNetwork.sendMessage(challenge);
-				System.err.println("Sent challenge message");
+				System.err.println("Sent challenge message against: " + lobbySelected + " with ID: " + Integer.toString(playerID));
 			}
 		}
 		else if(e.getSource() == refreshButton) {

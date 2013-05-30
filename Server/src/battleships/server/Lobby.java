@@ -153,6 +153,12 @@ public class Lobby
 			System.out.println(player.getName() + " [" + player.getID() + "] tried to challenge a busy player!");
 		}
 		
+		// Challenging oneself makes no sense
+		else if(other.getID() == player.getID())
+		{
+			System.out.println(player.getName() + " [" + player.getID() + "] tried to challenge oneself!");
+		}
+		
 		// Sending the challenge request
 		else if(!message.isAcceptMessage())
 		{

@@ -41,7 +41,7 @@ public class ChallengeMessage extends Message {
 	public void setAccept(boolean accept){this.accepted=accept;}
 	public void setIsAcceptMessage(boolean isAcceptMsg){this.isAcceptMsg=isAcceptMsg;}
 	public void setOpponentName(String opponentName){this.opponentName=opponentName;}
-	public void setOpponentIP(int opponentID){this.opponentID=opponentID;}
+	public void setOpponentID(int opponentID){this.opponentID=opponentID;}
 	
 	/**
 	 * Sets the message to become a accept challenge message

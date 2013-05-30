@@ -1,6 +1,6 @@
 /*
  * Lobby.java	
- * Version 1.0 (2013-05-29)
+ * Version 1.1 (2013-05-30)
  */
 
 package battleships.server;
@@ -72,7 +72,7 @@ public class Lobby
 							sendPlayerList(player);
 							break;
 							
-						// Messages related to challenging other players
+						// Messages related to challenging others
 						case "ChallengeMessage": 
 							handleChallenge(player, (ChallengeMessage)message);
 							break;
@@ -147,13 +147,13 @@ public class Lobby
 			System.out.println(player.getName() + " [" + player.getID() + "] tried to challenge someone who doesn't exist!");
 		}
 		
-		// The player can't already be in a game (ignore Server Player)
+		// The player can't already be in a game
 		else if(!other.getIdle())
 		{
 			System.out.println(player.getName() + " [" + player.getID() + "] tried to challenge a busy player!");
 		}
 		
-		// Sending the challenge request (ignore Server Player)
+		// Sending the challenge request
 		else if(!message.isAcceptMessage())
 		{
 			other.sendMessage(new ChallengeMessage(player.getName(), player.getID()));
@@ -177,6 +177,8 @@ public class Lobby
 		   		   		   		   "'s [" + other.getID() + "] request!");
 				createGame(player, other);
 			}
+			
+			// The challenge was declined
 			else
 			{
 				System.out.println(player.getName() + " [" + player.getID() + "] denied " + other.getName() +
@@ -192,11 +194,11 @@ public class Lobby
 	 */
 	private void createGame(Player player)
 	{
-		// The players isn't idle anymore
+		// The player isn't idle anymore
 		player.setIdle(false);
 		
 		// Sessions are handled in separate threads
-		(new Thread(new Session(player, null))).start();
+		(new Thread(new Session(player))).start();
 	}
 	
 	/**

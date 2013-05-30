@@ -25,7 +25,16 @@ public abstract class Message {
 	public static Message toMessage(String data)
 	{
 		XStream xstream = new XStream();
-		return (Message)xstream.fromXML(data);
+		Message message;
+		try
+		{
+			message = (Message)xstream.fromXML(data);
+		}
+		catch(Exception e)
+		{
+			return null;
+		}
+		return message;
 	}
 	
 	/**

@@ -3,11 +3,11 @@
  * Version 1.0 (2013-05-29)
  */
 
-package network;
+package battleships.network;
 
 import java.io.IOException;
 
-import message.Message;
+import battleships.message.Message;
 
 /**
  * Handles the communication between two entities over a network.

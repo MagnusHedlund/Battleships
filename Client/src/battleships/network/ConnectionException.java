@@ -3,7 +3,7 @@
  * Version 1.0 (2013-05-20)
  */
 
-package network;
+package battleships.network;
 
 /**
  * Exception that is thrown whenever the establishment of communication

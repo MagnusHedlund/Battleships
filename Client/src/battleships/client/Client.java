@@ -1,5 +1,3 @@
-package client;
-
 //----------------------------------------------------------------
 // Namn: Fredrik Strömbergsson
 // Datum: 2013-05-17
@@ -7,11 +5,13 @@ package client;
 // Client.java
 //----------------------------------------------------------------
 
+package battleships.client;
+
 public class Client {
 	
 	// ------- MAIN -------
 	public static void main(String[] args)
 	{	
-		ClientUI c = new ClientUI();
+		ClientUI c = new ClientUI();		
 	}
 }

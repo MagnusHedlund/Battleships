@@ -1,4 +1,4 @@
-package message;
+package battleships.message;
 
 public class RefreshMessage extends Message {
 

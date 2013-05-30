@@ -1,4 +1,4 @@
-package message;
+package battleships.message;
 
 import com.thoughtworks.xstream.XStream;
 

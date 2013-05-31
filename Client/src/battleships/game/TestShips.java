@@ -1,4 +1,9 @@
-package game;
+/*
+ * TestShips,java.java
+ * Version 1.0 (2013-05-30)
+ */
+
+package battleships.game;
 
 import static org.junit.Assert.*;
 

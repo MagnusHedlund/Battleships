@@ -1,10 +1,21 @@
-package game;
+/*
+ * TestNavy.java	
+ * Version 1.0 (2013-05-31)
+ */
+
+package battleships.game;
 
 import static org.junit.Assert.*;
 
 import org.junit.Before;
 import org.junit.Test;
 
+/**
+ * This class is used for testing the class Navy, a part of the game Battleshs.
+ * 
+ * @author Åsa Waldhe
+ *
+ */
 public class TestNavy {
 		
 	/**
@@ -25,7 +36,11 @@ public class TestNavy {
 	Aircraft_carrier aircc;
 	
 	Map map;
-
+	
+	/**
+	 * Set-up method, before each test.
+	 * @throws Exception
+	 */
 	@Before
 	public void setUp() throws Exception {
 		
@@ -50,7 +65,10 @@ public class TestNavy {
 		
 		map = new Map();
 	}
-
+	
+	/**
+	 * Testing methods in Navy. 
+	 */
 	@Test
 	public void test() {
 		navy.addShip(sub);

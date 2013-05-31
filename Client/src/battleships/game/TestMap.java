@@ -1,10 +1,21 @@
-package game;
+/*
+ * TestMap.java	
+ * Version 1.0 (2013-05-31)
+ */
+
+package battleships.game;
 
 import static org.junit.Assert.*;
 
 import org.junit.Before;
 import org.junit.Test;
 
+/**
+ * Testing the class Map, a tool representing an ocean in the game battlefield.
+ * 
+ * @author Åsa Waldhe
+ *
+ */
 public class TestMap {
 	
 	/**
@@ -35,7 +46,10 @@ public class TestMap {
 		
 		map = new Map();
 	}
-
+	
+	/**
+	 * Testing to set values in a map and to print the array from it.
+	 */
 	@Test
 	public void test() {
 		map.setValue(c1, map.BOM);

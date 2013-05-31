@@ -1,10 +1,21 @@
-package game;
+/*
+ * TestCoord.java	
+ * Version 1.0 (2013-05-31)
+ */
+
+package battleships.game;
 
 import static org.junit.Assert.*;
 
 import org.junit.Before;
 import org.junit.Test;
 
+/**
+ * Testing the class coordinate, representing a coordinate in the game Battleships.
+ * 
+ * @author Åsa Waldhe
+ *
+ */
 public class TestCoord {
 	
 	/**

@@ -1,10 +1,20 @@
-package game;
+/*
+ * TestServer.java	
+ * Version 1.0 (2013-05-31)
+ */
+package battleships.game;
 
 import static org.junit.Assert.*;
 
 import org.junit.Before;
 import org.junit.Test;
 
+/**
+ * Test for using the class ServerAI in the game Battleships.
+ * 
+ * @author Åsa Waldhe
+ *
+ */
 public class TestServerAI {
 	
 	/**
@@ -23,7 +33,10 @@ public class TestServerAI {
 		
 		ai = new ServerAI(5, 3, 1);		
 	}
-
+	
+	/**
+	 * Testing methods in ServerAI.
+	 */
 	@Test
 	public void test() {
 		

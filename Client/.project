@@ -14,19 +14,36 @@
 	<natures>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
-<<<<<<< HEAD
 	<linkedResources>
+		<link>
+			<name>src/battleships/game/TestCoord.java</name>
+			<type>1</type>
+			<location>/home/asa/Dokument/Datakurser/Metoder och verktyg i mjukvaruutveckling/gitHub-Project/Battleships/Client/src/battleships/game/TestCoord.java</location>
+		</link>
+		<link>
+			<name>src/battleships/game/TestMap.java</name>
+			<type>1</type>
+			<location>/home/asa/Dokument/Datakurser/Metoder och verktyg i mjukvaruutveckling/gitHub-Project/Battleships/Client/src/battleships/game/TestMap.java</location>
+		</link>
+		<link>
+			<name>src/battleships/game/TestNavy.java</name>
+			<type>1</type>
+			<location>/home/asa/Dokument/Datakurser/Metoder och verktyg i mjukvaruutveckling/gitHub-Project/Battleships/Client/src/battleships/game/TestNavy.java</location>
+		</link>
+		<link>
+			<name>src/battleships/game/TestServerAI.java</name>
+			<type>1</type>
+			<location>/home/asa/Dokument/Datakurser/Metoder och verktyg i mjukvaruutveckling/gitHub-Project/Battleships/Client/src/battleships/game/TestServerAI.java</location>
+		</link>
+		<link>
+			<name>src/battleships/game/TestShips.java</name>
+			<type>1</type>
+			<location>/home/asa/Dokument/Datakurser/Metoder och verktyg i mjukvaruutveckling/gitHub-Project/Battleships/Client/src/battleships/game/TestShips.java</location>
+		</link>
 		<link>
 			<name>src/battleships/game/TestValidator.java</name>
 			<type>1</type>
 			<location>/home/asa/Dokument/Datakurser/Metoder och verktyg i mjukvaruutveckling/Projekt/src/game/TestValidator.java</location>
 		</link>
-		<link>
-			<name>src/battleships/game/Tests</name>
-			<type>2</type>
-			<location>/home/asa/Dokument/Datakurser/Metoder och verktyg i mjukvaruutveckling/gitHub-Project/Battleships/Client/src/battleships/game/Tests</location>
-		</link>
 	</linkedResources>
-=======
->>>>>>> upstream/master
 </projectDescription>

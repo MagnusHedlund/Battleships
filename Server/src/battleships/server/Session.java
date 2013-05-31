@@ -71,6 +71,9 @@ public class Session implements Runnable{
 			}
 		}
 		
+		//let first player shoot
+		player[currentPlayer].sendMessage(new NavyMessage(navy[currentPlayer], grantTurn));
+		
 		enterGameLoop();
 		
 	}//run end
@@ -122,8 +125,7 @@ public class Session implements Runnable{
 			finished=false;
 			shotCoordinate=null;
 			
-			//let first player shoot
-			player[currentPlayer].sendMessage(new NavyMessage(navy[currentPlayer], grantTurn));
+			
 			
 			//Read message
 			if(player[currentPlayer]!=null){  //an actual player

@@ -43,9 +43,7 @@ public class Session implements Runnable{
 	
 	public Session(Player first){
 		player[PLAYER0]=first;
-		serverAI = new ServerAI(5,3,1); 
-		navyValid[PLAYER1]=true; //skip validation of server Navy
-		navy[PLAYER1]=serverAI.getNavy();
+		serverAI = new ServerAI(5,3,1);
 	}
 	
 	/**
@@ -55,7 +53,7 @@ public class Session implements Runnable{
 	public void run() {
 		System.out.println("Run");
 		/* listen and validate Navy objects*/
-		while(!navyValid[PLAYER0] || !navyValid[PLAYER1]){
+		while(!navyValid[PLAYER0] && !navyValid[PLAYER1]){
 			System.out.println("In Whileloop");
 			if(!navyValid[PLAYER0]){
 				System.out.println("validating navy 1");
@@ -63,13 +61,21 @@ public class Session implements Runnable{
 				navyValid[PLAYER0]=isValid;
 				player[PLAYER0].sendMessage(new ValidationMessage(isValid));
 			}
-			if(!navyValid[PLAYER1]){
+			
+			if(player[currentPlayer]!=null){
+				navyValid[PLAYER1]=true; //skip validation of server Navy
+				navy[PLAYER1]=serverAI.getNavy();
+				System.out.println("server already valid");
+			}
+			else if(!navyValid[PLAYER1]){
 				System.out.println("validating navy 2");
 				boolean isValid = readAndValidate(PLAYER1);	
 				navyValid[PLAYER1]=isValid;
 				player[PLAYER0].sendMessage(new ValidationMessage(isValid));
 			}
 		}
+		
+		System.out.println("left validation loop");
 		
 		//let first player shoot
 		player[currentPlayer].sendMessage(new NavyMessage(navy[currentPlayer], grantTurn));
@@ -133,6 +139,7 @@ public class Session implements Runnable{
 				Message msg = readMessage(player[currentPlayer]);
 				Shot navMsg=null;
 				if(msg.getType()=="Shot"){
+					System.out.println("received Shot");
 					navMsg = (Shot)msg;
 					shotCoordinate = navMsg.getCoordinate();
 				}
@@ -143,6 +150,7 @@ public class Session implements Runnable{
 			else {  //get shot coordinate from ServerAI
 				if(serverAI!=null){
 					shotCoordinate = serverAI.shoot();
+					System.out.println("server generated shot");
 				}	
 			}
 			

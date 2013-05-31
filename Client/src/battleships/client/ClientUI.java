@@ -407,8 +407,8 @@ public class ClientUI implements ActionListener
 		
 		// Korrekt utplacerad Navy?
 		if(valid.getMessage()) {
-			setPlayerNavy();		// Ja - Sätt Navy till spelplanen grafiskt
 			createGameWindow();		// Ja - Spela
+			setPlayerNavy();		// Ja - Sätt Navy till spelplanen grafiskt
 		}
 		else {						// Nej - Gör om
 			placer.Reset();
@@ -433,6 +433,12 @@ public class ClientUI implements ActionListener
 		System.err.println("Received: NavyMessage");
 		myNavy = navy.getNavy();
 		updateMyNavy();
+		
+		// FOR ERROR TESTING ONLY
+		if(myTurn)
+			System.err.println("myTurn value: TRUE");
+		else
+			System.err.println("myTurn value: FALSE");
 		
 		// Vems tur?
 		myTurn = navy.getGrantTurn();
@@ -475,16 +481,20 @@ public class ClientUI implements ActionListener
 	{
 		FinishedMessage finished = (FinishedMessage) msg;
 		System.err.println("Received: FinishedMessage");
+		
+		// Vem vann?
 		if(finished.getWinner())
 			information.append("******* YOU WIN! *******" + "\n");
 		else
 			information.append("******* YOU LOSE! *******" + "\n");
+		
+		// Sluta läsa efter meddelanden	
 		myTurn = false;
-		t.stop();	// Sluta läsa efter meddelanden	
+		t.stop();	
 	}
 	
 	/**
-	 * Triggers a challenge dialog box.
+	 * Triggers a challenge dialogbox.
 	 * You are asked to Accept or Deny.
 	 * 
 	 * @param opponent	String representation of the opponent ID.
@@ -747,9 +757,6 @@ public class ClientUI implements ActionListener
 		window.validate();
 		window.repaint();
 		window.setVisible(true);
-		
-		// Uppdatera navy
-		updateMyNavy();
 	}
 		
 	/**
@@ -931,6 +938,12 @@ public class ClientUI implements ActionListener
 				Ocean.add(y);
 		}
 
+		// FOR ERROR TESTING ONLY...
+		System.out.print("OCEAN[][] VALUES: ");
+		for(int i = 0; i < Ocean.size(); i++)
+			System.out.print(Ocean.elementAt(i));
+		System.err.println("");
+		
 		// Loopa genom båda vectorer, om värdet i Ocean == 3 eller 1, så är detta en träff av fienden.
 		for(int i = 0; i < playerSquares.size(); i++) {
 			if((Ocean.elementAt(i) == 3 || Ocean.elementAt(i) == 1) && playerSquares.elementAt(i).isAship())

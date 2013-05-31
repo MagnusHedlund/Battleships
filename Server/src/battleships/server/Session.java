@@ -64,7 +64,7 @@ public class Session implements Runnable{
 				player[PLAYER0].sendMessage(new ValidationMessage(isValid));
 			}
 			if(!navyValid[PLAYER1]){
-				System.out.println("validating navy 1");
+				System.out.println("validating navy 2");
 				boolean isValid = readAndValidate(PLAYER1);	
 				navyValid[PLAYER1]=isValid;
 				player[PLAYER0].sendMessage(new ValidationMessage(isValid));

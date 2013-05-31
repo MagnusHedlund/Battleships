@@ -2,7 +2,7 @@ package battleships.game;
 
 /**
  * Represents a coordinate in the game battleship.
- * The coordinates's value is meant not to be changed after initiation. But has methods for getting the values.
+ * The coordinates's value is meant not to be changed after initiation, but has methods for getting the values.
  * 
  * @author Åsa Waldhe
  */

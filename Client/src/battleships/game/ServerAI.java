@@ -99,8 +99,9 @@ public class ServerAI {
 	}
 	
 	/**
+	 * Invokes the ServerAI to choose a target-Coordinate.
 	 * 
-	 * @return Coordinate c	Coordinate from server AI to player.
+	 * @return c	Coordinate from server AI to player.
 	 */
 	public Coordinate shoot(){
 		
@@ -166,7 +167,7 @@ public class ServerAI {
 	}
 	
 	/**
-	 * Takes the result from last shot and registers it in the proper Set of coordinates.
+	 * Takes the result from last shot and registers it in the proper Set of coordinates - hits or oldTargets.
 	 *  
 	 * @param c	Coordinate or last shot.
 	 * @param ship	Ship that was hit, if any.

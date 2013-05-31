@@ -126,11 +126,12 @@ public class Validator {
 	}
 	
 	/**
-	 * Checks that all coordinates surrounding a horizontal ship is empty, by assuring that they are not in the set with coordinates from all ships.
+	 * Checks that all coordinates surrounding a horizontal ship is empty, by assuring that they are not in
+	 *  the set with coordinates from all ships.
 	 * 
 	 * @param length 			Length of the ship.
 	 * @param firstCoord		First Coordinate in the ship. (Upper left.)
-	 * @return Boolean1			True if ok, false if not.
+	 * @return Boolean			True if ok, false if not.
 	 */
 	private Boolean validateSpaceHorizontal(Integer length, Coordinate firstCoord){		
 		
@@ -156,7 +157,8 @@ public class Validator {
 	}
 	
 	/**
-	 * Checks that all coordinates surrounding a vertical ship is empty, by assuring that they are not in the set with coordinates from all ships.
+	 * Checks that all coordinates surrounding a vertical ship is empty, by assuring that they
+	 *  are not in the set with coordinates from all ships.
 	 * 
 	 * @param length 			Length of the ship.
 	 * @param firstCoord		First Coordinate in the ship. (Upper left.)
@@ -188,8 +190,8 @@ public class Validator {
 	/**
 	 * Only horizontal or vertical placement is ok. The coordinates must also be linear.
 	 * 
-	 * @param it
-	 * @return
+	 * @param it, Iterator<Coordinate> All coordinates in one ship.
+	 * @return	ok, Boolean
 	 */
 	private Boolean validatePlacement(Iterator<Coordinate> it)
 	{

@@ -1,3 +1,8 @@
+/*
+ * Submarine.java	
+ * Version 1.0 (2013-05-30)
+ */
+
 package battleships.game;
 
 import java.util.TreeSet;

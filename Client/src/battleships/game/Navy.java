@@ -17,10 +17,11 @@ public class Navy {
 	private Integer sunkShips;
 	
 	/**
+	 * Initiates member variables and constants.
 	 * 
-	 * @param s
-	 * @param d
-	 * @param ac
+	 * @param s	Number submarines
+	 * @param d	Number destroyers
+	 * @param ac Number aircraft carriers
 	 */
 	public Navy(int s, int d, int ac){
 		ships = new LinkedList<Ship>();
@@ -35,6 +36,7 @@ public class Navy {
 	}
 	
 	/**
+	 * Adds a ship to the navy.
 	 * 
 	 * @param ship
 	 */
@@ -43,16 +45,18 @@ public class Navy {
 	}
 	
 	/**
+	 * Returns the map.
 	 * 
-	 * @return
+	 * @return map, Map
 	 */
 	public Map getMap(){
 		return map;
 	}
 	
 	/**
+	 * Returns the ships in the navy.
 	 * 
-	 * @return
+	 * @return	LinkedList<Ships> ships	All ships in the navy.
 	 */
 	public LinkedList<Ship> getShips(){
 		return ships;
@@ -95,8 +99,9 @@ public class Navy {
 	}
 	
 	/**
+	 * Returns whether all ships are sunk or not.
 	 * 
-	 * @return sunkShips
+	 * @return Boolean
 	 */
 	public Boolean allGone(){
 		return sunkShips == SUBMARINES+DESTROYERS+AIRCRAFT_CARRIERS;
@@ -112,6 +117,7 @@ public class Navy {
 	
 	/**
 	 * Returns if all ships in the navy are placed.
+	 * 
 	 * @return
 	 */
 	public boolean allSet(){
@@ -119,8 +125,9 @@ public class Navy {
 	}
 	
 	/**
+	 * Sets value from a shot on the map.
 	 * 
-	 * @param c
+	 * @param c, Coordinate	Coordinate to mark, value for hit, sunk or miss.
 	 * @param v
 	 */
 	private void markOnMap(Coordinate c, int v){

@@ -2,6 +2,11 @@ package battleships.game;
 
 import java.util.Comparator;
 
+/**
+ * This class compares two instances of the class Coordinate in respect of the y-coordinate.
+ * @author Åsa Waldhe
+ *
+ */
 public class CompareVertical implements Comparator<Coordinate> {
 
 	/**

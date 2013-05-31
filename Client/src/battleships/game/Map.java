@@ -2,6 +2,8 @@ package battleships.game;
 
 
 /**
+ * Map contains a two dimensional array symbols the ocean in the game Battleships.
+ * The class uses constants for empty (not used space), hit, bom or sunk ship.
  * 
  * @author Åsa Waldhe
  *
@@ -13,33 +15,36 @@ public class Map {
 	private int[][] ocean;
 	
 	/**
-	 * 
+	 * Initiates an empty array.
 	 */
 	Map(){
 		ocean = new int[SIZE][SIZE];
 	}
 	
 	/**
+	 * Returns the array ocean.
 	 * 
-	 * @return
+	 * @return int[][]
 	 */
 	public int[][] getOcean(){
 		return ocean;
 	}
 	
 	/**
+	 * Marks hit, bom or sunk in the element corrseponding to a coordinate.
 	 * 
-	 * @param c
-	 * @param i
+	 * @param c, Coordinate 
+	 * @param i, Integer	Integer representing bom, hit or sunk.
 	 */
 	public void setValue(Coordinate c, Integer i){
 		ocean[c.getX()][c.getY()]=i;
 	}
 
 	/**
+	 * Returns the value from the element in tha array corresponding to chosen coordinate.
 	 * 
-	 * @param c
-	 * @return
+	 * @param c, Coordinate
+	 * @return Integer, representing empty (not used), hit, bom or sunk ship.
 	 */
 	public Integer getValue(Coordinate c){
 		return ocean[c.getX()][c.getY()];

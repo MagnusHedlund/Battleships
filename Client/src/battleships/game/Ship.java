@@ -4,6 +4,8 @@ package battleships.game;
 import java.util.TreeSet;
 
 /**
+ * Ship is an abstract class for being used in the game Battleships. 
+ * It contains methods and data that are important for ships in the game.
  * 
  * @author Åsa Waldhe
  *
@@ -23,17 +25,19 @@ public abstract class Ship {
 	protected Integer direction=null;
 	
 	/**
+	 * Initiate variables and constant. 
 	 * 
-	 * @param n
-	 * @param l
+	 * @param n, String	The name of the ship - from the subclass.
+	 * @param l, int	Length of the ship.
 	 */
-	public Ship(String n, int l ){			// Kontrollera att koordinaterna ligger i rad?
+	public Ship(String n, int l ){			
 		sunk = false;
 		NAME = n;
 		LENGTH = l;
 	}
 	
 	/**
+	 * Overrides the method toString
 	 * 
 	 */
 	public String toString(){
@@ -41,46 +45,53 @@ public abstract class Ship {
 	}
 	
 	/**
+	 * Returns the name of the ship - different for each class.
 	 * 
-	 * @return name 			The name of ship-type, as a String.
+	 * @return name	The name of ship-type, as a String.
 	 */
 	public String getName(){
 		return NAME;
 	}
 	
 	/**
+	 * Returns the first (upper left) coordinate in the ship. 
 	 * 
-	 * @return 					First coordinate from TreeSet coord
+	 * @return Coordinate					
 	 */
 	public Coordinate getFirstCoord(){
 		return coords.first();
 	}
+	
 	/**
+	 * Answers whether the direction of the ship i vertical or horizontal.
 	 * 
-	 * @return
+	 * @return Integer, direction - represented by constants HORIZONTAL=0, VERTICAL=1.
 	 */
 	public Integer getDirection(){
 		return direction;
 	}
 	
 	/**
+	 * Returns the length of the ship.
 	 * 
-	 * @return
+	 * @return LENGTH, Integer	
 	 */
 	public Integer getLength(){
 		return LENGTH;
 	}
 	
 	/**
+	 * Returns whether the ship contains the specified coordinate.
 	 * 
-	 * @param coord
-	 * @return
+	 * @param coord, Coordinate
+	 * @return Boolean
 	 */
 	public Boolean containsCoord(Coordinate coord){
 		 return coords.contains(coord);
 	}
 	
 	/**
+	 * 
 	 * 
 	 * @param c1
 	 * @param c2
@@ -99,12 +110,11 @@ public abstract class Ship {
 	}
 	
 	/**
-	 * Returns whether the ship is hit by a shot by comparing the coord argument with the ships coordinates.
+	 * Returns whether the ship is hit by a shot by comparing the coordinate argument with the ships coordinates.
 	 * Increments ads the coordinate to the array hits if true.
 	 * 
 	 * @param coord
 	 * @return constant Integer 
-	 * @throws
 	 */
 	public Boolean hitByShot(Coordinate coord){
 		if(containsCoord(coord)){
@@ -117,16 +127,18 @@ public abstract class Ship {
 	}
 	
 	/**
+	 * Is the ship sunk?
 	 * 
-	 * @return	Boolean			Sunk or not
+	 * @return	Boolean	Sunk or not
 	 */
 	public Boolean isSunk(){
 		return hits.size()==LENGTH;		
 	}
 	
 	/**
+	 * Returns all coordinates in the ship.
 	 * 
-	 * @return TreeSet<Coordinate>		All coordinates covered by the ship.
+	 * @return TreeSet<Coordinate>	All coordinates covered by the ship.
 	 */
 	public TreeSet<Coordinate> getCoords(){
 		return coords;
@@ -134,8 +146,9 @@ public abstract class Ship {
 	}
 	
 	/**
+	 * Provides a way to set all coordinates in a ship.
 	 * 
-	 * @param c
+	 * @param c, TreeSet<Coordinate>
 	 */
 	public void setCoords(TreeSet<Coordinate> c){
 		coords.clear();

@@ -20,5 +20,10 @@
 			<type>1</type>
 			<location>/home/asa/Dokument/Datakurser/Metoder och verktyg i mjukvaruutveckling/Projekt/src/game/TestValidator.java</location>
 		</link>
+		<link>
+			<name>src/battleships/game/Tests</name>
+			<type>2</type>
+			<location>/home/asa/Dokument/Datakurser/Metoder och verktyg i mjukvaruutveckling/gitHub-Project/Battleships/Client/src/battleships/game/Tests</location>
+		</link>
 	</linkedResources>
 </projectDescription>

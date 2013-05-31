@@ -1,4 +1,4 @@
-package game;
+package game.Tests;
 
 import static org.junit.Assert.*;
 

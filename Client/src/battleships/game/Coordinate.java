@@ -14,9 +14,9 @@ package battleships.game;
 public class Coordinate {
 	
 	/** x-coordinate */
-	private final Integer X;
+	private int X;
 	/** y-coordinate */
-	private final Integer Y;
+	private int Y;
 	
 	/** Max value for coordinate. */
 	final static int MAX=9;

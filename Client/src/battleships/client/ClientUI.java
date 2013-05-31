@@ -998,7 +998,7 @@ public class ClientUI implements ActionListener
 		// Utplacering av skepp
 		placeShip(e);	
 		
-		// READY eller CLEAR knapparna
+		// READY och CLEAR knapparna
 		if(e.getSource() == readyButton) {
 			myNavy = placer.getNavy();							// Hämta Navy från ShipPlacer
 			

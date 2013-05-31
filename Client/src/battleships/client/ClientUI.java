@@ -513,6 +513,7 @@ public class ClientUI implements ActionListener
 					cNetwork.sendMessage(msg);
 					System.err.println("Sent: Accept ChallengeMessage");
 					challengeDialog.setVisible(false);
+					createNavyWindow();	// Accepted - hoppa vidare.
 				}
 				else if(arg0.getSource() == deny) {
 					ChallengeMessage msg = new ChallengeMessage("NotImportant", Integer.parseInt(opponent), true, false);

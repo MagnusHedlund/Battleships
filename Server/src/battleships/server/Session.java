@@ -58,11 +58,13 @@ public class Session implements Runnable{
 		while(!navyValid[PLAYER0] || !navyValid[PLAYER1]){
 			System.out.println("In Whileloop");
 			if(!navyValid[PLAYER0]){
+				System.out.println("validating navy 1");
 				boolean isValid = readAndValidate(PLAYER0);
 				navyValid[PLAYER0]=isValid;
 				player[PLAYER0].sendMessage(new ValidationMessage(isValid));
 			}
 			if(!navyValid[PLAYER1]){
+				System.out.println("validating navy 1");
 				boolean isValid = readAndValidate(PLAYER1);	
 				navyValid[PLAYER1]=isValid;
 				player[PLAYER0].sendMessage(new ValidationMessage(isValid));

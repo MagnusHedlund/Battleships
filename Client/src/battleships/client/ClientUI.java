@@ -407,7 +407,7 @@ public class ClientUI implements ActionListener
 		
 		// Korrekt utplacerad Navy?
 		if(valid.getMessage()) {
-			setPlayerNavy();		// Ja - Sätt Navy
+			setPlayerNavy();		// Ja - Sätt Navy till spelplanen grafiskt
 			createGameWindow();		// Ja - Spela
 		}
 		else {						// Nej - Gör om
@@ -917,7 +917,7 @@ public class ClientUI implements ActionListener
 	}
 	
 	/**
-	 * Updates the clients Navy
+	 * Updates the visual representation of the clients navy
 	 */	
 	private void updateMyNavy() 
 	{
@@ -1001,10 +1001,18 @@ public class ClientUI implements ActionListener
 		// READY eller CLEAR knapparna
 		if(e.getSource() == readyButton) {
 			myNavy = placer.getNavy();							// Hämta Navy från ShipPlacer
+			
+			Validator valid = new Validator(5, 3, 1);
+			if(valid.validateNavy(myNavy))
+				System.err.println("Validator: Navy OK!");
+			else
+				System.err.println("Validator: Navy INVALID!!!");
+			
 			NavyMessage sendNavy = new NavyMessage(myNavy);		// Skicka till server
 			cNetwork.sendMessage(sendNavy);
 			System.err.println("Sent NavyMessage to Server.");
 			clearButton.setEnabled(false);
+			readyButton.setEnabled(false);
 		}
 		else if(e.getSource() == clearButton) {					// Nollställ Navy
 			placer.Reset();

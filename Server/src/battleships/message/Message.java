@@ -18,7 +18,6 @@ public abstract class Message {
 		XStream xstream = new XStream();
 		xml = xstream.toXML(this);
 		xml = xml.replace("\n", "").replace("\r", "");
-		xml += "\n";
 		return xml;
 	}
 	

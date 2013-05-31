@@ -22,13 +22,13 @@ public class Socket
 	/**
 	 * Writes to the socket.
 	 */
-	java.io.PrintWriter out;
+	private java.io.PrintWriter out;
 	
 	/**
 	 * Reads from the socket.
 	 */
-    java.io.BufferedReader in;
-	
+	private java.io.BufferedReader in;
+
 	/**
 	 * Creates a connection to another entity over the net.
 	 * 
@@ -144,11 +144,14 @@ public class Socket
 	public Message read()
 	{
 		// Reading
-		String data;
+		String data = null;
 		try
 		{
-			// Retrieve information
-			data = in.readLine();
+			// Retrieve information if there's any to fetch
+			if(internalSocket.getInputStream().available() > 0)
+			{
+				data = in.readLine();
+			}
 		} 
 		catch (Exception e)
 		{

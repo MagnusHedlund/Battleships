@@ -45,18 +45,19 @@ public class Session implements Runnable{
 	 * */
 	@Override
 	public void run() {
-		
+		System.out.println("Run");
 		/* listen and validate Navy objects*/
-		while(!navyValid[PLAYER0] && !navyValid[PLAYER1]){
+		while(!navyValid[PLAYER0] || !navyValid[PLAYER1]){
+			System.out.println("In Whileloop");
 			if(!navyValid[PLAYER0]){
-				boolean valid = readAndValidate(PLAYER0);
-				navyValid[PLAYER0]=valid;
-				player[PLAYER0].sendMessage(new ValidationMessage(valid));
+				boolean isValid = readAndValidate(PLAYER0);
+				navyValid[PLAYER0]=isValid;
+				player[PLAYER0].sendMessage(new ValidationMessage(isValid));
 			}
 			if(!navyValid[PLAYER1]){
-				boolean valid = readAndValidate(PLAYER1);	
-				navyValid[PLAYER1]=valid;
-				player[PLAYER0].sendMessage(new ValidationMessage(valid));
+				boolean isValid = readAndValidate(PLAYER1);	
+				navyValid[PLAYER1]=isValid;
+				player[PLAYER0].sendMessage(new ValidationMessage(isValid));
 			}
 		}
 		
@@ -71,18 +72,22 @@ public class Session implements Runnable{
 	private boolean readAndValidate(int playerNumber){
 		Validator validator = new Validator(SUBMARINES,DESTROYERS,AIRCRAFT_CARRIERS);
 		Message msg = readMessage(player[playerNumber]);
-		if(msg.getType()=="NavyMessage"){
+		if(msg.getType().equals("NavyMessage")){
+			System.out.println("We have a navy");
 			NavyMessage navMsg = (NavyMessage)msg;
-			if(validator.validateNavy(navMsg.getNavy())){  //TODO Correct call 
+			if(validator.validateNavy(navMsg.getNavy())){
+				System.out.println("it´s valid");
 				navy[playerNumber]=navMsg.getNavy();
 				return true;
 			}
 			else{
+				System.out.println("it´s not valid");
 				return false;
 			}
 			
 		}
 		else{
+			System.out.println("We don´t have a navy");
 			return false;
 		}	
 	}

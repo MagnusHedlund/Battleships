@@ -492,6 +492,7 @@ public class ClientUI implements ActionListener
 	private void triggerChallenge(String opponent) 
 	{
 		waitingForChallenge = false;
+		System.err.println("Triggered Challenge Dialogbox");
 		
 		// Skapar en JDialog för "challenge" meddelandet
 		final JDialog challengeDialog = new JDialog();
@@ -511,12 +512,14 @@ public class ClientUI implements ActionListener
 					ChallengeMessage msg = new ChallengeMessage();
 					msg.accept();
 					cNetwork.sendMessage(msg);
+					System.err.println("Sent: Accept ChallengeMessage");
 					challengeDialog.setVisible(false);
 				}
 				else if(arg0.getSource() == deny) {
 					ChallengeMessage msg = new ChallengeMessage();
 					msg.decline();
 					cNetwork.sendMessage(msg);
+					System.err.println("Received: Deny ChallengeMessage");
 					challengeDialog.setVisible(false);
 				}
 			}

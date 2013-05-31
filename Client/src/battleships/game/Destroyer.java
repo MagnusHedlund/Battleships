@@ -7,13 +7,22 @@ package battleships.game;
 
 import java.util.TreeSet;
 
+/**
+ * This class extends the abstract class Ship for the game Battleships.
+ * 
+ * @author Åsa Waldhe
+ *
+ */
 public class Destroyer extends Ship {
 
 	public static final int LENGTH_D = 3;
 	private static Integer instances_d=0;
 	
 	
-	
+	/**
+	 * Constructor, creates a ship, subclass Destroyer.
+	 * @param c1, c2, c3 Coordinate
+	 */
 	public Destroyer(Coordinate c1, Coordinate c2, Coordinate c3){
 		
 		super("Destroyer", LENGTH_D);
@@ -37,6 +46,10 @@ public class Destroyer extends Ship {
 		coords.add(c3);		
 	}
 	
+	/**
+	 * Returns how many instances that have been created of the subclass.
+	 * @return instances, Integer
+	 */
 	public Integer getInstances(){
 		return instances_d;
 	}

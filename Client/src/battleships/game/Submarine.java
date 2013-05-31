@@ -8,6 +8,7 @@ package battleships.game;
 import java.util.TreeSet;
 
 /**
+ * This class extends the abstract class Ship for the game Battleships.
  * 
  * @author Åsa Waldhe
  *
@@ -18,8 +19,8 @@ public class Submarine extends Ship {
 	public static final int LENGTH_S = 1;
 	
 	/**
-	 * 
-	 * @param c
+	 * Constructor, creates a ship, subclass submarine.
+	 * @param c, Coordinate
 	 */
 	public Submarine(Coordinate c){	
 		
@@ -34,8 +35,8 @@ public class Submarine extends Ship {
 	}
 	
 	/**
-	 * 
-	 * @return
+	 * Returns how many instances that have been created of the subclass.
+	 * @return instances, Integer
 	 */
 	public Integer getInstances(){
 		return instances_s;

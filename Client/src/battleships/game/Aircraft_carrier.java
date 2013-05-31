@@ -19,12 +19,8 @@ public class Aircraft_carrier extends Ship {
 	private static Integer instances_ac=0;
 	
 	/**
-	 * 
-	 * @param c1
-	 * @param c2
-	 * @param c3
-	 * @param c4
-	 * @param c5
+	 * Constructor, creates a ship, subclass Destroyer.
+	 * @param c1, c2, c3, c4, c5 Coordinate
 	 */
 	public Aircraft_carrier(Coordinate c1, Coordinate c2, Coordinate c3, Coordinate c4, Coordinate c5){
 		
@@ -52,9 +48,10 @@ public class Aircraft_carrier extends Ship {
 		
 		++instances_ac;
 	}
+	
 	/**
-	 * 
-	 * @return
+	 * Returns how many instances that have been created of the subclass.
+	 * @return instances, Integer
 	 */
 	public Integer getInstances(){
 		return instances_ac;

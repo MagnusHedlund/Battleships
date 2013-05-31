@@ -1,5 +1,8 @@
 package battleships.server;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+
 import battleships.game.Coordinate;
 import battleships.game.Navy;
 import battleships.game.ServerAI;
@@ -75,6 +78,22 @@ public class Session implements Runnable{
 		if(msg.getType().equals("NavyMessage")){
 			System.out.println("We have a navy");
 			NavyMessage navMsg = (NavyMessage)msg;
+			if(navMsg.getNavy().allSet()){
+				System.out.println("allSet");
+			}
+				
+			/* try{
+				  // Create file 
+				  FileWriter fstream = new FileWriter("out.xml");
+				  BufferedWriter out = new BufferedWriter(fstream);
+				  out.write(navMsg.toXML());
+				  //Close the output stream
+				  out.close();
+				  }catch (Exception e){//Catch exception if any
+					  
+				  }*/
+			
+			
 			if(validator.validateNavy(navMsg.getNavy())){
 				System.out.println("it´s valid");
 				navy[playerNumber]=navMsg.getNavy();

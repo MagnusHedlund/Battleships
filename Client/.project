@@ -14,6 +14,7 @@
 	<natures>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
+<<<<<<< HEAD
 	<linkedResources>
 		<link>
 			<name>src/battleships/game/TestValidator.java</name>
@@ -26,4 +27,6 @@
 			<location>/home/asa/Dokument/Datakurser/Metoder och verktyg i mjukvaruutveckling/gitHub-Project/Battleships/Client/src/battleships/game/Tests</location>
 		</link>
 	</linkedResources>
+=======
+>>>>>>> upstream/master
 </projectDescription>

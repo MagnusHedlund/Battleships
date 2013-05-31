@@ -1,4 +1,4 @@
-package game;
+package battleships.game;
 
 import static org.junit.Assert.*;
 

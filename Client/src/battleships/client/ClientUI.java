@@ -489,7 +489,7 @@ public class ClientUI implements ActionListener
 	 * 
 	 * @param opponent	String representation of the opponent ID.
 	 */	
-	private void triggerChallenge(String opponent) 
+	private void triggerChallenge(final String opponent) 
 	{
 		waitingForChallenge = false;
 		System.err.println("Triggered Challenge Dialogbox");
@@ -502,24 +502,23 @@ public class ClientUI implements ActionListener
 		challengeDialog.add(title, BorderLayout.NORTH);
 		challengeDialog.add(accept, BorderLayout.WEST);
 		challengeDialog.add(deny, BorderLayout.EAST);
-		challengeDialog.setLocation(200, 200);
 		
 		// action listener för denna.
 		ActionListener dialogListener = new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				if(arg0.getSource() == accept) {
-					ChallengeMessage msg = new ChallengeMessage();
+					ChallengeMessage msg = new ChallengeMessage("NotImportant", Integer.parseInt(opponent), true, true);
 					msg.accept();
 					cNetwork.sendMessage(msg);
 					System.err.println("Sent: Accept ChallengeMessage");
 					challengeDialog.setVisible(false);
 				}
 				else if(arg0.getSource() == deny) {
-					ChallengeMessage msg = new ChallengeMessage();
+					ChallengeMessage msg = new ChallengeMessage("NotImportant", Integer.parseInt(opponent), true, false);
 					msg.decline();
 					cNetwork.sendMessage(msg);
-					System.err.println("Received: Deny ChallengeMessage");
+					System.err.println("Sent: Deny ChallengeMessage");
 					challengeDialog.setVisible(false);
 				}
 			}

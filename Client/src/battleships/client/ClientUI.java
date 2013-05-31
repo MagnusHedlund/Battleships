@@ -100,6 +100,7 @@ public class ClientUI implements ActionListener
 			}
 		};
 		
+		// Starta timer och gå till connect-window
 		t = new javax.swing.Timer(1000, networkListener);
 		t.start();
 		createConnectWindow();
@@ -367,8 +368,9 @@ public class ClientUI implements ActionListener
 		// Uppdatera lobbylistan
 		playerList.clear();
 		playerList.add("Server");
-		for(int i = 0; i < lobbyContenders.size(); i++)
-			playerList.add("Player " + Integer.toString(i+1));
+		for (int value : lobbyContenders.values()) {
+			playerList.add("Player " + Integer.toString(value));
+		}
 		lobbyList.setListData(playerList);		
 	}
 	

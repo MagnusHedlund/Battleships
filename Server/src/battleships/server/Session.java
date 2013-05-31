@@ -70,7 +70,7 @@ public class Session implements Runnable{
 	 * */
 	private boolean readAndValidate(int playerNumber){
 		Validator validator = new Validator(SUBMARINES,DESTROYERS,AIRCRAFT_CARRIERS);
-		Message msg = player[playerNumber].readMessage();
+		Message msg = readMessage(player[playerNumber]);
 		if(msg.getType()=="NavyMessage"){
 			NavyMessage navMsg = (NavyMessage)msg;
 			if(validator.validateNavy(navMsg.getNavy())){  //TODO Correct call 
@@ -105,12 +105,16 @@ public class Session implements Runnable{
 			
 			//Read message
 			if(player[currentPlayer]!=null){  //an actual player
-				Message msg = player[currentPlayer].readMessage();
+				
+				Message msg = readMessage(player[currentPlayer]);
 				Shot navMsg=null;
 				if(msg.getType()=="Shot"){
 					navMsg = (Shot)msg;
 					shotCoordinate = navMsg.getCoordinate();
 				}
+				
+					
+				
 			}
 			else {  //get shot coordinate from ServerAI
 				if(serverAI!=null){
@@ -196,6 +200,21 @@ public class Session implements Runnable{
 		else{
 			currentPlayer=PLAYER0;
 		}
+	}
+	
+	private Message readMessage(Player p){
+		Message msg=null;
+		while(msg==null){
+			try{
+				msg=p.readMessage();
+				if(msg==null){
+					Thread.sleep(500);
+				}
+			}catch(Exception e){
+				 
+			}
+		}
+		return msg;	
 	}
 	
 }

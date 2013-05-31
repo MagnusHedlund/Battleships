@@ -1,7 +1,12 @@
 package battleships.server;
 
 import java.io.BufferedWriter;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.util.Scanner;
 
 import battleships.game.Coordinate;
 import battleships.game.Navy;
@@ -81,18 +86,6 @@ public class Session implements Runnable{
 			if(navMsg.getNavy().allSet()){
 				System.out.println("allSet");
 			}
-				
-			/* try{
-				  // Create file 
-				  FileWriter fstream = new FileWriter("out.xml");
-				  BufferedWriter out = new BufferedWriter(fstream);
-				  out.write(navMsg.toXML());
-				  //Close the output stream
-				  out.close();
-				  }catch (Exception e){//Catch exception if any
-					  
-				  }*/
-			
 			
 			if(validator.validateNavy(navMsg.getNavy())){
 				System.out.println("it´s valid");
@@ -126,6 +119,9 @@ public class Session implements Runnable{
 			grantTurn=false;
 			finished=false;
 			shotCoordinate=null;
+			
+			//let first player shoot
+			player[currentPlayer].sendMessage(new NavyMessage(navy[currentPlayer], grantTurn));
 			
 			//Read message
 			if(player[currentPlayer]!=null){  //an actual player

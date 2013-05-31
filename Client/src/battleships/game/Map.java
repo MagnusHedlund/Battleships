@@ -1,5 +1,9 @@
-package battleships.game;
+/*
+ * Map.java	
+ * Version 1.0 (2013-05-30)
+ */
 
+package battleships.game;
 
 /**
  * Map contains a two dimensional array symbols the ocean in the game Battleships.

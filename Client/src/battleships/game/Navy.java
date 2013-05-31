@@ -1,3 +1,8 @@
+/*
+ * Navy.java	
+ * Version 1.0 (2013-05-31)
+ */
+
 package battleships.game;
 
 import java.util.Iterator;

@@ -1,11 +1,9 @@
 /*
  * Socket.java
- * Version 1.0 (2013-05-29)
+ * Version 1.1 (2013-06-01)
  */
 
 package battleships.network;
-
-import java.io.IOException;
 
 import battleships.message.Message;
 
@@ -45,7 +43,7 @@ public class Socket
 		{
 			// Socket management
 			internalSocket = new java.net.Socket(address, port);
-			internalSocket.setSoTimeout(20);
+			internalSocket.setSoTimeout(1);
 			
 			// Streams for reading and writing through this socket
 			out = new java.io.PrintWriter(internalSocket.getOutputStream(), true);
@@ -152,7 +150,7 @@ public class Socket
 			// Retrieve information
 			data = in.readLine();
 		} 
-		catch (IOException e)
+		catch (Exception e)
 		{
 			return null;
 		}

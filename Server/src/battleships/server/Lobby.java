@@ -1,6 +1,6 @@
 /*
  * Lobby.java	
- * Version 1.1 (2013-05-30)
+ * Version 1.1 (2013-06-01)
  */
 
 package battleships.server;
@@ -79,7 +79,6 @@ public class Lobby
 					}
 				}
 			}
-			
 		}
 	}
 	

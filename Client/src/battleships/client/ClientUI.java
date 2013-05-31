@@ -969,7 +969,7 @@ public class ClientUI implements ActionListener
 		if(e.getSource() == challengeButton) {
 			
 			// Skicka ett challenge till den man valt
-			if(lobbySelected.length() > 0) {
+			if(lobbySelected != null && lobbySelected.length() > 0) {
 				waitingForChallenge = false;
 				
 				// Sätter ID och Namn

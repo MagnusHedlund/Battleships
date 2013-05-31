@@ -9,16 +9,16 @@ public class ChallengeMessage extends Message {
 	
 	public ChallengeMessage(){
 		super(myType);
-		isAcceptMsg=false;
-		accepted=false;
-		opponentName="";
-		opponentID=-1;
+		this.isAcceptMsg=false;
+		this.accepted=false;
+		this.opponentName="";
+		this.opponentID=-1;
 	}
 	
 	public ChallengeMessage(String opponentName, int opponentID){
 		super(myType);
-		isAcceptMsg=false;
-		accepted=false;
+		this.isAcceptMsg=false;
+		this.accepted=false;
 		this.opponentName=opponentName;
 		this.opponentID=opponentID;
 	}
@@ -47,15 +47,15 @@ public class ChallengeMessage extends Message {
 	 * Sets the message to become a accept challenge message
 	 * */
 	public void accept(){
-		isAcceptMsg=true;
-		accepted=true;
+		this.isAcceptMsg=true;
+		this.accepted=true;
 	}
 	
 	/**
 	 * Sets the message to become a decline challenge message
 	 * */
 	public void decline(){
-		isAcceptMsg=true;
-		accepted=false;
+		this.isAcceptMsg=true;
+		this.accepted=false;
 	}
 }

@@ -16,7 +16,7 @@ import java.util.TreeSet;
 public class Aircraft_carrier extends Ship {
 	
 	public static final int LENGTH_A = 5;
-	private static Integer instances_ac=0;
+	private static int instances_ac=0;
 	
 	/**
 	 * 
@@ -56,7 +56,7 @@ public class Aircraft_carrier extends Ship {
 	 * 
 	 * @return
 	 */
-	public Integer getInstances(){
+	public int getInstances(){
 		return instances_ac;
 	}
 	

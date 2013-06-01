@@ -19,7 +19,7 @@ public class Navy {
 	
 	private LinkedList<Ship> ships;
 	private Map map;
-	private Integer sunkShips;
+	private int sunkShips;
 	
 	/**
 	 * Initiates member variables and constants.

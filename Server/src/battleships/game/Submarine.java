@@ -14,7 +14,7 @@ import java.util.TreeSet;
  */
 public class Submarine extends Ship {
 	
-	private static Integer instances_s =0;
+	private static int instances_s =0;
 	public static final int LENGTH_S = 1;
 	
 	/**
@@ -37,7 +37,7 @@ public class Submarine extends Ship {
 	 * 
 	 * @return
 	 */
-	public Integer getInstances(){
+	public int getInstances(){
 		return instances_s;
 	}
 	

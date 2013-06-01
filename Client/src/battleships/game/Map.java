@@ -40,7 +40,7 @@ public class Map {
 	 * @param c, Coordinate 
 	 * @param i, Integer	Integer representing bom, hit or sunk.
 	 */
-	public void setValue(Coordinate c, Integer i){
+	public void setValue(Coordinate c, int i){
 		ocean[c.getX()][c.getY()]=i;
 	}
 
@@ -50,7 +50,7 @@ public class Map {
 	 * @param c, Coordinate
 	 * @return Integer, representing empty (not used), hit, bom or sunk ship.
 	 */
-	public Integer getValue(Coordinate c){
+	public int getValue(Coordinate c){
 		return ocean[c.getX()][c.getY()];
 	}
 }

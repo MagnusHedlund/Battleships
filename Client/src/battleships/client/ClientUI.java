@@ -461,7 +461,7 @@ public class ClientUI implements ActionListener
 		HitMessage Hit = (HitMessage) msg;
 		if(debug)
 			System.err.println("Received: HitMessage");
-		
+
 		// Träff eller bom?
 		if(Hit.getIsHit()) {
 			enemySquares.elementAt(myAttack).setHit();

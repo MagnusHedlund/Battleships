@@ -5,6 +5,7 @@
 
 package battleships.game;
 
+import java.util.Iterator;
 import java.util.TreeSet;
 
 /**
@@ -91,7 +92,13 @@ public abstract class Ship {
 	 * @return Boolean
 	 */
 	public Boolean containsCoord(Coordinate coord){
-		 return coords.contains(coord);
+		Iterator<Coordinate> it = coords.iterator();
+		while(it.hasNext()){
+			Coordinate test = it.next();
+			if(coord.getX() == test.getX() && coord.getY() == test.getY())
+				return true;
+		}
+		return false;
 	}
 	
 	/**

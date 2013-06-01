@@ -461,7 +461,7 @@ public class ClientUI implements ActionListener
 			
 			// Sänkte vi ett skepp?
 			if(Hit.getIsSunk())
-				information.append("You sunk a " + Hit.getShip().getName() + "\n");
+				information.append("You sunk a " + Hit.getShip().getName() + "! \n");
 			else
 				information.append("You managed to hit a ship! \n");
 				
@@ -483,10 +483,16 @@ public class ClientUI implements ActionListener
 		System.err.println("Received: FinishedMessage");
 		
 		// Vem vann?
-		if(finished.getWinner())
+		if(finished.getWinner()) {
 			information.append("******* YOU WIN! *******" + "\n");
-		else
+			direction.setForeground(Color.blue);
+			direction.setText("=)");
+		}
+		else {
 			information.append("******* YOU LOSE! *******" + "\n");
+			direction.setForeground(Color.blue);
+			direction.setText("=(");
+		}
 		
 		// Sluta läsa efter meddelanden	
 		myTurn = false;
@@ -948,7 +954,7 @@ public class ClientUI implements ActionListener
 		for(int i = 0; i < playerSquares.size(); i++) {
 			if((Ocean.elementAt(i) == 3 || Ocean.elementAt(i) == 1) && playerSquares.elementAt(i).isAship())
 				playerSquares.elementAt(i).setMiss();	// Egentligen en träff, men för fienden. (blir rätt färg)
-			else if(Ocean.elementAt(i) == 2)
+			else if(Ocean.elementAt(i) == 2 && !playerSquares.elementAt(i).isAship())
 				playerSquares.elementAt(i).setBom();	// "BOM" är alltså en miss (för fienden)
 		}
 	}

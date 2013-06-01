@@ -926,7 +926,7 @@ public class ClientUI implements ActionListener
 		// Sätt ut koordinaterna på playerSquares
 		for(int i = 0; i < playerSquares.size(); i++){
 			for(int j = 0; j < cords.size(); j++){
-				if(cords.elementAt(j).getX().equals(playerSquares.elementAt(i).getXcoordinate()) && cords.elementAt(j).getY().equals(playerSquares.elementAt(i).getYcoordinate())) {
+				if(cords.elementAt(j).getX() == playerSquares.elementAt(i).getXcoordinate() && cords.elementAt(j).getY() == playerSquares.elementAt(i).getYcoordinate()) {
 					playerSquares.elementAt(i).setShipHere();	
 				}
 			}

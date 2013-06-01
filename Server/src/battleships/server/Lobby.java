@@ -41,8 +41,6 @@ public class Lobby
 	 */
 	public void update()
 	{
-		System.out.println("START Lobby Update");
-		
 		// Read messages coming from clients
 		for(Entry<Integer, Player> entry : players.entrySet())
 		{
@@ -82,8 +80,6 @@ public class Lobby
 				}
 			}
 		}
-		
-		System.out.println("END Lobby Update");
 	}
 	
 	/**

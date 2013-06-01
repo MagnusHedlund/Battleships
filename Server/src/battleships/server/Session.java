@@ -62,6 +62,7 @@ public class Session implements Runnable{
 				player[PLAYER0].sendMessage(new ValidationMessage(isValid));
 			}
 			
+			//only validate if the other player is real
 			if(player[PLAYER1]==null){  //no real opponent
 				navyValid[PLAYER1]=true; //skip validation of server Navy
 				navy[PLAYER1]=serverAI.getNavy();
@@ -137,11 +138,12 @@ public class Session implements Runnable{
 			if(player[currentPlayer]!=null){  //an actual player
 				
 				Message msg = readMessage(player[currentPlayer]);
-				Shot navMsg=null;
-				if(msg.getType()=="Shot"){
+				Shot shotMsg=null;
+				if(msg.getType().equals("Shot")){
 					System.out.println("received Shot");
-					navMsg = (Shot)msg;
-					shotCoordinate = navMsg.getCoordinate();
+					shotMsg = (Shot)msg;
+					shotCoordinate = shotMsg.getCoordinate();
+					System.out.println(shotCoordinate.getX().toString()+shotCoordinate.getY().toString());
 				}
 				
 					
@@ -156,7 +158,7 @@ public class Session implements Runnable{
 			
 			// do we have a Coordinate?
 			if(shotCoordinate!=null){
-				
+				System.out.println("valid coord");
 				Ship hitShip=navy[otherPlayer].shot(shotCoordinate);
 				
 				//a hit
@@ -241,6 +243,9 @@ public class Session implements Runnable{
 				msg=p.readMessage();
 				if(msg==null){
 					Thread.sleep(500);
+				}
+				else{
+					System.out.println("Got a message: "+msg.getType());
 				}
 			}catch(Exception e){
 				 

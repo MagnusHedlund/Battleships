@@ -433,16 +433,16 @@ public class ClientUI implements ActionListener
 		System.err.println("Received: NavyMessage");
 		myNavy = navy.getNavy();
 		updateMyNavy();
+
+		// Vems tur?
+		myTurn = navy.getGrantTurn();
+		changeDirection();
 		
 		// FOR ERROR TESTING ONLY
 		if(myTurn)
 			System.err.println("myTurn value: TRUE");
 		else
 			System.err.println("myTurn value: FALSE");
-		
-		// Vems tur?
-		myTurn = navy.getGrantTurn();
-		changeDirection();
 	}
 	
 	/**

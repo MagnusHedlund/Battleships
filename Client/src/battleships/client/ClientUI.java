@@ -1050,6 +1050,8 @@ public class ClientUI implements ActionListener
 					if(enemySquares.elementAt(i).isAlive()){
 						Shot shoot = new Shot(enemySquares.elementAt(i).getXcoordinate(), enemySquares.elementAt(i).getYcoordinate()); 
 						cNetwork.sendMessage(shoot);
+						enemySquares.elementAt(i).setBom();			// "BOM" tills man vet om det är träff eller miss.
+						System.err.println("Sent: ShootMessage");
 						myAttack = i;
 						myTurn = false;
 					}

@@ -180,19 +180,9 @@ public class Session implements Runnable{
 					grantTurn=true;
 				}
 				
-				if(finished){
-					if(player[currentPlayer]!=null){
-						player[currentPlayer].sendMessage(new FinishedMessage(true, navy[currentPlayer]));
-					}
-					
-					//send hitMessage to otherPlayer
-					if(player[otherPlayer]!=null){
-						player[otherPlayer].sendMessage(new FinishedMessage(false, navy[otherPlayer]));
-					}
-					
-					loop=false;
-				}
-				else{
+				
+				// Tell players if it´s a hit?
+				
 					//send hitMessage to currentPlayer
 					if(player[currentPlayer]!=null){
 						player[currentPlayer].sendMessage(new HitMessage(isHit, shotCoordinate, isSunk, hitShip));
@@ -202,8 +192,20 @@ public class Session implements Runnable{
 					if(player[otherPlayer]!=null){
 						player[otherPlayer].sendMessage(new NavyMessage(navy[otherPlayer], grantTurn));
 					}
-				}
 
+					if(finished){
+						if(player[currentPlayer]!=null){
+							player[currentPlayer].sendMessage(new FinishedMessage(true, navy[currentPlayer]));
+						}
+						
+						//send hitMessage to otherPlayer
+						if(player[otherPlayer]!=null){
+							player[otherPlayer].sendMessage(new FinishedMessage(false, navy[otherPlayer]));
+						}
+						
+						loop=false;
+					}
+					
 				//if otherPlayer was granted next turn, Switch player
 				if(grantTurn){
 					System.out.println("Switching player");

@@ -97,7 +97,7 @@ public class Navy {
 			}			
 		}		
 		if(!found)
-			this.markOnMap(c, map.HIT);
+			this.markOnMap(c, map.BOM);
 				
 		return null;	
 		

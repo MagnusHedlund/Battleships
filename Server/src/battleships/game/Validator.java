@@ -144,7 +144,7 @@ public class Validator {
 		if(allCoords.contains(tmpC))
 			return false;
 		
-		Coordinate tmpC1 = new Coordinate((firstCoord.getX()+1), firstCoord.getY());
+		Coordinate tmpC1 = new Coordinate((firstCoord.getX()+length), firstCoord.getY());
 		if(allCoords.contains(tmpC1))
 			return false;
 		
@@ -175,7 +175,7 @@ public class Validator {
 		if(allCoords.contains(tmpC))
 			return false;
 		
-		Coordinate tmpC1 = new Coordinate(firstCoord.getX(), (firstCoord.getY()+1));
+		Coordinate tmpC1 = new Coordinate(firstCoord.getX(), (firstCoord.getY()+length));
 		if(allCoords.contains(tmpC1))
 			return false;
 		
@@ -184,7 +184,7 @@ public class Validator {
 			Coordinate tmpC2 = new Coordinate((firstCoord.getX()-1), (firstCoord.getY()-1+i));
 			if(allCoords.contains(tmpC2))
 				return false;
-			Coordinate tmpC3 = new Coordinate((firstCoord.getX()+1), (firstCoord.getY()+1+i));
+			Coordinate tmpC3 = new Coordinate((firstCoord.getX()+1), (firstCoord.getY()-1+i));
 			if(allCoords.contains(tmpC3))
 					return false;
 		}

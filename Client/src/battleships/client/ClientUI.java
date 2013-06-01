@@ -518,6 +518,7 @@ public class ClientUI implements ActionListener
 		challengeDialog.add(title, BorderLayout.NORTH);
 		challengeDialog.add(accept, BorderLayout.WEST);
 		challengeDialog.add(deny, BorderLayout.EAST);
+		challengeDialog.setLocation(window.getX() + 200, window.getY() + 200);
 		
 		// action listener för denna.
 		ActionListener dialogListener = new ActionListener() {
@@ -945,16 +946,20 @@ public class ClientUI implements ActionListener
 		}
 
 		// FOR ERROR TESTING ONLY...
-		System.out.print("OCEAN[][] VALUES: ");
-		for(int i = 0; i < Ocean.size(); i++)
+		System.out.println("OCEAN[][] VALUES: ");
+		for(int i = 0; i < Ocean.size(); i++) {
 			System.out.print(Ocean.elementAt(i));
+			if((i+1) % 10 == 0)
+				System.out.println();
+		}
 		System.err.println("");
+		
 		
 		// Loopa genom båda vectorer, om värdet i Ocean == 3 eller 1, så är detta en träff av fienden.
 		for(int i = 0; i < playerSquares.size(); i++) {
-			if((Ocean.elementAt(i) == 3 || Ocean.elementAt(i) == 1) && playerSquares.elementAt(i).isAship())
+			if((Ocean.elementAt(i) == 3 || Ocean.elementAt(i) == 1))
 				playerSquares.elementAt(i).setMiss();	// Egentligen en träff, men för fienden. (blir rätt färg)
-			else if(Ocean.elementAt(i) == 2 && !playerSquares.elementAt(i).isAship())
+			else if(Ocean.elementAt(i) == 2)
 				playerSquares.elementAt(i).setBom();	// "BOM" är alltså en miss (för fienden)
 		}
 	}

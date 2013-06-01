@@ -12,6 +12,7 @@ import java.util.Map.Entry;
 import battleships.message.ActivePlayersMessage;
 import battleships.message.ChallengeMessage;
 import battleships.message.Message;
+import battleships.message.NotificationMessage;
 
 /**
  * Listens for messages and acts upon them when it's related to
@@ -115,7 +116,6 @@ public class Lobby
 		}
 		
 		// Apply the list to the message and send it
-		System.out.println(player.getName() + " [" + player.getID() + "] received an updated player list.");
 		message.setContenders(list);
 		player.sendMessage(message);
 	}
@@ -143,27 +143,28 @@ public class Lobby
 		// Must be a valid one
 		if(other == null)
 		{
-			System.out.println(player.getName() + " [" + player.getID() + "] tried to challenge someone who doesn't exist!");
+			NotificationMessage error = new NotificationMessage("The player you wish to challenge has disconnected.");
+			player.sendMessage(error);
 		}
 		
 		// The player can't already be in a game
 		else if(!other.getIdle())
 		{
-			System.out.println(player.getName() + " [" + player.getID() + "] tried to challenge a busy player!");
+			NotificationMessage error = new NotificationMessage("'" + other.getName() + "' is already in a game.");
+			player.sendMessage(error);
 		}
 		
 		// Challenging oneself makes no sense
 		else if(other.getID() == player.getID())
 		{
-			System.out.println(player.getName() + " [" + player.getID() + "] tried to challenge oneself!");
+			NotificationMessage error = new NotificationMessage("You can't challenge yourself!");
+			player.sendMessage(error);
 		}
 		
 		// Sending the challenge request
 		else if(!message.isAcceptMessage())
 		{
 			other.sendMessage(new ChallengeMessage(player.getName(), player.getID()));
-			System.out.println(player.getName() + " [" + player.getID() + "] sent a challenge request to " + other.getName() +
-					   		   " [" + other.getID() + "]!");
 		}
 		
 		// Response from the challenged player
@@ -178,16 +179,14 @@ public class Lobby
 			// Create a new game if the challenge was accepted
 			if(response)
 			{
-				System.out.println(player.getName() + " [" + player.getID() + "] accepted the challenge given by " + other.getName() +
-		   		   		   		   " [" + other.getID() + "]!");
 				createGame(player, other);
 			}
 			
 			// The challenge was declined
 			else
 			{
-				System.out.println(player.getName() + " [" + player.getID() + "] denied the challenge given by " + other.getName() +
-				   		   		   " [" + other.getID() + "]!");
+				NotificationMessage error = new NotificationMessage("'" + player.getName() + "' declined your request.");
+				other.sendMessage(error);
 			}
 		}
 	}
@@ -203,7 +202,6 @@ public class Lobby
 		player.setIdle(false);
 		
 		// Sessions are handled in separate threads
-		System.out.println(player.getName() + " [" + player.getID() + "] is battling against the Server AI!");
 		(new Thread(new Session(player))).start();
 	}
 	
@@ -220,8 +218,6 @@ public class Lobby
 		second.setIdle(false);
 		
 		// Sessions are handled in separate threads
-		System.out.println(first.getName() + " [" + first.getID() + "] is battling against " + second.getName() +
-		   		   		   " [" + second.getID() + "]!");
 		(new Thread(new Session(first, second))).start();
 	}
 }

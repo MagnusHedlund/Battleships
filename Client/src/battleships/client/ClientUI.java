@@ -326,6 +326,8 @@ public class ClientUI implements ActionListener
 				handleActivePlayerMessage(lobbyUpdate);
 			else if(lobbyUpdate.getType().equals("ChallengeMessage")) 	// Challenge
 				handleChallengeMessage(lobbyUpdate);
+			else if(lobbyUpdate.getType().equals("NotificationMessage"))
+				handleNotificationMessage(lobbyUpdate);
 	}
 	
 	/**
@@ -398,6 +400,15 @@ public class ClientUI implements ActionListener
 			else
 				waitingForChallenge = true;		// Deny message
 		}		
+	}
+	
+	private void handleNotificationMessage(Message msg)
+	{
+		NotificationMessage notice = (NotificationMessage) msg;
+		JOptionPane.showMessageDialog(window,
+			    notice.getNotification(),
+			    "Ooops!",
+			    JOptionPane.INFORMATION_MESSAGE);
 	}
 	
 	/**

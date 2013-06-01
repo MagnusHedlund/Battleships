@@ -57,8 +57,11 @@ public class TestMap {
 		assertEquals(map.BOM, map.getValue(c1), 0.1);
 		
 		map.setValue(c2, map.BOM);
+		assertEquals(2, map.getValue(c2), 0.1);
 		map.setValue(c3, map.HIT);
+		assertEquals(1, map.getValue(c3), 0.1);
 		map.setValue(c4, map.SUNK);
+		assertEquals(3, map.getValue(c4), 0.1);
 		int[][] a = map.getOcean();
 		for(int i=0; i<a.length; i++){
 			for(int j=0; j<a.length; j++)

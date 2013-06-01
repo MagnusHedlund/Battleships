@@ -16,7 +16,7 @@ import java.util.TreeSet;
 public class Aircraft_carrier extends Ship {
 	
 	public static final int LENGTH_A = 5;
-	private static Integer instances_ac=0;
+	private static int instances_ac=0;
 	
 	/**
 	 * Constructor, creates a ship, subclass Destroyer.
@@ -53,7 +53,7 @@ public class Aircraft_carrier extends Ship {
 	 * Returns how many instances that have been created of the subclass.
 	 * @return instances, Integer
 	 */
-	public Integer getInstances(){
+	public int getInstances(){
 		return instances_ac;
 	}
 	

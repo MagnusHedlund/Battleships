@@ -10,7 +10,7 @@ import java.util.TreeSet;
 public class Destroyer extends Ship {
 
 	public static final int LENGTH_D = 3;
-	private static Integer instances_d=0;
+	private static int instances_d=0;
 	
 	
 	
@@ -37,7 +37,7 @@ public class Destroyer extends Ship {
 		coords.add(c3);		
 	}
 	
-	public Integer getInstances(){
+	public int getInstances(){
 		return instances_d;
 	}
 	

@@ -16,11 +16,11 @@ import java.util.TreeSet;
  */
 public abstract class Ship {
 	
-	protected static final Integer HORIZONTAL=0;
-	protected static final Integer VERTICAL=1;
+	protected static final int HORIZONTAL=0;
+	protected static final int VERTICAL=1;
 	
 	protected final String NAME; // Initiated in each subclass's constructor..
-	protected final Integer LENGTH; // Initiated in each subclass's constructor.	
+	protected final int LENGTH; // Initiated in each subclass's constructor.	
 	
 	protected TreeSet<Coordinate> coords;
 	protected TreeSet<Coordinate> hits;
@@ -71,7 +71,7 @@ public abstract class Ship {
 	 * 
 	 * @return Integer, direction - represented by constants HORIZONTAL=0, VERTICAL=1.
 	 */
-	public Integer getDirection(){
+	public int getDirection(){
 		return direction;
 	}
 	
@@ -80,7 +80,7 @@ public abstract class Ship {
 	 * 
 	 * @return LENGTH, Integer	
 	 */
-	public Integer getLength(){
+	public int getLength(){
 		return LENGTH;
 	}
 	
@@ -101,7 +101,7 @@ public abstract class Ship {
 	 * @param c2
 	 * @return
 	 */
-	protected Integer shipsDirection(Coordinate c1, Coordinate c2){
+	protected int shipsDirection(Coordinate c1, Coordinate c2){
 		if( c1.getY() == c2.getY() ){
 			direction = HORIZONTAL;
 			return direction;

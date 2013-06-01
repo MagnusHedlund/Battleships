@@ -41,14 +41,14 @@ public class Coordinate {
 	/** 
 	 * @return					X-coordinate
 	 */
-	public Integer getX(){
+	public int getX(){
 		return X;
 	}
 	
 	/**
 	 * @return					Y-coordinate
 	 */
-	public Integer getY(){
+	public int getY(){
 		return Y;
 	}
 	

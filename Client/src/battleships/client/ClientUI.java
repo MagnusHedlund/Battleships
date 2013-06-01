@@ -433,16 +433,16 @@ public class ClientUI implements ActionListener
 		System.err.println("Received: NavyMessage");
 		myNavy = navy.getNavy();
 		updateMyNavy();
+
+		// Vems tur?
+		myTurn = navy.getGrantTurn();
+		changeDirection();
 		
 		// FOR ERROR TESTING ONLY
 		if(myTurn)
 			System.err.println("myTurn value: TRUE");
 		else
 			System.err.println("myTurn value: FALSE");
-		
-		// Vems tur?
-		myTurn = navy.getGrantTurn();
-		changeDirection();
 	}
 	
 	/**
@@ -1050,6 +1050,8 @@ public class ClientUI implements ActionListener
 					if(enemySquares.elementAt(i).isAlive()){
 						Shot shoot = new Shot(enemySquares.elementAt(i).getXcoordinate(), enemySquares.elementAt(i).getYcoordinate()); 
 						cNetwork.sendMessage(shoot);
+						enemySquares.elementAt(i).setBom();			// "BOM" tills man vet om det är träff eller miss.
+						System.err.println("Sent: ShootMessage");
 						myAttack = i;
 						myTurn = false;
 					}

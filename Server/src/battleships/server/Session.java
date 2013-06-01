@@ -62,7 +62,7 @@ public class Session implements Runnable{
 				player[PLAYER0].sendMessage(new ValidationMessage(isValid));
 			}
 			
-			if(player[currentPlayer]!=null){
+			if(player[PLAYER1]==null){  //no real opponent
 				navyValid[PLAYER1]=true; //skip validation of server Navy
 				navy[PLAYER1]=serverAI.getNavy();
 				System.out.println("server already valid");

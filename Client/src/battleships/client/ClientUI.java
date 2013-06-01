@@ -1,6 +1,6 @@
 /*
  * ClientUI.java
- * Version 1.0 (2013-05-30)
+ * Version 1.1 (2013-06-01)
  */
 
 package battleships.client;
@@ -1048,9 +1048,9 @@ public class ClientUI implements ActionListener
 			if(debug) {
 				Validator valid = new Validator(5, 3, 1);
 				if(valid.validateNavy(myNavy))
-					System.err.println("Validator: Navy OK!");
+					System.err.println("Client_Validator: Navy OK!");
 				else
-					System.err.println("Validator: Navy INVALID!!!");
+					System.err.println("Client_Validator: Navy INVALID!!!");
 			}
 			
 			NavyMessage sendNavy = new NavyMessage(myNavy);		// Skicka till server

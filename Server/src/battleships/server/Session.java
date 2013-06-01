@@ -123,6 +123,7 @@ public class Session implements Runnable{
 	private void enterGameLoop(){
 		boolean loop=true;
 		Coordinate shotCoordinate=null;
+		Ship hitShip=null;
 		while(loop){
 			
 			//reset
@@ -130,6 +131,7 @@ public class Session implements Runnable{
 			isSunk=false;
 			grantTurn=false;
 			finished=false;
+			hitShip=null;
 			shotCoordinate=null;
 			
 			
@@ -158,16 +160,18 @@ public class Session implements Runnable{
 			
 			// do we have a Coordinate?
 			if(shotCoordinate!=null){
-				System.out.println("valid coord");
-				Ship hitShip=navy[otherPlayer].shot(shotCoordinate);
+				//System.out.println("valid coord");
+				hitShip=navy[otherPlayer].shot(shotCoordinate);
 				
 				//a hit
 				if(hitShip!=null){
 					isHit=true;
+					System.out.println("Hit");
 					if(!hitShip.isSunk()){
 						hitShip=null;  //don´t send Ship unless sunk
 					}
 					else{
+						System.out.println("sunk");
 						isSunk=true;
 						// check if won
 						if(navy[otherPlayer].allGone()){
@@ -177,6 +181,7 @@ public class Session implements Runnable{
 				}
 				// no hit
 				else{
+					System.out.println("Let the other one fire");
 					//if miss  let the other one fire
 					grantTurn=true;
 				}

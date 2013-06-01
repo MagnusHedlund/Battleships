@@ -146,7 +146,7 @@ public class Session implements Runnable{
 					System.out.println("received Shot");
 					shotMsg = (Shot)msg;
 					shotCoordinate = shotMsg.getCoordinate();
-					System.out.println(shotCoordinate.getX().toString()+shotCoordinate.getY().toString());
+					
 				}
 				
 					
@@ -161,6 +161,7 @@ public class Session implements Runnable{
 			
 			// do we have a Coordinate?
 			if(shotCoordinate!=null){
+				System.out.println("X: "+shotCoordinate.getX().toString()+" Y: "+shotCoordinate.getY().toString());
 				//System.out.println("valid coord");
 				hitShip=navy[otherPlayer].shot(shotCoordinate);
 				
@@ -213,6 +214,7 @@ public class Session implements Runnable{
 
 				//if otherPlayer was granted next turn, Switch player
 				if(grantTurn){
+					System.out.println("Switching player");
 					switchPlayer();
 				}
 			}

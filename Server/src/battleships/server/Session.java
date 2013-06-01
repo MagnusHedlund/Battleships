@@ -44,7 +44,7 @@ public class Session implements Runnable{
 	public void run() {
 		System.out.println("Run");
 		/* listen and validate Navy objects*/
-		while(!navyValid[PLAYER0] && !navyValid[PLAYER1]){
+		while(!navyValid[PLAYER0] || !navyValid[PLAYER1]){
 			System.out.println("In Whileloop");
 			if(!navyValid[PLAYER0]){
 				boolean isValid = readAndValidate(PLAYER0);

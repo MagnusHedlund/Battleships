@@ -78,7 +78,7 @@ public class Session implements Runnable{
 		System.out.println("left validation loop");
 		
 		//let first player shoot
-		player[currentPlayer].sendMessage(new NavyMessage(navy[currentPlayer], grantTurn));
+		player[currentPlayer].sendMessage(new NavyMessage(navy[currentPlayer], true));
 		
 		enterGameLoop();
 		
@@ -198,7 +198,7 @@ public class Session implements Runnable{
 					}
 					
 					//send hitMessage to otherPlayer
-					if(player[currentPlayer]!=null){
+					if(player[otherPlayer]!=null){
 						player[otherPlayer].sendMessage(new NavyMessage(navy[otherPlayer], grantTurn));
 					}
 				}

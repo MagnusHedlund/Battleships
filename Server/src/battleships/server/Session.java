@@ -161,7 +161,7 @@ public class Session implements Runnable{
 			
 			// do we have a Coordinate?
 			if(shotCoordinate!=null){
-				System.out.println("X: "+shotCoordinate.getX().toString()+" Y: "+shotCoordinate.getY().toString());
+				System.out.println("X: "+Integer.toString(shotCoordinate.getX())+" Y: "+Integer.toString(shotCoordinate.getX()));
 				
 				// shoot the other players navy
 				hitShip=navy[otherPlayer].shot(shotCoordinate);

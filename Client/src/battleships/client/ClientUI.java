@@ -81,7 +81,6 @@ public class ClientUI implements ActionListener
 	private boolean myTurn = false;				// Min tur att anfalla?	
 	private JLabel direction = new JLabel("?");	// Visar vems tur det är, visuellt.
 	private int myAttack = 0; 	// Den square man attackerade
-	private boolean debug = false;	// PÅ/AV debug/consol meddelanden.
 	
 	/**
 	 * Constructor
@@ -301,10 +300,7 @@ public class ClientUI implements ActionListener
 		window.validate();
 		window.repaint();
 		window.setVisible(true);
-		
-		if(debug)
-			System.err.println("Created Lobby Window");
-		
+				
 		// Skicka namn
 		NameMessage msg = new NameMessage();
 		msg.setName("IAmAPlayerName");
@@ -367,8 +363,6 @@ public class ClientUI implements ActionListener
 	{
 		ActivePlayersMessage playerL = (ActivePlayersMessage) msg;
 		lobbyContenders = playerL.getContenders();
-		if(debug)
-			System.err.println("Received: ActivePlayersMessage");
 		
 		// Uppdatera lobbylistan
 		playerList.clear();
@@ -386,8 +380,6 @@ public class ClientUI implements ActionListener
 	private void handleChallengeMessage(Message msg) 
 	{
 		ChallengeMessage challenge = (ChallengeMessage) msg;
-		if(debug)
-			System.err.println("Received: ChallengeMessage");
 						
 		// Avgör om man väntar på ett svar på skickad challenge, eller väntar på en challenge.
 		if(waitingForChallenge) {
@@ -402,9 +394,14 @@ public class ClientUI implements ActionListener
 		}		
 	}
 	
+	/**
+	 * Handle this type of message
+	 * @param	msg		The Message
+	 */		
 	private void handleNotificationMessage(Message msg)
 	{
 		NotificationMessage notice = (NotificationMessage) msg;
+		
 		JOptionPane.showMessageDialog(window,
 			    notice.getNotification(),
 			    "Ooops!",
@@ -418,8 +415,6 @@ public class ClientUI implements ActionListener
 	private void handleValidationMessage(Message msg) 
 	{
 		ValidationMessage valid = (ValidationMessage) msg;
-		if(debug)
-			System.err.println("Received: ValidationMessage");
 		
 		// Korrekt utplacerad Navy?
 		if(valid.getMessage()) {
@@ -446,21 +441,12 @@ public class ClientUI implements ActionListener
 	{
 		// Uppdatera Navy
 		NavyMessage navy = (NavyMessage) msg;
-		if(debug)
-			System.err.println("Received: NavyMessage");
 		myNavy = navy.getNavy();
 		updateMyNavy();
 
 		// Vems tur?
 		myTurn = navy.getGrantTurn();
 		changeDirection();
-		
-		// FOR ERROR TESTING ONLY
-		if(debug)
-			if(myTurn)
-				System.err.println("myTurn value: TRUE");
-			else
-				System.err.println("myTurn value: FALSE");
 	}
 	
 	/**
@@ -470,8 +456,6 @@ public class ClientUI implements ActionListener
 	private void handleHitMessage(Message msg) 
 	{
 		HitMessage Hit = (HitMessage) msg;
-		if(debug)
-			System.err.println("Received: HitMessage");
 
 		// Träff eller bom?
 		if(Hit.getIsHit()) {
@@ -499,8 +483,6 @@ public class ClientUI implements ActionListener
 	private void handleFinishedMessage(Message msg) 
 	{
 		FinishedMessage finished = (FinishedMessage) msg;
-		if(debug)
-			System.err.println("Received: FinishedMessage");
 		
 		// Vem vann?
 		if(finished.getWinner()) {
@@ -528,8 +510,6 @@ public class ClientUI implements ActionListener
 	private void triggerChallenge(final String opponent) 
 	{
 		waitingForChallenge = false;
-		if(debug)
-			System.err.println("Triggered Challenge Dialogbox");
 		
 		// Skapar en JDialog för "challenge" meddelandet
 		final JDialog challengeDialog = new JDialog();
@@ -549,8 +529,6 @@ public class ClientUI implements ActionListener
 					ChallengeMessage msg = new ChallengeMessage("NotImportant", Integer.parseInt(opponent), true, true);
 					msg.accept();
 					cNetwork.sendMessage(msg);
-					if(debug)
-						System.err.println("Sent: Accept ChallengeMessage");
 					challengeDialog.setVisible(false);
 					createNavyWindow();	// Accepted - hoppa vidare.
 				}
@@ -558,8 +536,6 @@ public class ClientUI implements ActionListener
 					ChallengeMessage msg = new ChallengeMessage("NotImportant", Integer.parseInt(opponent), true, false);
 					msg.decline();
 					cNetwork.sendMessage(msg);
-					if(debug)
-						System.err.println("Sent: Deny ChallengeMessage");
 					challengeDialog.setVisible(false);
 				}
 			}
@@ -578,8 +554,6 @@ public class ClientUI implements ActionListener
 	{
 		RefreshMessage refresh = new RefreshMessage();
 		cNetwork.sendMessage(refresh);
-		if(debug)
-			System.err.println("Refreshed Lobby");
 	}
 	
 	/**
@@ -968,18 +942,6 @@ public class ClientUI implements ActionListener
 			for (int y : x) 
 				Ocean.add(y);
 		}
-
-		// FOR ERROR TESTING ONLY...
-		if(debug){
-			System.out.println("OCEAN[][] VALUES: ");
-			for(int i = 0; i < Ocean.size(); i++) {
-				System.out.print(Ocean.elementAt(i));
-				if((i+1) % 10 == 0)
-					System.out.println();
-			}
-			System.err.println("");
-		}
-		
 		
 		// Loopa genom båda vectorer, om värdet i Ocean == 3 eller 1, så är detta en träff av fienden.
 		for(int i = 0; i < playerSquares.size(); i++) {
@@ -1033,8 +995,6 @@ public class ClientUI implements ActionListener
 				// Skicka
 				ChallengeMessage challenge = new ChallengeMessage(lobbySelected, playerID);
 				cNetwork.sendMessage(challenge);
-				if(debug)
-					System.err.println("Sent challenge message against: " + lobbySelected + " with ID: " + Integer.toString(playerID));
 			}
 		}
 		else if(e.getSource() == refreshButton) {
@@ -1054,20 +1014,9 @@ public class ClientUI implements ActionListener
 		
 		// READY och CLEAR knapparna
 		if(e.getSource() == readyButton) {
-			myNavy = placer.getNavy();							// Hämta Navy från ShipPlacer
-			
-			if(debug) {
-				Validator valid = new Validator(5, 3, 1);
-				if(valid.validateNavy(myNavy))
-					System.err.println("Client_Validator: Navy OK!");
-				else
-					System.err.println("Client_Validator: Navy INVALID!!!");
-			}
-			
+			myNavy = placer.getNavy();							// Hämta Navy från ShipPlacer			
 			NavyMessage sendNavy = new NavyMessage(myNavy);		// Skicka till server
 			cNetwork.sendMessage(sendNavy);
-			if(debug)
-				System.err.println("Sent NavyMessage to Server.");
 			clearButton.setEnabled(false);
 			readyButton.setEnabled(false);
 		}
@@ -1092,8 +1041,6 @@ public class ClientUI implements ActionListener
 						Shot shoot = new Shot(enemySquares.elementAt(i).getXcoordinate(), enemySquares.elementAt(i).getYcoordinate()); 
 						cNetwork.sendMessage(shoot);
 						enemySquares.elementAt(i).setBom();			// "BOM" tills man vet om det är träff eller miss.
-						if(debug)
-							System.err.println("Sent: ShootMessage");
 						myAttack = i;
 						myTurn = false;
 					}

@@ -2,9 +2,18 @@ package battleships.message;
 
 import com.thoughtworks.xstream.XStream;
 
+/**
+ * Abstraction of messages
+ * @author Magnus Hedlund
+ *
+ */
 public abstract class Message {
 	protected String type;
 	
+	/**
+	 * Constructor that sets the type String
+	 * @param type, String with type 
+	 */
 	public Message(String type){
 		this.type=type;
 	}
